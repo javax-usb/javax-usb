@@ -180,4 +180,21 @@ public interface UsbIrp
 	 * After calling this {@link #isComplete() isComplete} will return true.
 	 */
 	public void complete();
+
+	/**
+	 * Wait until {@link #isComplete() complete}.
+	 * <p>
+	 * This will block until this is {@link #isComplete() complete}.
+	 */
+	public void waitUntilComplete();
+
+	/**
+	 * Wait until {@link #isComplete() complete}, or the timeout has expired.
+	 * <p>
+	 * This will block until this is {@link #isComplete() complete},
+	 * or the timeout has expired.  The timeout is ignored if it is
+	 * 0 or less, i.e. this will behave as the {@link #waitUntilComplete() no-timeout method}.
+	 * @param timeout The maximum number of milliseconds to wait.
+	 */
+	public void waitUntilComplete( long timeout );
 }
