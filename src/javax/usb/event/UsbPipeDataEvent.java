@@ -15,10 +15,6 @@ import javax.usb.*;
  * Indicates data was successfully transferred over the UsbPipe.
  * <p>
  * This event will be fired to all listeners for all data that is transferred over the pipe.
- * <p>
- * Since multiple listeners are possible and some may choose to modify the data or UsbIrp directly,
- * a unique copy of the data is provided for each listener, but the UsbIrp is the same that was
- * originally submitted.
  * @author Dan Streetman
  * @author E. Michael Maximilien
  */
@@ -26,45 +22,57 @@ public class UsbPipeDataEvent extends UsbPipeEvent
 {
 	/**
 	 * Constructor.
+	 * <p>
+	 * This should only be used if there is no UsbIrp associated with this event.
 	 * @param source The UsbPipe.
-	 * @param irp The UsbIrp, or null if no UsbIrp was involved.
-	 * @param data The data.
-	 * @param offset The offset into the data.
-	 * @param length The amount of data transferred.
-	 * @exception IllegalArgumentException If the offset, length or data is invalid.
+	 * @param d The data.
+	 * @param aL The actual length of data transferred.
 	 */
-	public UsbPipeDataEvent( UsbPipe source, UsbIrp irp, byte[] data, int offset, int length ) throws IllegalArgumentException
+	public UsbPipeDataEvent( UsbPipe source, byte[] d, int aL )
 	{
 		super(source);
-		usbIrp = irp;
-		if (0 > offset)
-			throw new IllegalArgumentException("Offset cannot be negative");
-		if (0 > length)
-			throw new IllegalArgumentException("Length cannot be negative");
-		if ((offset+length) > data.length)
-			throw new IllegalArgumentException("Offset + length cannot be larger than data.length");
-		this.data = new byte[length];
-		System.arraycopy(data, offset, this.data, 0, length);
+		data = d;
+		actualLength = aL;
 	}
 
 	/**
-	 * Get the UsbIrp.
-	 * <p>
-	 * If no UsbIrp was involved, this returns null.
-	 * @return The UsbIrp, or null.
+	 * Constructor.
+	 * @param source The UsbPipe.
+	 * @param uI The UsbIrp.
 	 */
-	public UsbIrp getUsbIrp() { return usbIrp; }
+	public UsbPipeDataEvent( UsbPipe source, UsbIrp uI ) { super(source,uI); }
 
 	/**
 	 * Get the data.
 	 * <p>
-	 * This is a copy of the original buffer used.
-	 * The size is the exact amount of data actually transferred.
+	 * If there is an associated UsbIrp, this returns a new byte[] containing only the actual transferred data.
+	 * If there is no associated UsbIrp, this returns the actual data buffer used.
 	 * @return The transferred data.
 	 */
-	public byte[] getData() { return data; }
+	public byte[] getData()
+	{
+		if (hasUsbIrp()) {
+			byte[] newData = new byte[getUsbIrp().getActualLength()];
+			System.arraycopy(getUsbIrp().getData(), getUsbIrp().getOffset(), newData, 0, newData.length);
+			return newData;
+		} else {
+			return data;
+		}
+	}
 
-	private UsbIrp usbIrp = null;
+	/**
+	 * Get the actual length.
+	 * @return The actual amount of transferred data.
+	 */
+	public int getActualLength()
+	{
+		if (hasUsbIrp())
+			return getUsbIrp().getActualLength();
+		else
+			return actualLength;
+	}
+
 	private byte[] data = null;
+	private int actualLength = 0;
 
 }

@@ -20,22 +20,37 @@ import javax.usb.*;
  */
 public class UsbPipeErrorEvent extends UsbPipeEvent
 {
-    /**
-     * Constructor.
-     * @param source The UsbPipe.
-     * @param uE The UsbException.
-     */
-    public UsbPipeErrorEvent( UsbPipe source, UsbException uE )
-    {
-        super(source);
+	/**
+	 * Constructor.
+	 * <p>
+	 * This should be used only if there is no UsbIrp associated with this event.
+	 * @param source The UsbPipe.
+	 * @param uE The UsbException.
+	 */
+	public UsbPipeErrorEvent( UsbPipe source, UsbException uE )
+	{
+		super(source);
 		usbException = uE;
-    }
+	}
+
+	/**
+	 * Constructor.
+	 * @param source The UsbPipe.
+	 * @param uI The UsbIrp.
+	 */
+	public UsbPipeErrorEvent( UsbPipe source, UsbIrp uI ) { super(source,uI); }
 
 	/**
 	 * Get the associated UsbException.
 	 * @return The associated UsbException.
 	 */
-	public UsbException getUsbException() { return usbException; }
+	public UsbException getUsbException()
+	{
+		if (hasUsbIrp())
+			return getUsbIrp().getUsbException();
+		else
+			return usbException;
+	}
 
 	private UsbException usbException = null;
 

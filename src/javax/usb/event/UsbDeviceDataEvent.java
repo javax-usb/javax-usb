@@ -24,21 +24,6 @@ public class UsbDeviceDataEvent extends UsbDeviceEvent
 	 * Constructor.
 	 * @param source The UsbDevice.
 	 * @param irp The UsbControlIrp.
-	 * @param data The data.
-	 * @param offset The offset.
-	 * @param length The amount of data transferred.
-	 * @exception IllegalArgumentException If the offset, length or data is invalid.
-	 * @deprecated The data, offset, and length are ignored; they are provided by the UsbControlIrp.
-	 */
-	public UsbDeviceDataEvent( UsbDevice source, UsbControlIrp irp, byte[] data, int offset, int length ) throws IllegalArgumentException
-	{
-		this( source, irp );
-	}
-
-	/**
-	 * Constructor.
-	 * @param source The UsbDevice.
-	 * @param irp The UsbControlIrp.
 	 */
 	public UsbDeviceDataEvent( UsbDevice source, UsbControlIrp irp )
 	{
