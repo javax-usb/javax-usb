@@ -106,6 +106,22 @@ public interface UsbServices
 	public UsbHub getRootUsbHub() throws UsbException,SecurityException;
 
 	/**
+	 * Create a UsbIrp.
+	 * @return A UsbIrp ready for use.
+	 */
+	public UsbIrp createUsbIrp();
+
+	/**
+	 * Create a ControlUsbIrp.
+	 * @param bmRequestType The bmRequestType.
+	 * @param bRequest The bRequest.
+	 * @param wValue The wValue.
+	 * @param wIndex The wIndex.
+	 * @return A ControlUsbIrp ready for use.
+	 */
+	public ControlUsbIrp createControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex);
+
+	/**
 	 * Add UsbServicesListener.
 	 * @param listener The UsbServicesListener.
 	 */
