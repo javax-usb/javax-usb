@@ -9,6 +9,9 @@ The JSR80 web site is: http://javax-usb.org
 Java Standard Edition version 1.2 or greater - Micro Edition has not been tested but may work
 ANT	 http://jakarta.apache.org/ant
 
+Note that pre-installed versions of these tools may not be right, e.g. some distros have "Kaffe"
+or "gcc-java" or another version of ant.  Those packages should be replaced/removed.
+
 *********
 * Build *
 *********
