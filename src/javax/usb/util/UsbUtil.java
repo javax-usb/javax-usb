@@ -9,7 +9,7 @@ package javax.usb.util;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import javax.usb.*;

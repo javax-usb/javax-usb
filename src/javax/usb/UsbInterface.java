@@ -9,7 +9,7 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import java.io.*;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 /**
@@ -22,7 +22,7 @@ import java.util.*;
  * the active interface setting should be used for claiming and releasing ownership of
  * the interface; also no action may be taken on any parts of this interface
  * setting, if the setting is not active.  Any attempt to perform action on objects
- * belonging to an inactive interface setting will throw a NotActiveException.
+ * belonging to an inactive interface setting will throw a UsbNotActiveException.
  * @author Dan Streetman
  */
 public interface UsbInterface
@@ -39,10 +39,10 @@ public interface UsbInterface
 	 * <p>
 	 * If the interface has already been claimed (in Java), this method with do nothing.
 	 * @exception UsbException If the interface could not be claimed.
-	 * @exception NotActiveException If this interface setting is not
+	 * @exception UsbNotActiveException If this interface setting is not
 	 * {@link #isActive() active}.
 	 */
-	public void claim() throws UsbException,NotActiveException;
+	public void claim() throws UsbException,UsbNotActiveException;
 
 	/**
 	 * Release this interface.
@@ -56,10 +56,10 @@ public interface UsbInterface
 	 * <p>
 	 * If the interface is not claimed (in Java), this method will do nothing.
 	 * @exception UsbException If the interface could not be released.
-	 * @exception NotActiveException If this interface setting is not
+	 * @exception UsbNotActiveException If this interface setting is not
 	 * {@link #isActive() active}.
 	 */
-	public void release() throws UsbException,NotActiveException;
+	public void release() throws UsbException,UsbNotActiveException;
 
 	/**
 	 * If this interface is claimed.
@@ -94,19 +94,19 @@ public interface UsbInterface
 	/**
 	 * Get the number of the active alternate setting.
 	 * @return The active setting number for this interface.
-	 * @exception NotActiveException If the interface (and parent config) is not
+	 * @exception UsbNotActiveException If the interface (and parent config) is not
 	 * {@link #isActive() active}.
 	 */
-	public byte getActiveSettingNumber() throws NotActiveException;
+	public byte getActiveSettingNumber() throws UsbNotActiveException;
 
 	/**
 	 * Get the active alternate setting.
 	 * <p>
 	 * @return The active setting for this interface.
-	 * @exception NotActiveException If this interface (and parent config) is not
+	 * @exception UsbNotActiveException If this interface (and parent config) is not
 	 * {@link #isActive() active}.
 	 */
-	public UsbInterface getActiveSetting() throws NotActiveException;
+	public UsbInterface getActiveSetting() throws UsbNotActiveException;
 
 	/**
 	 * Get the specified alternate setting.

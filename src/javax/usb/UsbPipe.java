@@ -9,7 +9,6 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import java.io.NotActiveException;
 import java.util.List;
 
 import javax.usb.event.*;
@@ -28,7 +27,7 @@ import javax.usb.event.*;
  * <p>
  * This pipe's configuration and interface setting must be active to use this pipe.
  * Any attempt to use a UsbPipe belonging to an inactive configuration or interface setting
- * will throw a NotActiveException.
+ * will throw a UsbNotActiveException.
  * @author Dan Streetman
  * @author E. Michael Maximilien
  */
