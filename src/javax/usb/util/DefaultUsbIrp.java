@@ -29,6 +29,7 @@ public class DefaultUsbIrp implements UsbIrp
 	/**
 	 * Constructor.
 	 * @param data The data.
+	 * @exception IllegalArgumentException If the data is null.
 	 */
 	public DefaultUsbIrp(byte[] data) { setData(data); }
 
@@ -38,12 +39,11 @@ public class DefaultUsbIrp implements UsbIrp
 	 * @param offset The offset.
 	 * @param length The length.
 	 * @param shortPacket The Short Packet policy.
+	 * @exception IllegalArgumentException If the data is null, or the offset and/or length is negative.
 	 */
 	public DefaultUsbIrp(byte[] data, int offset, int length, boolean shortPacket)
 	{
-		setData(data);
-		setOffset(offset);
-		setLength(length);
+		setData(data,offset,length);
 		setAcceptShortPacket(shortPacket);
 	}
 
@@ -70,6 +70,20 @@ public class DefaultUsbIrp implements UsbIrp
 	 * @return The actual length.
 	 */
 	public int getActualLength() { return actualLength; }
+
+	/**
+	 * Set the data, offset, and length.
+	 * @param d The data.
+	 * @param o The offset.
+	 * @param l The length.
+	 * @exception IllegalArgumentException If the data is null, or the offset and/or length is negative.
+	 */
+	public void setData( byte[] d, int o, int l ) throws IllegalArgumentException
+	{
+		setData(d);
+		setOffset(o);
+		setLength(l);
+	}
 
 	/**
 	 * Set the data.

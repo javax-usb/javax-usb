@@ -20,18 +20,17 @@ package javax.usb;
  * Before submitting this, at least some of these (depending on UsbIrp implementation) must be performed:
  * <ul>
  * <li>The {@link #getData() data} must be {@link #setData(byte[]) set}.</li>
- * <li>The {@link #getOffset() data offset}, may be {@link #setOffset(int) set}; the default is 0.</li>
- * <li>The {@link #getLength() data length} may be {@link #setLength(int) set}; the default is the full data length.</li>
- * <li>The {@link #getAcceptShortPacket() Short Packet policy} may be {@link #setAcceptShortPacket(boolean) set}; the default is true.</li>
+ * <li>The {@link #getOffset() data offset}, may be {@link #setOffset(int) set}.</li>
+ * <li>The {@link #getLength() data length} may be {@link #setLength(int) set}.</li>
+ * <li>The {@link #getAcceptShortPacket() Short Packet policy} may be {@link #setAcceptShortPacket(boolean) set}.</li>
  * <li>The {@link #getUsbException() UsbException} must be null (and {@link #isUsbException() isUsbException} must be false).</li>
  * <li>The {@link #isComplete() complete state} must be false.</li>
  * </ul>
  * Any UsbIrp implementation must behave as specified in this interface's documentation, including the specified defaults.
- * Note that {@link #setData(byte[]) setData()} not only sets the data, but also
- * {@link #setLength(int) sets the length} to the length of the new data buffer.  This behavior allows
- * the default case, where the offset is 0 and the length is the full data buffer, to work correctly.
- * Only the data must be set, the offset and length are set to correct values.  If the offset and/or length
- * should be non-standard values, then they must be set <i>after</i> the data is set.
+ * Note that {@link #setData(byte[]) setData} also sets the offset to 0 and the length to data.length; if other
+ * values should be used, use the {@link #setData(byte[],int,int) 3-parameter setData} or set the
+ * {@link #setOffset(int) offset} and {@link #setLength(int) length} with their setters <i>after</i> setting
+ * the data.
  * <p>
  * The javax.usb implementation will set the {@link #getActualLength() data length} and, if unsuccessful, the
  * {@link #getUsbException() UsbException}, after processing.  Finally, it will call {@link #complete() complete}.
@@ -45,7 +44,8 @@ public interface UsbIrp
 	/**
 	 * Get the data.
 	 * <p>
-	 * This defaults to an empty byte[].  This will never return null.
+	 * This defaults to an empty byte[].
+	 * This will never be null.
 	 * @return The data.
 	 */
 	public byte[] getData();
@@ -53,28 +53,30 @@ public interface UsbIrp
 	/**
 	 * Get the starting offset of the data.
 	 * <p>
-	 * This indicates the starting byte in the {@link #getData() data}.
+	 * This indicates the starting byte in the data.
 	 * <p>
-	 * This defaults to no offset (0).  This will never be negative.
-	 * @return The offset to use.
+	 * This defaults to 0, and this is set to 0 by {@link #setData(byte[]) the 1-parameter setData}.
+	 * This will never be negative.
+	 * @return The offset.
 	 */
 	public int getOffset();
 
 	/**
 	 * The amount of data to transfer.
 	 * <p>
-	 * This should be set to the amount of data to transfer.
-	 * The default is the full length of the data buffer.
-	 * This will never be negative.
+	 * This indicates the amount of data to transfer.
 	 * <p>
-	 * This will be automatically reset every time the data is
-	 * {@link #setData(byte[]) set}.
+	 * This defaults to 0, and this is set to data.length by {@link #setData(byte[]} the 1-parameter setData}.
+	 * This will never be negative.
 	 * @return The amount of data to transfer.
 	 */
 	public int getLength();
 
 	/**
 	 * The amount of data that was transferred.
+	 * <p>
+	 * This defaults to 0, and is set by the implementation during/after submission.
+	 * This will never be negative.
 	 * @return The amount of data that was transferred.
 	 */
 	public int getActualLength();
@@ -82,13 +84,25 @@ public interface UsbIrp
 	/**
 	 * Set the data.
 	 * <p>
-	 * <i>Note that the {@link #getLength() length} will be reset
-	 * when this is called</i>.  This will {@link #setLength(int) set the length}
-	 * to {@link #getData() getData()}.length.
+	 * This {@link #setOffset(int) sets the offset} to 0,
+	 * and {@link #setLength(int) sets the length} to data.length;
+	 * if those values are inappropriate, use the
+	 * {@link #setData(byte[],int,int) other setData}.
 	 * @param data The data.
 	 * @exception IllegalArgumentException If the data is null.
 	 */
 	public void setData(byte[] data);
+
+	/**
+	 * Set the data.
+	 * <p>
+	 * This sets the data, offset, and length to the specified values.
+	 * @param data The data.
+	 * @param offset The offset.
+	 * @param length The length.
+	 * @exception IllegalArgumentException If the data is null, or offset and/or length is negative.
+	 */
+	public void setData(byte[] data, int offset, int length);
 
 	/**
 	 * Set the offset.
@@ -99,8 +113,6 @@ public interface UsbIrp
 
 	/**
 	 * Set the amount of data to transfer.
-	 * <p>
-	 * This must be set <i>after</i> the data is {@link #setData(byte[]) set}.
 	 * @param length The amount of data to transfer.
 	 * @exception IllegalArgumentException If the length is negative.
 	 */
