@@ -23,6 +23,7 @@ target "all" does everything.
 ****************
 
 Create the .class jarfile and put it into your CLASSPATH.
+The jarfile is "jsr80.jar" and is located in the lib/ directory.
 
 ********************
 * More Information *
