@@ -14,16 +14,20 @@
 
 \newcommand{\mytitle}[0]{JSR80 API Specification}
 \newcommand{\myauthor}[0]{Dan Streetman}
-\newcommand{\mydate}[0]{Oct 22 2002}
+\newcommand{\mydate}[0]{\today}
 
 \newcommand{\myclass}[1]{\emph{#1}}
 \newcommand{\myinterface}[1]{\emph{#1}}
-\newcommand{\mypackage}[1]{\emph{#1}}
+\newcommand{\mypackage}[1]{\tt#1\rm}
 \newcommand{\mymethod}[1]{\emph{#1}}
 \newcommand{\myfield}[1]{\emph{#1}}
 
+\newcommand{\mysectionend}[0]{\vfill\pagebreak[1]}
+
 \begin{document}
 \pagestyle{empty}
+
+\pagenumbering{roman}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Titlepage
@@ -41,6 +45,8 @@
 \begin{flushright}
 \large{\myauthor}
 \\
+\large{ddstreet@ieee.org}
+\\
 \large{ddstreet@us.ibm.com}
 \\
 \large{\mydate}
@@ -49,9 +55,6 @@
 \vfill
 
 \end{titlepage}
-
-\newpage
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Page setup
@@ -65,7 +68,6 @@
 \fancyhead[LE,RO]{\bfseries\thepage}
 \fancyhead[LO]{\rightmark}
 
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Table of Contents
 %
@@ -76,7 +78,9 @@
 
 \listoffigures
 
-\newpage
+\pagebreak
+
+\pagenumbering{arabic}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Initialization
@@ -90,15 +94,17 @@ is final and cannot be instantiated; it is a completely static class.  The only
 public method is \mymethod{getUsbServices}, which starts up the javax.usb implementation
 and returns the \myinterface{UsbServices} implementaion.  To find the implementation class,
 the \myclass{UsbHostManager} attempts to load the properties file as defined by the
-field \myclass{UsbHostManager}.\myfield{JAVAX USB PROPERTIES FILE}.  It uses the
+field \myclass{UsbHostManager}.\myfield{JAVAX\_USB\_PROPERTIES\_FILE}.  It uses the
 \myclass{ClassLoader}.\mymethod{getSystemResourceAsStream} method to find the properties file;
 this method essentially searches the classpath for the file.  The properties contained
 in this file are loaded into a \myclass{Properties} instance using the method
 \myclass{Properties}.\mymethod{load}, so the file should contain key-value pairs.  The
 only required key-value pair is the key defined by
-\myclass{UsbHostManager}.\myfield{JAVAX USB USBSERVICES PROPERTY}; the value must be the
+\myclass{UsbHostManager}.\myfield{JAVAX\_USB\_USBSERVICES\_PROPERTY}; the value must be the
 name of the class that implements \myinterface{UsbServices}.  The class must be instantiatable
 using \myclass{Class}.\mymethod{newInstance}.
+
+\mysectionend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % UsbServices
@@ -123,6 +129,8 @@ The most important method of \myinterface{UsbServices} is \mymethod{getRootUsbHu
 This method returns the virtual root \myinterface{UsbHub} of the javax.usb topology.  This gives access
 to all devices connected to the host machine.
 
+\mysectionend
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Topology
 %
@@ -144,6 +152,8 @@ required to support up to 5 chained external devices (which means a topology
 7 levels deep including the virtual root hub and a hardware host controller hub,
 plus the 5 external hubs/device).
 
+\mysectionend
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % UsbHubs
 %
@@ -160,6 +170,8 @@ at all, and contains enough ports to accomodate all hardware host controllers.
 The topology may then be traversed using each hub's ports, which may contain a device (or not).
 Additionally, all \myinterface{UsbDevce}s connected to a \myinterface{UsbHub} may be accessed using
 the \mymethod{getAttachedUsbDevices} method.
+
+\mysectionend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % UsbDevice Structure
@@ -205,6 +217,8 @@ that interface must be located on the device's currently active configuration.
 Before using the pipe, the interface it is located on must be \mymethod{claim}ed,
 and the pipe must be \mymethod{open}ed.  Once the interface is claimed and the
 pipe is open, communication may begin on that pipe.
+
+\mysectionend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Communication
@@ -273,6 +287,8 @@ a per-submission basis by a bit in the meta-information.  The USB
 specification explains in detail what is included in this meta-information,
 which is called a setup packet.
 
+\mysectionend
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Security
 %
@@ -280,6 +296,8 @@ which is called a setup packet.
 \section{Security}
 
 Security is not yet fully addressed.
+
+\mysectionend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Utilities
@@ -316,5 +334,7 @@ provided in the base \mypackage{javax.usb} package.  It contains methods to dete
 the version of the API itself, as well as the version of the USB specification
 that the API supports.  It also contains a \mymethod{main} method so it can
 be called directly; this method simply prints out the version numbers.
+
+\mysectionend
 
 \end{document}
