@@ -12,21 +12,20 @@ package javax.usb.event;
 import java.util.EventListener;
 
 /**
- * Super interface for all UsbServices event listeners
+ * Interface for receiving UsbServicesEvents.
  * @author E. Michael Maximilien
- * @since 0.8.0
  */
 public interface UsbServicesListener extends EventListener
 {
     /**
-     * Called when a UsbDevice is attached to the host
-     * @param event the UsbServicesEvent object
+     * A UsbDevice was attached.
+     * @param event The UsbServicesEvent.
      */
     public void usbDeviceAttached( UsbServicesEvent event );
 
     /**
-     * Called when a UsbDevice is detached to the host
-     * @param event the UsbServicesEvent object
+     * A UsbDevice was detached.
+     * @param event The UsbServicesEvent.
      */
     public void usbDeviceDetached( UsbServicesEvent event );
 }

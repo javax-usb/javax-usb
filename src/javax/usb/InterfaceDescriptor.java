@@ -10,38 +10,55 @@ package javax.usb;
  */
 
 /**
- * Defines the interface for USB interface descriptors
+ * Interface for a USB interface descriptor.
  * <p>
- * This interface logically represents a USB interface descriptor
- * which keeps all the necessary information describing it.  Getter methods
- * are provided for all the sections of a interface descriptor.
- * </p>
- * <p>
- * <i>See section 9.6.3 of USB 1.1 specification for details</i>
- * </p>
+ * See the USB 1.1 specification section 9.6.3.
+ * @author Dan Streetman
  * @author E. Michael Maximilien
- * @since 0.8.0
  */
 public interface InterfaceDescriptor extends Descriptor
 {
-    /** @return the interface number */
+    /**
+	 * Get the interface number.
+	 * @return The interface number.
+	 */
     public byte getInterfaceNumber();
 
-    /** @return the alternate setting for this interface */
+    /**
+	 * Get the alternate setting number.
+	 * @return The alternate setting number.
+	 */
     public byte getAlternateSetting();
 
-    /** @return the number of endpoints used by this interface */
+    /**
+	 * Get the number of endpoints for this interface setting.
+	 * @return The number of endpoints for this interface setting.
+	 */
     public byte getNumEndpoints();
 
-    /** @return the interface class code */
+    /**
+	 * Get the interface class.
+	 * @return The interface class.
+	 */
     public byte getInterfaceClass();
 
-    /** @return the interface subclass code */
+    /**
+	 * Get the interface subclass.
+	 * @return The interface subclass.
+	 */
     public byte getInterfaceSubClass();
 
-    /** @return the interface protocol code */
+    /**
+	 * Get the interface protocol.
+	 * @return The interface protocol.
+	 */
     public byte getInterfaceProtocol();
 
-    /** @return the interface StringDescriptor index code */
+    /**
+	 * Get the interface string index.
+	 * <p>
+	 * If this is 0, the interface does not have an interface string.
+	 * @return The interface string index.
+	 */
     public byte getInterfaceIndex();
 }

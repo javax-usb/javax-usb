@@ -10,28 +10,14 @@ package javax.usb;
  */
 
 import javax.usb.event.*;
-import javax.usb.util.UsbInfoListIterator;
 
 /**
- * Defines a USB device.
- * <p>
- * It defines the main interface that all USB device objects should adhere too.  It 
- * represents a USB device attached to the USB host system.  It is mainly though this
- * interface that clients will be able to identify devices that they are interrested 
- * in as well as access
- * {@link javax.usb.UsbConfig UsbConfig},
- * {@link javax.usb.UsbInterface UsbInterface},
- * and {@link javax.usb.UsbEndpoint UsbEndpoint} objects.
- * @author E. Michael Maximilien
+ * Interface for a USB device.
  * @author Dan Streetman
- * @since 1.0.0
+ * @author E. Michael Maximilien
  */
-public interface UsbDevice extends UsbInfo
+public interface UsbDevice
 {
-    //-------------------------------------------------------------------------
-    // Public properties getter methods
-    //
-
 	/**
 	 * Get the UsbPort on the 'parent' UsbHub that this device is connected to.
 	 * @return the port on the parent UsbHub that this is attached to.
@@ -47,122 +33,64 @@ public interface UsbDevice extends UsbInfo
     /**
 	 * Get the manufacturer String.
 	 * <p>
-	 * If this device does not define a manufacturer String,
-	 * null is returned.
-	 * @return the manufacturer String.
-	 * @see javax.usb.StringDescriptor
+	 * This is a convienence method.  The String may be cached.
+	 * If the device does not support strings or does not define the
+	 * manufacturer string, this returns null.
+	 * @return The manufacturer String, or null.
+	 * @exception UsbException If there was an error getting the StringDescriptor.
 	 */
-    public String getManufacturer();
+    public String getManufacturer() throws UsbException;
 
     /**
 	 * Get the serial number String.
 	 * <p>
-	 * If this device does not define a serial number String,
-	 * null is returned.
-	 * @return the serial number String.
-	 * @see javax.usb.StringDescriptor
+	 * This is a convienence method.  The String may be cached.
+	 * If the device does not support strings or does not define the
+	 * serial number string, this returns null.
+	 * @return The serial number String, or null.
+	 * @exception UsbException If there was an error getting the StringDescriptor.
 	 */
     public String getSerialNumber();
 
     /**
 	 * Get the product String.
 	 * <p>
-	 * If this device does not define a product String,
-	 * null is returned.
-	 * @return the product String.
-	 * @see javax.usb.StringDescriptor
+	 * This is a convienence method.  The String may be cached.
+	 * If the device does not support strings or does not define the
+	 * product string, this returns null.
+	 * @return The product String, or null.
+	 * @exception UsbException If there was an error getting the StringDescriptor.
 	 */
     public String getProductString();
 
     /**
 	 * Get the speed of the device.
 	 * <p>
-	 * Return the speed of the device as a String.
-	 * One of the following values will be returned :
+	 * The speed will be one of:
 	 * <ul>
-	 * <li>1.5 Mbps</li>
-	 * <li>12 Mbps</li>
+	 * <li>{@link javax.usb.UsbConst#SPEED_UNKNOWN UsbConst.SPEED_UNKNOWN}</li>
+	 * <li>{@link javax.usb.UsbConst#SPEED_LOW UsbConst.SPEED_LOW}</li>
+	 * <li>{@link javax.usb.UsbConst#SPEED_FULL UsbConst.SPEED_FULL}</li>
 	 * </ul>
-	 * @return the speed of this device.
+	 * @return The speed of this device.
 	 */
-    public String getSpeedString();
+    public Object getSpeed();
 
     /**
-	 * Get the device class.
-	 * @return the USB device class.
-	 */
-    public byte getDeviceClass();
-
-    /**
-	 * Get the device subclass.
-	 * @return the USB device sub-class.
-	 */
-    public byte getDeviceSubClass();
-
-    /**
-	 * Get the device protocol.
-	 * @return the USB device protocol.
-	 */
-    public byte getDeviceProtocol();
-
-    /**
-	 * Get the max packet size of this device's Default Control Pipe.
-	 * @return the maximum packet size.
-	 */
-    public byte getMaxPacketSize();
-
-    /**
-	 * Get the number of configurations for this device.
-	 * @return the number of configurations.
-	 */
-    public byte getNumConfigs();
-
-    /**
-	 * Get the vendor ID.
+	 * Get all UsbConfigs for this device.
 	 * <p>
-	 * The vendor ID is a Binary Coded Decimal.
-	 * @return the vendor ID.
+	 * The List is unmodifiable.
+	 * @return All UsbConfigs for this device.
 	 */
-    public short getVendorId();
-
-    /**
-	 * Get the product ID.
-	 * <p>
-	 * The product ID is a Binary Coded Decimal.
-	 * @return the product ID.
-	 */
-    public short getProductId();
-
-    /**
-	 * Get the USB version for this device.
-	 * <p>
-	 * The USB version is a Binary Coded Decimal.
-	 * @return the USB version for this device.
-	 */
-    public short getBcdUsb();
-
-    /**
-	 * Get the device version.
-	 * <p>
-	 * The device version is a Binary Coded Decimal.
-	 * @return the device version number.
-	 */
-    public short getBcdDevice();
-
-    /**
-	 * Get an iteration of UsbConfigs contained by this UsbDevice.
-	 * @return the UsbConfig objects contained by this UsbDevice.
-	 */
-    public UsbInfoListIterator getUsbConfigs();
+    public List getUsbConfigs();
 
 	/**
 	 * Get the specified UsbConfig.
 	 * <p>
-	 * Note the config numbering is 1-based, and config number 0 is
-	 * reserved for the Not Configured state (see the USB 1.1 specification
+	 * If the specified UsbConfig does not exist, null is returned.
+	 * Config number 0 is reserved for the Not Configured state (see the USB 1.1 specification
 	 * section 9.4.2).  Obviously, no UsbConfig exists for the Not Configured state.
-	 * @return the specified UsbConfig.
-	 * @throws javax.usb.UsbRuntimeException if the specified UsbConfig does not exist.
+	 * @return The specified UsbConfig, or null.
 	 */
 	public UsbConfig getUsbConfig( byte number );
 
@@ -171,7 +99,7 @@ public interface UsbDevice extends UsbInfo
 	 * <p>
 	 * Note that this will return false for the number zero, which indicates
 	 * the device is in a Not Configured state.
-	 * @return if the specified UsbConfig is contained in this UsbDevice.
+	 * @return If the specified UsbConfig is contained in this UsbDevice.
 	 */
 	public boolean containsUsbConfig( byte number );
 
@@ -179,115 +107,104 @@ public interface UsbDevice extends UsbInfo
 	 * Get the number of the active UsbConfig.
 	 * <p>
 	 * If the device is in a Not Configured state, this will return zero.
-	 * @return the active config number.
+	 * @return The active config number.
 	 */
 	public byte getActiveUsbConfigNumber();
 
     /**
 	 * Get the active UsbConfig.
 	 * @return the active UsbConfig.
-	 * @throws javax.usb.UsbRuntimeException if the device is in a Not Configured state.
+//FIXME - create NotConfiguredException?
+	 * @throws RuntimeException if the device is in a Not Configured state.
 	 */
     public UsbConfig getActiveUsbConfig();
 
 	/**
-	 * If this UsbDevice has reached the Configured state.
+	 * If this UsbDevice is configured.
 	 * <p>
-	 * This returns true if the device has reached the Configured state
+	 * This returns true if the device is in the configured state
 	 * as shown in the USB 1.1 specification table 9.1.
-	 * @return if this is in the Configured state.
+	 * @return If this is in the Configured state.
 	 */
 	public boolean isConfigured();
 
 	/**
 	 * Get the device descriptor.
 	 * <p>
-	 * This descriptor may be cached by the implementation.  If
-	 * this is unacceptable for any reason, the descriptor
-	 * should be retrieved using a
-	 * {@link javax.usb.Request Request} through the
-	 * {@link #getStandardOperations() StandardOperations}.
-	 * @return the descriptor.
+	 * The descriptor may be cached.
+	 * @return The device descriptor.
 	 */
 	public DeviceDescriptor getDeviceDescriptor();
 
 	/**
 	 * Get the specified string descriptor.
 	 * <p>
-	 * If the specified string descriptor does not exist,
-	 * null is returned.
-	 * <p>
-	 * This descriptor may be cached by the implementation.  If
-	 * this is unacceptable for any reason, the descriptor
-	 * should be retrieved using a
-	 * {@link javax.usb.Request Request} through the
-	 * {@link #getStandardOperations() StandardOperations}.
-	 * @param index the index of the string descriptor to get.
-	 * @return the specified string descriptor.
-	 * @throws javax.usb.UsbException if an error occurrs while getting the StringDescrpitor.
+	 * This is a convienence method.  The StringDescriptor may be cached.
+	 * If the device does not support strings or does not define the
+	 * specified string descriptor, this returns null.
+	 * @param index The index of the string descriptor to get.
+	 * @return The specified string descriptor.
+	 * @exception UsbException If an error occurred while getting the string descriptor.
 	 */
 	public StringDescriptor getStringDescriptor( byte index ) throws UsbException;
 
 	/**
 	 * Get the String from the specified string descriptor.
 	 * <p>
-	 * If the specified string descriptor does not exist,
-	 * null is returned.
-	 * <p>
-	 * This string may be cached by the implementation.  If
-	 * this is unacceptable for any reason, the descriptor
-	 * should be retrieved using a
-	 * {@link javax.usb.Request Request} through the
-	 * {@link #getStandardOperations() StandardOperations}.
-	 * @return the String from the specified StringDescrpitor.
-	 * @throws javax.usb.UsbException if an error occurred while getting the String.
-	 * @see javax.usb.StringDescriptor
+	 * This is a convienence method.  The String may be cached.
+	 * If the device does not support strings or does not define the
+	 * specified string, this returns null.
+	 * @param index The index of the string to get.
+	 * @return The specified String.
+	 * @exception UsbException If an error occurred while getting the String.
 	 */
 	public String getString( byte index ) throws UsbException;
 
 	/**
-	 * Returns a StandardOperations object that can be used to submit
-	 * standard USB Request objects to this device.
-	 * @return a StandardOperations object to use with this UsbDevice
-	 * @see javax.usb.Request
-	 * @see javax.usb.os.UsbServices#getRequestFactory
-	 * @throw javax.usb.UsbException if the StandardOperations could not be returned
+	 * Submit a ControlUsbIrp synchronously to the Default Control Pipe.
+	 * @param irp The ControlUsbIrp.
+	 * @exception UsbException If an error occurrs.
 	 */
-	public StandardOperations getStandardOperations() throws UsbException;
+	public void syncSubmit( UsbIrp.ControlUsbIrp irp ) throws UsbException;
 
 	/**
-	 * Returns a ClassOperations object that can be used to submit
-	 * standard USB class Request objects to this device.
-	 * @return a ClassOperations object to use with this UsbDevice
-	 * @see javax.usb.Request
-	 * @see javax.usb.os.UsbServices#getRequestFactory
-	 * @throw javax.usb.UsbException if the ClassOperations could not be returned
+	 * Submit a ControlUsbIrp asynchronously to the Default Control Pipe.
+	 * @param irp The ControlUsbIrp.
+	 * @exception UsbException If an error occurrs.
 	 */
-	public ClassOperations getClassOperations() throws UsbException;
+	public void asyncSubmit( UsbIrp.ControlUsbIrp irp ) throws UsbException;
 
 	/**
-	 * Returns a VendorOperations object that can be used to submit
-	 * standard USB vendor Request objects to this device.
-	 * @return a VendorOperations object to use with this UsbDevice
-	 * @see javax.usb.Request
-	 * @see javax.usb.os.UsbServices#getRequestFactory
-	 * @throw javax.usb.UsbException if the VendorOperations could not be returned
+	 * Submit a List of ControlUsbIrps synchronously to the Default Control Pipe.
+	 * <p>
+	 * All ControlUsbIrps are guaranteed to be atomically (with respect to other clients
+	 * of this API) submitted to the Default Control Pipe.  Atomicity on a native level
+	 * is implementation-dependent.
+	 * @param list The List of ControlUsbIrps.
+	 * @exception UsbException If an error occurrs.
 	 */
-	public VendorOperations getVendorOperations() throws UsbException;
+	public void syncSubmit( List list ) throws UsbException;
+
+	/**
+	 * Submit a List of ControlUsbIrps asynchronously to the Default Control Pipe.
+	 * <p>
+	 * All ControlUsbIrps are guaranteed to be atomically (with respect to other clients
+	 * of this API) submitted to the Default Control Pipe.  Atomicity on a native level
+	 * is implementation-dependent.
+	 * @param list The List of ControlUsbIrps.
+	 * @exception UsbException If an error occurrs.
+	 */
+	public void asyncSubmit( List list ) throws UsbException;
 
 	/**
 	 * Add a UsbDeviceListener to this UsbDevice.
-	 * <p>
-	 * The listener will receive UsbDeviceEvents.
-	 * @param listener the UsbDeviceListener to add.
+	 * @param listener The UsbDeviceListener to add.
 	 */
 	public void addUsbDeviceListener( UsbDeviceListener listener );
 
 	/**
 	 * Remove a UsbDeviceListener from this UsbDevice.
-	 * <p>
-	 * The listener will not receive any more events from this UsbDevice.
-	 * @param listener the listener to remove.
+	 * @param listener The listener to remove.
 	 */
 	public void removeUsbDeviceListener( UsbDeviceListener listener );
 

@@ -9,61 +9,22 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import javax.usb.util.UsbInfoListIterator;
-
 /**
- * Defines a USB device configuration.
+ * Interface for a USB config.
  * <p>
  * This represents a configuration of a USB device.  The device may have multiple
- * configurations; only one configuration (if any) can be currently active.
- * If the device is in an unconfigured state none of its configurations will be active.
- * If this configuration is not active, its device model may be browsed, but no action
- * can be taken on any object belonging to this configuration.
+ * configurations, and must have at least one configuration; only one configuration
+ * (if any) can be currently active.  If the device is in an unconfigured state
+ * none of its configurations will be active.  If this configuration is not
+ * active, its device model (UsbInterfaces, UsbEndpoints, and UsbPipes) may be browsed,
+ * but no action can be taken.
  * <p>
  * See the USB 1.1 specification sec 9.6.2 for more information on USB device configurations.
- * @author E. Michael Maximilien
  * @author Dan Streetman
- * @since 0.8.0
+ * @author E. Michael Maximilien
  */
-public interface UsbConfig extends UsbInfo
+public interface UsbConfig
 {
-    /**
-	 * Get this configuration's declared number.
-	 * <p>
-	 * Note that configuration numbers are 1-based, and not necessarily sequential.
-	 * The number is actually an <i>unsigned byte</i>, but since
-	 * Java does not provide unsigned numbers, an unsigned byte above
-	 * 127 will appear negative.  You can use
-	 * {@link javax.usb.util.UsbUtil#unsignedInt(byte) UsbUtil} to
-	 * convert the number to an unsigned integer.
-	 * @return this configuration's number.
-	 */
-    public byte getConfigNumber();
-
-    /**
-	 * Get the number of interfaces this configuration has.
-	 * @return this configuration's number of interfaces.
-	 */
-    public byte getNumInterfaces();
-
-    /**
-	 * Get the attributes for this configuration.
-	 * <p>
-	 * See the USB 1.1 specification sec 9.6.2 and table 9.8 for information
-	 * on configuration attributes.
-	 * @return the attributes bitmap for this configuration.
-	 */
-    public byte getAttributes();
-
-    /**
-	 * Get the max power needed for this configuration.
-	 * <p>
-	 * See the USB 1.1 specification sec 9.6.2 and table 9.8 for more information
-	 * on configuration max power.
-	 * @return the maximum power needed for this configuration.
-	 */
-    public byte getMaxPower();
-
 	/**
 	 * If this UsbConfig is active.
 	 * @return if this UsbConfig is active.
@@ -71,24 +32,24 @@ public interface UsbConfig extends UsbInfo
 	public boolean isActive();
 
     /**
-	 * Get an iteration of this UsbInterfaces belonging to this UsbConfig.
+	 * Get all UsbInterfaces for this configuration.
 	 * <p>
-	 * The returned iteration consists of interface settings dependent on
+	 * The returned UsbInterface settings depend on
 	 * whether this configuration (and by association its contained interfaces)
 	 * is active or not:
 	 * <ul>
-	 * <li>If this configuration is active, the iteration will contain each
-	 * iterface's active alternate setting UsbInterface.</li>
+	 * <li>If this configuration is active, all UsbInterfaces will
+	 * be the active alternate setting for that interface.</li>
 	 * <li>If this configuration is not active, no contained interfaces
-	 * are active, so they have no active alternate settings.  The iteration
-	 * will then contain an implementation-dependent alternate setting UsbInterface
-	 * for each iterface.  To get a specific alternate setting, call
+	 * are active, so they have no active alternate settings.  The UsbInterfaces
+	 * will then be an implementation-dependent alternate setting UsbInterface
+	 * for each iterface.  To get a specific alternate setting, use
 	 * {@link javax.usb.UsbInterface#getAlternateSetting(byte)
 	 * UsbInterface.getAlternateSetting(byte number)}.</li>
 	 * </ul>
-	 * @return the list of USB device interfaces for this configuration.
+	 * @return All UsbInterfaces for this configuration.
 	 */
-    public UsbInfoListIterator getUsbInterfaces();
+    public List getUsbInterfaces();
 
 	/**
 	 * Get the UsbInterface with the specified interface number.
@@ -97,59 +58,45 @@ public interface UsbConfig extends UsbInfo
 	 * alternate setting if this configuration (and thus the contained interface)
 	 * is {@link #isActive() active}.  If this configuration is not active,
 	 * the returned interface setting will be an implementation-dependent alternate setting.
-	 * To get a specific alternate setting, call
+	 * To get a specific alternate setting, use
 	 * {@link javax.usb.UsbInterface#getAlternateSetting(byte)
 	 * UsbInterface.getAlternateSetting(byte number)}.
-	 * @param the number of the interface to get.
-	 * @return a UsbInterface with the given number.
-	 * @throws javax.usb.UsbRuntimeException if this does not contain a UsbInterface with the specified number.
+	 * <p>
+	 * If the specified UsbInterface does not exist, this returns null.
+	 * @param number The number of the interface to get.
+	 * @return The specified UsbInterface, or null.
 	 */
 	public UsbInterface getUsbInterface( byte number );
 
 	/**
 	 * If the specified UsbInterface is contained in this UsbConfig.
-	 * @param number the number of the UsbInterface to check.
-	 * @return if this config contains the specified UsbInterface.
+	 * @param number The interface number.
+	 * @return If this config contains the specified UsbInterface.
 	 */
 	public boolean containsUsbInterface( byte number );
 
     /**
-	 * Get the 'parent' UsbDevice that this UsbConfig belongs to.
+	 * Get the parent UsbDevice that this UsbConfig belongs to.
 	 * @return the UsbDevice that this UsbConfig belongs to.
 	 */
     public UsbDevice getUsbDevice();
 
 	/**
-	 * Get the Descriptor for this UsbConfig.
+	 * Get the config descriptor.
 	 * <p>
-	 * See the USB specification sec 9.6.2 for details on configurations
-	 * and their associated descriptors.  All methods in this Class that refer
-	 * to configuration descriptor fields/methods will agree.
-	 * For example, <code>getNumInterfaces() == getConfigDescriptor().getNumInterfaces()</code>.
-	 * <p>
-	 * This descriptor may be cached by the implementation.  If
-	 * this is unacceptable for any reason, the descriptor
-	 * should be retrieved using a
-	 * {@link javax.usb.Request Request} through the
-	 * {@link javax.usb.StandardOperations StandardOperations}.
-	 * @return the descriptor for this UsbConfig.
+	 * The descriptor may be cached.
+	 * @return The config descriptor.
 	 */
 	public ConfigDescriptor getConfigDescriptor();
 
 	/**
-	 * Get the String for this config's description.
+	 * Get the config String.
 	 * <p>
-	 * This gets the String from the device's
-	 * {@link javax.usb.StringDescriptor StringDescriptor}
-	 * at the index specified by the
-	 * {@link javax.usb.ConfigDescriptor#getConfigIndex() ConfigDescriptor}.
-	 * <p>
-	 * This String may be cached by the implementation.  If
-	 * this is unacceptable for any reason, the descriptor
-	 * should be retrieved using a
-	 * {@link javax.usb.Request Request} through the
-	 * {@link javax.usb.StandardOperations StandardOperations}.
-	 * @return the String (or null) for this config's description.
+	 * This is a convienence method.  The String may be cached.
+	 * If the device does not support strings or does not define the
+	 * config string, this returns null.
+	 * @return The config String, or null.
+	 * @exception UsbException If there was an error getting the StringDescriptor.
 	 */
-	public String getConfigString();
+	public String getConfigString() throws UsbException;
 }

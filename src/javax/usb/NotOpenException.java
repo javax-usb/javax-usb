@@ -10,22 +10,21 @@ package javax.usb;
  */
 
 /**
- * Interface for a USB descriptor.
+ * Exception indicating an operation was attempted on a
+ * {@link javax.usb.UsbPipe#isOpen() closed} UsbPipe.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
-public interface Descriptor
+public class NotOpenException extends RuntimeException
 {
-    /**
-	 * Get the length of this descriptor.
-	 * @return The length of this descriptor.
+	/**
+	 * Constructor.
 	 */
-    public byte getLength();
+	public NotOpenException() { super(); }
 
-    /**
-	 * Get the type of this descriptor.
-	 * @return The type of this descriptor.
-	 * 
-    public byte getType();
+	/**
+	 * Constructor.
+	 * @param s The detail message.
+	 */
+	public NotOpenException(String s) { super(s); }
 
 }

@@ -9,20 +9,14 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import javax.usb.util.UsbInfoListIterator;
-
 /**
- * Defines a USB hub.
- * <p>
- * USB hubs are USB devices that implement the USB hub specification.
- * See the USB 1.1 specification Chapter 11 for the USB hub specification.
- * @author E. Michael Maximilien
+ * Interface for a USB hub.
  * @author Dan Streetman
- * @since 1.0.0
+ * @author E. Michael Maximilien
  */
 public interface UsbHub extends UsbDevice
 {
-    /**
+	/**
 	 * Get the number of (downstream) ports this hub has.
 	 * <p>
 	 * This is only the number of ports on the hub, not
@@ -37,17 +31,18 @@ public interface UsbHub extends UsbDevice
 	 * downstream ports, and sec 11.6 for details on the upstream port.
 	 * @return the number of (downstream) ports for this hub
 	 */
-    public byte getNumberOfPorts();
+	public byte getNumberOfPorts();
 
-    /**
-	 * Get an iteration of the ports this hub has.
+	/**
+	 * Get all the ports this hub has.
 	 * <p>
 	 * See getUsbPort() for important details on port numbering.
-	 * All UsbInfo objects in the returned iteration will implement UsbPort.
-	 * @return an iteration of UsbPort objects this hub has
+	 * <p>
+	 * The List will be unmodifiable.
+	 * @return All ports this hub has.
 	 * @see #getUsbPort( byte number )
 	 */
-    public UsbInfoListIterator getUsbPorts();
+	public List getUsbPorts();
 
 	/**
 	 * Get a specific UsbPort by port number.
@@ -57,7 +52,7 @@ public interface UsbHub extends UsbDevice
 	 * that port numbers start with 1, not 0.  For example,
 	 * see the USB 1.1 specification table 11.8 offset 7,
 	 * where the port numbers start at 1, and 0 is not a valid
-	 * port number.  Therefore,
+	 * port number.	 Therefore,
 	 * <code>getUsbPort(number) == (UsbPort)getUsbPorts().getUsbInfo(number-1)</code>.
 	 * Additionally, the returned UsbPort's getNumber() method will return
 	 * the specified number.
@@ -66,30 +61,18 @@ public interface UsbHub extends UsbDevice
 	 */
 	public UsbPort getUsbPort( byte number );
 
-    /**
-	 * Get an iterator of attached UsbDevices.
+	/**
+	 * Get all attached UsbDevices.
 	 * <p>
-	 * All UsbInfo objects in the returned iterator will implement UsbDevice.
-	 * @return the iterator of devices currently attached to this hub
+	 * The List will be unmodifiable.
+	 * @return All devices currently attached to this hub.
 	 */
-    public UsbInfoListIterator getAttachedUsbDevices();
-
-    /**
-	 * Returns true if this is a UsbRootHub.
-	 * <p>
-	 * See javax.usb.UsbRootHub for details on UsbRootHubs.
-	 * @return true if this is the root hub
-	 * @see javax.usb.UsbRootHub
-	 */
-    public boolean isUsbRootHub();
+	public List getAttachedUsbDevices();
 
 	/**
-	 * Returns a HubClassOperations object that can be used to submit
-	 * standard USB hub class Request objects to this hub.
-	 * @return a HubClassOperations object to use with this UsbHub
-	 * @see javax.usb.Request
-	 * @see javax.usb.os.UsbServices#getRequestFactory
-	 * @throw javax.usb.UsbException if the HubClassOperations could not be returned
+	 * If this is the {@link javax.usb.UsbServices#getRootUsbHub() virtual root hub}.
+	 * @return If this is the virtual root hub.
 	 */
-	public HubClassOperations getHubClassOperations() throws UsbException;
+	public boolean isRootUsbHub();
+
 }

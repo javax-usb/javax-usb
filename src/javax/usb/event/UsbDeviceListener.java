@@ -12,33 +12,26 @@ package javax.usb.event;
 import java.util.EventListener;
 
 /**
- * Super interface for all USB device event listeners
+ * Interface for receiving UsbDeviceEvents.
  * @author E. Michael Maximilien
- * @since 0.8.0
  */
 public interface UsbDeviceListener extends EventListener
 {
     /**
-     * Called when UsbDevice is detached.
-     * @param event the UsbDeviceEvent object
+     * The UsbDevice was detached.
+     * @param event The UsbDeviceEvent.
      */
     public void usbDeviceDetached( UsbDeviceEvent event );
 
     /**
-     * Called when a UsbDeviceErrorEvent occurred.
-	 * <p>
-	 * This indicates that an error has occurred during a submission of a Request.
-	 * See {@link javax.usb.event.UsbDeviceErrorEvent UsbDeviceErrorEvent} for details.
-     * @param event the UsbDeviceErrorEvent object.
+	 * An error occurred.
+     * @param event The UsbDeviceErrorEvent.
      */
     public void errorEventOccurred( UsbDeviceErrorEvent event );
 
     /**
-     * Called when a UsbDeviceDataEvent occurred.
-	 * <p>
-	 * This indicates that a submission has successfully completed.
-	 * See {@link javax.usb.event.UsbDeviceDataEvent UsbDeviceDataEvent} for details.
-     * @param event the UsbDeviceDataEvent object.
+	 * Data was successfully transferred.
+     * @param event The UsbDeviceDataEvent.
      */
     public void dataEventOccurred( UsbDeviceDataEvent event );
 }

@@ -9,54 +9,40 @@ package javax.usb.event;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import java.util.EventObject;
-import java.util.Vector;
+import java.util.*;
 
-import javax.usb.os.UsbServices;
-import javax.usb.util.*;
+import javax.usb.*;
+import javax.usb.os.*;
 
 /**
- * Event class for UsbServices
+ * Class for a USB services event.
  * @author E. Michael Maximilien
  * @author Dan Streetman
- * @since 0.8.0
  */
-public class UsbServicesEvent extends UsbEvent
+public class UsbServicesEvent extends EventObject
 {
-    //-------------------------------------------------------------------------
-    // Public ctor(s)
-    //
-
 	/**
-     * Creates a UsbServicesEvent with source and UsbDevice involved
-	 * @param source the event's source
-	 * @param usbDevices the usbDevices involved
+     * Constructor.
+	 * @param source The source UsbServices.
+	 * @param usbDevice The UsbDevice involved in the event.
 	 */
-	public UsbServicesEvent( UsbServices services, UsbInfoList devices )
+	public UsbServicesEvent( UsbServices source, UsbDevice device )
 	{
-		super( services );
-		usbDevices = devices;
+		super(source);
+		usbDevice = device;
 	}
 
-    //-------------------------------------------------------------------------
-    // Public methods
-    //
-
     /**
-	 * Get the UsbServices object that fired this.
-	 * @return the UsbServices that caused this event.
+	 * Get the UsbServices.
+	 * @return The associated UsbServices.
 	 **/
     public UsbServices getUsbServices() { return (UsbServices)getSource(); }
 
 	/**
-	 * Get the UsbInfoList of UsbDevices involved in this event.
-	 * @return the UsbDevices involved in this event.
+	 * Get the UsbDevice.
+	 * @return The associated UsbDevice.
 	 */
-	public UsbInfoList getUsbDevices() { return usbDevices; }
+	public UsbDevice getUsbDevice() { return usbDevice; }
 
-    //-------------------------------------------------------------------------
-    // Instance variables
-    //
-
-	private UsbInfoList usbDevices = null;
+	private UsbDevice usbDevice = null;
 }

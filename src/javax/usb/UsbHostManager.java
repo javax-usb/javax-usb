@@ -11,8 +11,6 @@ package javax.usb;
 
 import java.security.*;
 
-import javax.usb.os.*;
-
 /**
  * Entry point for javax.usb.
  * @author Dan Streetman

@@ -12,73 +12,54 @@ package javax.usb.event;
 import javax.usb.UsbPipe;
 
 /**
- * Defines a UsbPipeEvent that indicates a successfully completed data transmission.
+ * Indicates data was successfully transferred over the UsbPipe.
  * <p>
- * This event will be fired on all successful transfers of data:
- * <ul>
- * <li>{@link javax.usb.UsbPipe#syncSubmit( byte[] data ) synchronous byte[] submission}.</li>
- * <li>{@link javax.usb.UsbPipe#asyncSubmit( byte[] data ) asynchronous byte[] submission}.</li>
- * <li>{@link javax.usb.UsbPipe#syncSubmit( UsbIrp irp ) synchronous UsbIrp (and UsbCompositeIrp) submission}.</li>
- * <li>{@link javax.usb.UsbPipe#asyncSubmit( UsbIrp irp ) asynchronous UsbIrp (and UsbCompositeIrp) submission}.</li>
- * </ul>
- * @author E. Michael Maximilien
+ * This event will be fired to all listeners for all data that is transferred over the pipe.
+ * <p>
+ * Since multiple listeners are possible and some may choose to modify the data or UsbIrp directly,
+ * a unique copy of the data is provided for each listener, but the UsbIrp is the same that was
+ * originally submitted.
  * @author Dan Streetman
- * @since 0.8.0
+ * @author E. Michael Maximilien
  */
 public class UsbPipeDataEvent extends UsbPipeEvent
 {
-    /**
+	/**
 	 * Constructor.
-     * @param usbPipe the event's source.
-	 * @param sn the sequence number of the associated submission.
-     * @param data the byte[] data.
-	 * @param dataLength the number of valid bytes in the data array.
-     */
-    public UsbPipeDataEvent( UsbPipe usbPipe, long sn, byte[] ba, int dl ) 
-    {
-        super( usbPipe );
-		sequenceNumber = sn;
-        data = ba;
-		dataLength = dl;
-    }
-
-    //-------------------------------------------------------------------------
-    // Public methods
-    //
-
-    /**
-	 * Get the data associated with this successful data transfer.
-	 * <p>
-	 * This byte[] is the original byte[] submitted on the <code>UsbPipe</code>
-	 * (not a copy), so the <code>data.length</code> may be longer than the
-	 * number of bytes actually transferred in the operation.  See
-	 * {@link #getDataLength()} for the valid number of bytes in this byte[].
-	 * @return the byte[] data for this Data event
+	 * @param source The UsbPipe.
+	 * @param irp The UsbIrp, or null if no UsbIrp was involved.
+	 * @param data The data.
+	 * @param length The amount of data transferred.
+	 * @exception IllegalArgumentException If the length is less than 0 or greater than data.length.
 	 */
-    public byte[] getData() { return data; }
-
-    /**
-	 * Get the number of valid bytes in the associated data.
-	 * <p>
-	 * This indicates how many bytes were actually transferred in
-	 * the operation associated with this event.  Only this many bytes
-	 * of the associated data are valid.  This will always be zero or greater
-	 * (never negative).
-	 * @return the number of valid bytes of data for this Data event.
-	 */
-    public int getDataLength() { return dataLength; }
+	public UsbPipeDataEvent( UsbPipe source, UsbIrp irp, byte[] data, int length ) throws IllegalArgumentException
+	{
+		super(source);
+		usbIrp = irp;
+		if (0 > length || length > data.length)
+			throw new IllegalArgumentException("Illegal data length " + length + "; length must be between 0 and data.length");
+		this.data = new byte[length];
+		System.arraycopy(data, 0, this.data, 0, length);
+	}
 
 	/**
-	 * Get the sequence number of the assocaited submission.
-	 * @return the sequence number of the assocaited submission.
+	 * Get the UsbIrp.
+	 * <p>
+	 * If no UsbIrp was involved, this returns null.
+	 * @return The UsbIrp, or null.
 	 */
-	public long getSequenceNumber() { return sequenceNumber; }
+	public UsbIrp getUsbIrp() { return usbIrp; }
 
-    //-------------------------------------------------------------------------
-    // Instance variables
-    //
+	/**
+	 * Get the data.
+	 * <p>
+	 * This is a copy of the original buffer used.
+	 * The size is the exact amount of data actually transferred.
+	 * @return The transferred data.
+	 */
+	public byte[] getData() { return data; }
 
-    private byte[] data = null;
-	private int dataLength = -1;
-	private long sequenceNumber = 0;
+	private UsbIrp usbIrp = null;
+	private byte[] data = null;
+
 }

@@ -9,28 +9,26 @@ package javax.usb.event;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import java.util.EventObject;
+import java.util.*;
 
-import javax.usb.UsbPipe;
+import javax.usb.*;
 
 /**
- * Super class for all USB Pipe events
+ * Class for USB pipe events.
  * @author E. Michael Maximilien
- * @since 0.8.0
  */
-public class UsbPipeEvent extends UsbEvent
+public class UsbPipeEvent extends EventObject
 {
-    /**
-     * Creates an event with the UsbPipe that generated it.
-     * @param source the event's source.
-     */
-    public UsbPipeEvent( UsbPipe source ) { super( source ); }
+	/**
+	 * Constructor.
+	 * @param source The source UsbPipe.
+	 */
+	public UsbPipeEvent( UsbPipe source ) { super(source); }
 
-    //-------------------------------------------------------------------------
-    // Public methods
-    //
-
-    /** @return the UsbPipe that generated this event */
-    public UsbPipe getUsbPipe() { return (UsbPipe)getSource(); }
+	/**
+	 * Get the UsbPipe.
+	 * @return The associated UsbPipe.
+	 */
+	public UsbPipe getUsbPipe() { return (UsbPipe)getSource(); }
 
 }

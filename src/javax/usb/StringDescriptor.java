@@ -10,30 +10,29 @@ package javax.usb;
  */
 
 /**
- * Defines a USB string descriptor
+ * Interface for a USB string descriptor.
  * <p>
- * This interface logically represents a USB string descriptor
- * which keeps all the necessary information describing it.  Getter methods
- * are provided for all the sections of a string descriptor.
+ * To convert from byte[] to String, the implementation should
+ * use the first available of these encodings:
+ * <ul>
+ * <li>UnicodeLittleUnmarked</li>
+ * <li>UnicodeLittle</li>
+ * <li>UTF-16LE</li>
+ * <li>ASCII (after conversion from 16 bit to 8 bit)</li>
+ * </ul>
  * <p>
- * For all methods which convert a byte[] (from the physical device) into a Java String,
- * the implementation will use "UTF-16LE" encoding for the conversion;
- * i.e., new String( byteArray, "UTF-16LE" ).  All byte[] requested from the device will use
- * the device's default lang-id (first 2 bytes of String Descriptor 0).
- * <p>
- * <i>See section 9.6.5 of USB 1.1 specification for details.</i>
+ * See the USB 1.1 specification section 9.6.5.
  * @author E. Michael Maximilien
  * @author Dan Streetman
- * @since 0.8.0
  */
 public interface StringDescriptor extends Descriptor
 {
 	/**
-	 * Return the UTF-16LE encoded String from this Descriptor.
+	 * Get the String.
 	 * <p>
 	 * For information about Unicode see
 	 * <a href="http://www.unicode.org/">the Unicode website</a>.
-	 * @return the string for this descriptor.
+	 * @return The String for this descriptor.
 	 */
     public String getString();
 }

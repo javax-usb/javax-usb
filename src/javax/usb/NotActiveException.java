@@ -10,30 +10,23 @@ package javax.usb;
  */
 
 /**
- * UsbRuntimeException indicating an attempt was made to access or use an
- * inactive part of a UsbDevice.
+ * Exception indicating an operation was attempted on an inactive part of a device.
+ * <p>
+ * This indicates either a configuration is
+ * {@link javax.usb.UsbConfig#isActive() not active} or an interface setting is
+ * {@link javax.usb.UsbInterface#isActive() not active}.
  * @author Dan Streetman
- * @author E. Michael Maximilien
- * @since 0.8.0
  */
-public class NotActiveException extends UsbRuntimeException
+public class NotActiveException extends RuntimeException
 {
-	/** Constructs a <code>NotActiveException</code> with no detail message. */
+	/**
+	 * Constructor.
+	 */
 	public NotActiveException() { super(); }
 
 	/**
-	 * Constructs a <code>NotActiveException</code> with the specified 
-	 * detail message. 
-	 * @param msg the detail message
+	 * Constructor.
+	 * @param s The detail message.
 	 */
-	public NotActiveException( String msg ) { super(msg); }
-
-	/**
-	 * Constructs a <code>NotActiveException</code> with the specified 
-	 * detail message and error code.
-	 * @param msg the detail message.
-	 * @param err the error code.
-	 */
-	public NotActiveException( String msg, int err ) { super(msg,err); }
-
+	public NotActiveException(String s) { super(s); }
 }

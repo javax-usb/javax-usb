@@ -10,39 +10,52 @@ package javax.usb;
  */
 
 /**
- * Defines a USB configuration descriptor.
+ * Interface for a USB configuration descriptor.
  * <p>
- * This interface logically represents a USB device configuration descriptor
- * which keeps all the necessary information describing it.  Getter methods
- * are provided for all the sections of a configuration descriptor.
- * </p>
- * <p>
- * <i>See section 9.6.2 of USB 1.1 specification for details</i>
- * </p>
- * @author E. Michael Maximilien
+ * See the USB 1.1 specification section 9.6.2.
  * @author Dan Streetman
- * @since 0.8.0
+ * @author E. Michael Maximilien
  */
 public interface ConfigDescriptor extends Descriptor
 {
-	/** @return The total length of this Descriptor. */
+	/**
+	 * Get the total length of this descriptor.
+	 * @return The total length of this Descriptor.
+	 */
 	public short getTotalLength();
 
-    /** @return the number of interfaces supported by this configuration */
+    /**
+	 * Get the number of interfaces for the configuration.
+	 * @return The number of interfaces for this configuration.
+	 */
     public byte getNumInterfaces();
 
-    /** @return this configuration value */
+    /**
+	 * Get the value (number) of this configuration.
+	 * @return The value (number) of this configuration.
+	 */
     public byte getConfigValue();
 
-    /** @return this configuration description index */
+    /**
+	 * Get the configuration string index.
+	 * <p>
+	 * If this is 0, the configuration does not have a configuration string.
+	 * @return The configuration string index.
+	 */
     public byte getConfigIndex();
 
     /**
-     * @return the attributes specifying this configuration's characteristics 
-     * <i>NOTE: this is a byte bitmap</i>
+	 * Get the configuration attributes bitmap.
+     * @return The configuration attributes bitmap.
      */
     public byte getAttributes();
 
-    /** @return the maximum power for this configuration.  Specified in multiple of 2mA */
+    /**
+	 * Get the maximum power this configuration requires.
+	 * <p>
+	 * This is specified in units of 2mA.  For example,
+	 * a value of 50 indicates 100mA.
+	 * @return The maximum power for this configuration.
+	 */
     public byte getMaxPower();
 }

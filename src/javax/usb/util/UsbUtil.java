@@ -16,6 +16,24 @@ package javax.usb.util;
 public class UsbUtil
 {
 	/**
+	 * Get the specified byte's value as an unsigned short.
+	 * <p>
+	 * This converts the specified byte into a short.
+	 * The least significant byte (8 bits) of the short
+	 * will be identical to the byte (8 bits) provided,
+	 * and the most significant byte (8 bits) of the
+	 * short will be zero.
+	 * <p>
+	 * For many of the values in this USB API, unsigned bytes are used.
+	 * However, since Java does not include unsigned bytes in the language,
+	 * those unsigned bytes must be converted to a larger storage type
+	 * before being used in unsigned calculations.
+	 * @param b the byte to convert.
+	 * @return An unsigned short representing the specified byte.
+	 */
+	public static short unsignedShort( byte b ) { return 0x00ff & ((short)b); }
+
+	/**
 	 * Get the specified byte's value as an unsigned integer.
 	 * <p>
 	 * This converts the specified byte into an integer.
@@ -23,6 +41,11 @@ public class UsbUtil
 	 * will be identical to the byte (8 bits) provided,
 	 * and the most significant 3 bytes (24 bits) of the
 	 * integer will be zero.
+	 * <p>
+	 * For many of the values in this USB API, unsigned bytes are used.
+	 * However, since Java does not include unsigned bytes in the language,
+	 * those unsigned bytes must be converted to a larger storage type
+	 * before being used in unsigned calculations.
 	 * @param b the byte to convert.
 	 * @return An unsigned int representing the specified byte.
 	 */
@@ -36,6 +59,11 @@ public class UsbUtil
 	 * will be identical to the short (16 bits) provided,
 	 * and the most significant 2 bytes (16 bits) of the
 	 * integer will be zero.
+	 * <p>
+	 * For many of the values in this USB API, unsigned shorts are used.
+	 * However, since Java does not include unsigned short in the language,
+	 * those unsigned shorts must be converted to a larger storage type
+	 * before being used in unsigned calculations.
 	 * @param s the short to convert.
 	 * @return An unsigned int representing the specified short.
 	 */
@@ -49,6 +77,11 @@ public class UsbUtil
 	 * will be identical to the byte (8 bits) provided,
 	 * and the most significant 7 bytes (56 bits) of the
 	 * long will be zero.
+	 * <p>
+	 * For many of the values in this USB API, unsigned bytes are used.
+	 * However, since Java does not include unsigned bytes in the language,
+	 * those unsigned bytes must be converted to a larger storage type
+	 * before being used in unsigned calculations.
 	 * @param b the byte to convert.
 	 * @return An unsigned long representing the specified byte.
 	 */
@@ -62,6 +95,11 @@ public class UsbUtil
 	 * will be identical to the short (16 bits) provided,
 	 * and the most significant 6 bytes (48 bits) of the
 	 * long will be zero.
+	 * <p>
+	 * For many of the values in this USB API, unsigned shorts are used.
+	 * However, since Java does not include unsigned short in the language,
+	 * those unsigned shorts must be converted to a larger storage type
+	 * before being used in unsigned calculations.
 	 * @param s the short to convert.
 	 * @return An unsigned long representing the specified short.
 	 */

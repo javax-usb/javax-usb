@@ -9,32 +9,26 @@ package javax.usb.event;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import java.util.EventObject;
+import java.util.*;
 
-import javax.usb.UsbDevice;
+import javax.usb.*;
 
 /**
- * Super class for all USB device event
+ * Class for USB device events.
  * @author E. Michael Maximilien
- * @since 0.8.0
  */
-public class UsbDeviceEvent extends UsbEvent
+public class UsbDeviceEvent extends EventObject
 {
-    //-------------------------------------------------------------------------
-    // Public ctor(s)
-    //
+	/**
+	 * Constructor.
+	 * @param source The source UsbDevice.
+	 */
+	public UsbDeviceEvent( UsbDevice source ) { super(source); }
 
-    /**
-     * Creates a UsbDeviceEvent with source
-     * @param source the event's source
-     */
-    public UsbDeviceEvent( UsbDevice source ) { super( source ); }
-
-    //-------------------------------------------------------------------------
-    // Public methods
-    //
-
-    /** @return the UsbDevice that caused this event */
-    public UsbDevice getUsbDevice() { return (UsbDevice)getSource(); }
+	/**
+	 * Get the UsbDevice.
+	 * @return The associated UsbDevice.
+	 */
+	public UsbDevice getUsbDevice() { return (UsbDevice)getSource(); }
 
 }

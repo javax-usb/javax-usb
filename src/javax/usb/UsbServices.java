@@ -1,4 +1,4 @@
-package javax.usb.os;
+package javax.usb;
 
 /**
  * Copyright (c) 1999 - 2001, International Business Machines Corporation.
@@ -9,19 +9,15 @@ package javax.usb.os;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import javax.usb.*;
-
 import javax.usb.event.*;
 
 /**
- * Defines an interface for all necessary USB OS services.
+ * Entry point for the JSR80 Implementation.
  * <p>
- * Each platform needs to provide a class implementing this interface.	That class
- * <b>must</b> define a no-argument (default) constructor which will used via reflection
- * to bootstrap the javax.usb implementation for the particular platform in question.
- * </p>
- * @author E. Michael Maximilien
+ * This is instantiated by the UsbHostManager.
+ * The implementation must include a no-parameter constructor.
  * @author Dan Streetman
+ * @author E. Michael Maximilien
  */
 public interface UsbServices
 {
@@ -107,7 +103,7 @@ public interface UsbServices
 	 * @exception UsbException If there is an error accessing javax.usb.
 	 * @exception SecurityException If current client not configured to access javax.usb.
 	 */
-	public UsbHub getUsbHub() throws UsbException,SecurityException;
+	public UsbHub getRootUsbHub() throws UsbException,SecurityException;
 
 	/**
 	 * Add UsbServicesListener.
