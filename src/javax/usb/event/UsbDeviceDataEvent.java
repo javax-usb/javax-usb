@@ -29,17 +29,22 @@ public class UsbDeviceDataEvent extends UsbDeviceEvent
 	 * @param source The UsbDevice.
 	 * @param irp The ControlUsbIrp.
 	 * @param data The data.
+	 * @param offset The offset.
 	 * @param length The amount of data transferred.
-	 * @exception IllegalArgumentException If the length is less than 0 or greater than data.length.
+	 * @exception IllegalArgumentException If the offset, length or data is invalid.
 	 */
-	public UsbDeviceDataEvent( UsbDevice source, ControlUsbIrp irp, byte[] data, int length ) throws IllegalArgumentException
+	public UsbDeviceDataEvent( UsbDevice source, ControlUsbIrp irp, byte[] data, int offset, int length ) throws IllegalArgumentException
 	{
 		super(source);
 		controlUsbIrp = irp;
-		if (0 > length || length > data.length)
-			throw new IllegalArgumentException("Illegal data length " + length + "; length must be between 0 and data.length");
+		if (0 > offset)
+			throw new IllegalArgumentException("Offset cannot be negative");
+		if (0 > length)
+			throw new IllegalArgumentException("Length cannot be negative");
+		if ((offset+length) > data.length)
+			throw new IllegalArgumentException("Offset + length cannot be larger than data.length");
 		this.data = new byte[length];
-		System.arraycopy(data, 0, this.data, 0, length);
+		System.arraycopy(data, offset, this.data, 0, length);
 	}
 
 	/**
