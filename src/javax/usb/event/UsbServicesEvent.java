@@ -23,7 +23,7 @@ public class UsbServicesEvent extends EventObject
 	/**
      * Constructor.
 	 * @param source The source UsbServices.
-	 * @param usbDevice The UsbDevice involved in the event.
+	 * @param device The UsbDevice involved in the event.
 	 */
 	public UsbServicesEvent( UsbServices source, UsbDevice device )
 	{

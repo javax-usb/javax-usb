@@ -247,7 +247,7 @@ public interface UsbPipe
 	public void asyncSubmit( List list ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
 
 	/**
-	 * Stop all submissions in progress
+	 * Stop all submissions in progress.
 	 * <p>
 	 * This will abort all submission in progress on the pipe,
 	 * and block until all submissions are complete.

@@ -178,7 +178,7 @@ public class DefaultUsbIrp implements UsbIrp
 
 	/**
 	 * Set this as complete (or not).
-	 * @param c If this is complete (or not).
+	 * @param b If this is complete (or not).
 	 */
 	public void setComplete( boolean b ) { complete = b; }
 

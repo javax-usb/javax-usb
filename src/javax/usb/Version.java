@@ -20,10 +20,13 @@ package javax.usb;
 public class Version
 {
 	/**
-	 * Prints out this text to stdout (with appropriate version numbers):
+	 * Prints out text to stdout (with appropriate version numbers).
 	 * <p>
-	 * javax.usb API version &lt;getApiVersion()><br>
-	 * USB specification version &lt;getUsbVersion()><br>
+	 * The specific text printed is:
+	 * <pre>
+	 * javax.usb API version &lt;getApiVersion()>
+	 * USB specification version &lt;getUsbVersion()>
+	 * </pre>
 	 * @param args a String[] of arguments.
 	 */
 	public static void main( String[] args )
