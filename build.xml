@@ -1,40 +1,24 @@
 <?xml version="1.0"?>
 
-<!-- 
-	XML Ant (http://www.apache.org/ant) build file for JSR80 (javax.usb)
-	@author E. Michael Maximilien                                          
-	@author Dan Streetman                                                  
-	@version 1.0.0                                                         
-
-	All properties are changable via the '.ant-global.properties' file     
-	which should (optionally) be located in the user's home directory.     
-	The properties and their defaults are shown below.  Note that the      
-	default 'root of everything' directory (jsr80.home) defaults to the    
-	current directory.                                                     
--->
+<!--
+  ** Buildfile for javax.usb
+  **
+  ** Properties are changable by setting the corresponding environment variable
+  ** as listed in the "User overrides from environment" section.
+  **
+  -->
 
 <project name="JSR80" default="help">
 	
-	<!-- User overrides from file -->
-	<property name="ant.prop.file.name" value=".ant-global.properties"/>
-	<property file="${user.home}/${ant.prop.file.name}"/>
-
 	<!-- User overrides from environment -->
 	<property environment="Jsr80Env"/>
 
-	<property name="Jsr80Env.JSR80_API_VERSION" value="1.0.0-beta2"/>
-	<property name="Jsr80Env.JSR80_DIST_NAME" value="jsr80-${Jsr80Env.JSR80_API_VERSION}"/>
-	<property name="Jsr80Env.JSR80_DIST_ZIP_FILE" value="${Jsr80Env.JSR80_DIST_NAME}.zip"/>
-	<property name="Jsr80Env.JSR80_DIST_TAR_FILE" value="${Jsr80Env.JSR80_DIST_NAME}.tar"/>
-
-	<property name="Jsr80Env.JSR80_JAVA_POLICY_FILE_NAME" value=".java.policy"/>
-
-	<property name="Jsr80Env.JSR80_BUILDFILE" value="build.xml"/>
-
-	<property name="Jsr80Env.JSR80_SRC_JARFILE_DIR" value="src"/>
-	<property name="Jsr80Env.JSR80_SRC_JARFILE" value="jsr80_src.jar"/>
-	<property name="Jsr80Env.JSR80_CLASS_JARFILE_DIR" value="lib"/>
-	<property name="Jsr80Env.JSR80_CLASS_JARFILE" value="jsr80.jar"/>
+	<property name="Jsr80Env.JSR80_SRC_DIR" value="src"/>
+	<property name="Jsr80Env.JSR80_DEST_DIR" value="src"/>
+	<property name="Jsr80Env.JSR80_JDOC_DIR" value="docs/jdoc"/>
+	
+	<property name="Jsr80Env.JSR80_JARFILE_DIR" value="lib"/>
+	<property name="Jsr80Env.JSR80_JARFILE" value="jsr80.jar"/>
 
 	<property name="Jsr80Env.JSR80_DEPRECATION" value="on"/>
 	<property name="Jsr80Env.JSR80_DEBUG" value="off"/>
@@ -43,42 +27,31 @@
 	<property name="Jsr80Env.JSR80_QUIET" value="off"/>
 	<property name="Jsr80Env.JSR80_COMPRESS" value="on"/>
 	
-	<property name="Jsr80Env.JSR80_DIST_DIR" value="dist"/>
-	<property name="Jsr80Env.JSR80_SRC_DIR" value="src"/>
-	<property name="Jsr80Env.JSR80_DEST_DIR" value="src"/>
-	<property name="Jsr80Env.JSR80_DOCS_DIR" value="docs"/>
-	<property name="Jsr80Env.JSR80_JDOC_DIR" value="${Jsr80Env.JSR80_DOCS_DIR}/jdoc"/>
-	
-	<property name="Jsr80Env.JSR80_JDOC_WINDOWTITLE" value="JavaDOC for JSR80 (javax.usb) API"/>
-	<property name="Jsr80Env.JSR80_JDOC_DOCTITLE" value="JSR80 (javax.usb) API"/>
-	<property name="Jsr80Env.JSR80_JDOC_BOTTOM" value="Copyright &#169; 2000-2001 JCP (Java Community Process) All Rights Reserved."/>
-	<property name="Jsr80Env.JSR80_JDOC_HEADER" value="javax.usb API v${Jsr80Env.JSR80_API_VERSION}"/>
-	<property name="Jsr80Env.JSR80_JDOC_FOOTER" value="javax.usb API v${Jsr80Env.JSR80_API_VERSION}"/>
+	<property name="Jsr80Env.JSR80_JDOC_WINDOWTITLE" value="JavaDOC for javax.usb API"/>
+	<property name="Jsr80Env.JSR80_JDOC_DOCTITLE" value="javax.usb API"/>
+	<property name="Jsr80Env.JSR80_JDOC_BOTTOM" value=""/>
+	<property name="Jsr80Env.JSR80_JDOC_HEADER" value=""/>
+	<property name="Jsr80Env.JSR80_JDOC_FOOTER" value=""/>
+	<property name="Jsr80Env.JSR80_JDOC_VERBOSE" value="no"/>
+	<property name="Jsr80Env.JSR80_JDOC_VERSION" value="yes"/>
+	<property name="Jsr80Env.JSR80_JDOC_AUTHOR" value="yes"/>
+	<property name="Jsr80Env.JSR80_JDOC_NODEPRECATED" value="no"/>
+	<property name="Jsr80Env.JSR80_JDOC_NODEPRECATEDLIST" value="no"/>
+	<property name="Jsr80Env.JSR80_JDOC_FAILONERROR" value="yes"/>
+	<property name="Jsr80Env.JSR80_JDOC_PUBLIC" value="no"/>
+	<property name="Jsr80Env.JSR80_JDOC_PROTECTED" value="no"/>
+	<property name="Jsr80Env.JSR80_JDOC_PACKAGE" value="yes"/>
+	<property name="Jsr80Env.JSR80_JDOC_PRIVATE" value="no"/>
+
+	<property name="Jsr80Env.JSR80_VERSION_CLASS" value="javax.usb.Version"/>
 
 	<!-- Variable defaults -->
-	<property name="jsr80.tmp.dir" value="TMP-DIR"/>
-	<property name="jsr80.dist.name.dir" value="${Jsr80Env.JSR80_DIST_NAME}"/>
-	<property name="jsr80.dist.zip.file" value="${Jsr80Env.JSR80_DIST_ZIP_FILE}"/>
-	<property name="jsr80.dist.tar.file" value="${Jsr80Env.JSR80_DIST_TAR_FILE}"/>
-	<property name="jsr80.manifest.file" value="jsr80.mf"/>
-
-	<property name="jsr80.java.policy.file" value="${Jsr80Env.JSR80_JAVA_POLICY_FILE_NAME}"/>
-
-	<property name="jsr80.buildfile" value="${Jsr80Env.JSR80_BUILDFILE}"/>
-	<property name="jsr80.readme.file" value="README"/>
-	<property name="jsr80.license.file" value="LICENSE"/>
-	<property name="jsr80.whatsnew.file" value="WHATSNEW"/>
-
-	<property name="jsr80.dist.dir" value="${Jsr80Env.JSR80_DIST_DIR}"/>
 	<property name="jsr80.src.dir" value="${Jsr80Env.JSR80_SRC_DIR}"/>
 	<property name="jsr80.dest.dir" value="${Jsr80Env.JSR80_DEST_DIR}"/>
-	<property name="jsr80.docs.dir" value="${Jsr80Env.JSR80_DOCS_DIR}"/>
 	<property name="jsr80.jdoc.dir" value="${Jsr80Env.JSR80_JDOC_DIR}"/>
-	
-	<property name="jsr80.src.jarfile.dir" value="${Jsr80Env.JSR80_SRC_JARFILE_DIR}"/>
-	<property name="jsr80.src.jarfile" value="${Jsr80Env.JSR80_SRC_JARFILE}"/>
-	<property name="jsr80.class.jarfile.dir" value="${Jsr80Env.JSR80_CLASS_JARFILE_DIR}"/>
-	<property name="jsr80.class.jarfile" value="${Jsr80Env.JSR80_CLASS_JARFILE}"/>
+
+	<property name="jsr80.jarfile.dir" value="${Jsr80Env.JSR80_JARFILE_DIR}"/>
+	<property name="jsr80.jarfile" value="${Jsr80Env.JSR80_JARFILE}"/>
 
 	<property name="jsr80.deprecation" value="${Jsr80Env.JSR80_DEPRECATION}"/>
 	<property name="jsr80.debug" value="${Jsr80Env.JSR80_DEBUG}"/>
@@ -92,33 +65,31 @@
 	<property name="jsr80.jdoc.bottom" value="${Jsr80Env.JSR80_JDOC_BOTTOM}"/>
 	<property name="jsr80.jdoc.header" value="${Jsr80Env.JSR80_JDOC_HEADER}"/>
 	<property name="jsr80.jdoc.footer" value="${Jsr80Env.JSR80_JDOC_FOOTER}"/>
-	<property name="jsr80.jdoc.verbose" value="no"/>
-	<property name="jsr80.jdoc.version" value="yes"/>
-	<property name="jsr80.jdoc.author" value="yes"/>
-	<property name="jsr80.jdoc.nodeprecated" value="no"/>
-	<property name="jsr80.jdoc.nodeprecatedlist" value="no"/>
-	<property name="jsr80.jdoc.failonerror" value="yes"/>
-	<property name="jsr80.jdoc.public" value="no"/>
-	<property name="jsr80.jdoc.protected" value="no"/>
-	<property name="jsr80.jdoc.package" value="yes"/>
-	<property name="jsr80.jdoc.private" value="no"/>
+	<property name="jsr80.jdoc.verbose" value="${Jsr80Env.JSR80_JDOC_VERBOSE}"/>
+	<property name="jsr80.jdoc.version" value="${Jsr80Env.JSR80_JDOC_VERSION}"/>
+	<property name="jsr80.jdoc.author" value="${Jsr80Env.JSR80_JDOC_AUTHOR}"/>
+	<property name="jsr80.jdoc.nodeprecated" value="${Jsr80Env.JSR80_JDOC_NODEPRECATED}"/>
+	<property name="jsr80.jdoc.nodeprecatedlist" value="${Jsr80Env.JSR80_JDOC_NODEPRECATEDLIST}"/>
+	<property name="jsr80.jdoc.failonerror" value="${Jsr80Env.JSR80_JDOC_FAILONERROR}"/>
+	<property name="jsr80.jdoc.public" value="${Jsr80Env.JSR80_JDOC_PUBLIC}"/>
+	<property name="jsr80.jdoc.protected" value="${Jsr80Env.JSR80_JDOC_PROTECTED}"/>
+	<property name="jsr80.jdoc.package" value="${Jsr80Env.JSR80_JDOC_PACKAGE}"/>
+	<property name="jsr80.jdoc.private" value="${Jsr80Env.JSR80_JDOC_PRIVATE}"/>
 	
-	<property name="jsr80.version.class" value="javax.usb.Version"/>
+	<property name="jsr80.version.class" value="${Jsr80Env.JSR80_VERSION_CLASS}"/>
 	
 	<!-- Show help (the different options for this build.xml) -->
 	<target name="help">
-		<echo message="Buildfile for JSR80 (javax.usb) API"/>
+		<echo message="Buildfile for javax.usb API"/>
 		<echo message=""/>
 		<echo message="Targets:"/>
 		<echo message=""/>
-		<echo message="  all              == compile jars jdoc"/>
-		<echo message="  clean            Clean all classes"/>
+		<echo message="  all              == clean compile jars jdoc"/>
+		<echo message="  clean            Clean everything"/>
 		<echo message="  compile          Compile all classes"/>
-		<echo message="  dist             Create ZIP and TAR distribution files of API"/>
 		<echo message="  help             Show this help"/>
 		<echo message="  jars             Create JAR files"/>
 		<echo message="  jdoc             Create JavaDOC"/>
-		<echo message="  mrproper         Clean everything"/>
 		<echo message="  version          Show API version"/>
 		<echo message=""/>
 	</target>
@@ -129,7 +100,7 @@
 			<classpath>
 				<pathelement path="${java.class.path}"/>
 				<pathelement path="${jsr80.dest.dir}"/>
-				<pathelement location="${jsr80.class.jarfile.dir}/${jsr80.class.jarfile}"/>
+				<pathelement location="${jsr80.jarfile.dir}/${jsr80.jarfile}"/>
 			</classpath>
 		</java>
 	</target>
@@ -140,7 +111,7 @@
 
 	<!-- Compile source files -->
 	<target name="compile" depends="init">
-		<echo message="Compiling JSR80 (javax.usb) API classes"/>
+		<echo message="Compiling javax.usb API classes"/>
 		<mkdir dir="${jsr80.dest.dir}"/>
 		<javac srcdir="${jsr80.src.dir}"
 			destdir="${jsr80.dest.dir}"
@@ -151,28 +122,18 @@
 			includes="javax/usb/**"/>
 	</target>
 
-	<!-- Create JAR files -->
+	<!-- Create JAR file -->
 	<target name="jars" depends="init,compile">
-		<mkdir dir="${jsr80.src.jarfile.dir}"/>
-		<mkdir dir="${jsr80.class.jarfile.dir}"/>
-		<jar jarfile="${jsr80.src.jarfile.dir}/${jsr80.src.jarfile}"
-			basedir="${jsr80.src.dir}"
-			includes="javax/usb/**/*.java,javax/usb/res/jusb.properties"/>
+		<mkdir dir="${jsr80.jarfile.dir}"/>
 		
-		<echo message="Creating temp ${jsr80.class.jarfile.dir}/${jsr80.manifest.file} MANIFEST file" />
-		<echo message="Main-Class: ${jsr80.version.class}" file="${jsr80.class.jarfile.dir}/${jsr80.manifest.file}"/>
-		
-		<jar jarfile="${jsr80.class.jarfile.dir}/${jsr80.class.jarfile}"
+		<jar jarfile="${jsr80.jarfile.dir}/${jsr80.jarfile}"
 			basedir="${jsr80.dest.dir}"
-			manifest="${jsr80.class.jarfile.dir}/${jsr80.manifest.file}"
 			includes="javax/usb/**/*.class"/>
-
-		<delete quiet="true" file="${jsr80.class.jarfile.dir}/${jsr80.manifest.file}"/>
 	</target>
 
 	<!-- Create JavaDOC -->
 	<target name="jdoc" depends="init">
-		<echo message="Creating JSR80 (javax.usb) API JavaDoc"/>
+		<echo message="Creating javax.usb API JavaDoc"/>
 		<mkdir dir="${jsr80.jdoc.dir}"/>
 		<javadoc
 			packagenames="javax.usb.*"
@@ -194,81 +155,17 @@
 		<echo message="Java Documentation placed in ${jsr80.jdoc.dir}"/>
 	</target>
 
-	<!-- 
-		Builds a release distribution and Zip for this API version 
-	-->
-	<target name="dist" depends="init,all">
-		<!-- Creating distribution directories -->
-		<mkdir dir="${jsr80.dist.dir}"/>
-		<mkdir dir="${jsr80.dist.dir}/src"/>
-		<mkdir dir="${jsr80.dist.dir}/lib"/>
-		<mkdir dir="${jsr80.dist.dir}/docs"/>
-
-		<!-- Copying main project files -->
-		<copy file="${jsr80.buildfile}" todir="${jsr80.dist.dir}"/>
-		<copy file="${jsr80.readme.file}" todir="${jsr80.dist.dir}"/>
-		<copy file="${jsr80.license.file}" todir="${jsr80.dist.dir}"/>
-		<copy file="${jsr80.whatsnew.file}" todir="${jsr80.dist.dir}"/>
-
-		<!-- Default policy? -->
-		<!-- <copy file="${jsr80.java.policy.file}" todir="${jsr80.dist.dir}"/> -->
-
-		<!-- Copying docs files (directories) -->
-		<copy todir="${jsr80.dist.dir}/docs">
-			<fileset dir="${jsr80.docs.dir}"/>
-		</copy>
-
-		<!-- Copying src files -->
-		<copy todir="${jsr80.dist.dir}/src">
-			<fileset dir="${jsr80.src.dir}" includes="javax/usb/**" excludes="**/*.class"/>
-		</copy>
-
-		<!-- Creating Zip distribution file -->
-		<echo message="Creating temp directory ${jsr80.tmp.dir}/${jsr80.dist.name.dir}"/>
-		<mkdir dir="${jsr80.tmp.dir}/${jsr80.dist.name.dir}"/>
-		<copy todir="${jsr80.tmp.dir}/${jsr80.dist.name.dir}">
-			<fileset dir="${jsr80.dist.dir}"/>
-		</copy>
-
-		<zip zipfile="${jsr80.dist.zip.file}" basedir="${jsr80.tmp.dir}"/>
-		<echo message="Zip distribution file ${jsr80.dist.zip.file} created sucessfully"/>
-
-		<tar tarfile="${jsr80.dist.tar.file}" basedir="${jsr80.tmp.dir}"/>
-		<gzip zipfile="${jsr80.dist.tar.file}.gz" src="${jsr80.dist.tar.file}"/>
-		<delete file="${jsr80.dist.tar.file}"/>
-		<echo message="Tar distribution file ${jsr80.dist.tar.file}.gz created sucessfully"/>
-
-		<echo message="Cleaning temp directory ${jsr80.tmp.dir}"/>
-		<delete dir="${jsr80.tmp.dir}"/>
-		<echo message="Cleaning distribution directory ${jsr80.dist.dir}"/>
-		<delete dir="${jsr80.dist.dir}"/>
-	</target>
-
-	<!-- Creates a full blown distribution -->
+	<!-- Do everything -->
 	<target name="all" depends="clean,compile,jars,jdoc"/>
 
 	<!-- Clean all classfiles -->
 	<target name="clean" depends="init">
-		<echo message="Removing all JSR80 (javax.usb) API class files"/>
+		<echo message="Cleaning everything in javax.usb API."/>
 		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false">
 			<fileset dir="${jsr80.dest.dir}" includes="javax/usb/**/*.class"/>
+			<fileset dir="${jsr80.jarfile.dir}" includes="${jsr80.jarfile}"/>
+			<fileset dir="${jsr80.jdoc.dir}"/>
 		</delete>
-	</target>
-
-	<!-- Clean everything (Mr. Proper) -->
-	<target name="mrproper" depends="init,clean">
-		<echo message="Cleaning everything in JSR80 API!"/>
-		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false">
-			<fileset dir="${jsr80.src.jarfile.dir}" includes="${jsr80.src.jarfile}"/>
-			<fileset dir="${jsr80.class.jarfile.dir}" includes="${jsr80.class.jarfile}"/>
-		</delete>
-
-		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false"
-			dir="${jsr80.jdoc.dir}"/>
-		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false"
-			file="${jsr80.dist.zip.file}"/>
-		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false"
-			file="${jsr80.dist.tar.file}.gz"/>
 	</target>
 
 </project>
