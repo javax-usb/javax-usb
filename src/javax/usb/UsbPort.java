@@ -9,6 +9,8 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
+import java.util.*;
+
 /**
  * Interface for a USB port.
  * <p>

@@ -9,7 +9,7 @@ package javax.usb.event;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import javax.usb.UsbPipe;
+import javax.usb.*;
 
 /**
  * Indicates data was successfully transferred over the UsbPipe.

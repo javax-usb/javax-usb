@@ -12,7 +12,6 @@ package javax.usb.event;
 import java.util.*;
 
 import javax.usb.*;
-import javax.usb.os.*;
 
 /**
  * Class for a USB services event.

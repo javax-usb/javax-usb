@@ -31,7 +31,7 @@ public class UsbUtil
 	 * @param b the byte to convert.
 	 * @return An unsigned short representing the specified byte.
 	 */
-	public static short unsignedShort( byte b ) { return 0x00ff & ((short)b); }
+	public static short unsignedShort( byte b ) { return (short)(0x00ff & b); }
 
 	/**
 	 * Get the specified byte's value as an unsigned integer.
@@ -49,7 +49,7 @@ public class UsbUtil
 	 * @param b the byte to convert.
 	 * @return An unsigned int representing the specified byte.
 	 */
-	public static int unsignedInt( byte b ) { return 0x000000ff & ((int)b); }
+	public static int unsignedInt( byte b ) { return 0x000000ff & b; }
 
 	/**
 	 * Get the specified short's value as an unsigned integer.
@@ -67,7 +67,7 @@ public class UsbUtil
 	 * @param s the short to convert.
 	 * @return An unsigned int representing the specified short.
 	 */
-	public static int unsignedInt( short s ) { return 0x0000ffff & ((int)s); }
+	public static int unsignedInt( short s ) { return 0x0000ffff & s; }
 
 	/**
 	 * Get the specified byte's value as an unsigned long.
@@ -85,7 +85,7 @@ public class UsbUtil
 	 * @param b the byte to convert.
 	 * @return An unsigned long representing the specified byte.
 	 */
-	public static long unsignedLong( byte b ) { return 0x00000000000000ff & ((long)b); }
+	public static long unsignedLong( byte b ) { return 0x00000000000000ff & b; }
 
 	/**
 	 * Get the specified short's value as an unsigned long.
@@ -103,7 +103,7 @@ public class UsbUtil
 	 * @param s the short to convert.
 	 * @return An unsigned long representing the specified short.
 	 */
-	public static long unsignedLong( short s ) { return 0x000000000000ffff & ((long)s); }
+	public static long unsignedLong( short s ) { return 0x000000000000ffff & s; }
 
 	/**
 	 * Get the specified int's value as an unsigned long.
@@ -116,7 +116,7 @@ public class UsbUtil
 	 * @param i the int to convert.
 	 * @return An unsigned long representing the specified int.
 	 */
-	public static long unsignedLong( int i ) { return 0x00000000ffffffff & ((long)i); }
+	public static long unsignedLong( int i ) { return 0x00000000ffffffff & i; }
 
 	/**
 	 * Format a byte into a proper length hex String.

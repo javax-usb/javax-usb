@@ -9,6 +9,8 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
+import java.io.*;
+import java.util.*;
 import java.security.*;
 
 /**
@@ -47,8 +49,8 @@ public class UsbHostManager
 			return (UsbServices)Class.forName(className).newInstance();
 		} catch ( ClassNotFoundException cnfE ) {
 			throw new UsbException(USBSERVICES_CLASSNOTFOUNDEXCEPTION(className)+" : "+cnfE.getMessage());
-		} catch ( ExceptionInInitializerException eiiE ) {
-			throw new UsbException(USBSERVICES_EXCEPTIONININITIALIZEREXCEPTION(className)+" : "+eiiE.getMessage());
+		} catch ( ExceptionInInitializerError eiiE ) {
+			throw new UsbException(USBSERVICES_EXCEPTIONININITIALIZERERROR(className)+" : "+eiiE.getMessage());
 		} catch ( InstantiationException iE ) {
 			throw new UsbException(USBSERVICES_INSTANTIATIONEXCEPTION(className)+" : "+iE.getMessage());
 		} catch ( IllegalAccessException iaE ) {
@@ -70,11 +72,12 @@ public class UsbHostManager
 		} catch ( IOException ioE ) {
 			throw new UsbException("IOException while reading properties file " + JAVAX_USB_PROPERTIES_FILE + " : " + ioE.getMessage());
 		}
-		i.close();
+		try { i.close(); }
+		catch ( IOException ioE ) { /* FIXME - log inability to close */ }
 
 		Enumeration e = p.propertyNames();
-		while (e.hasNext()) {
-			String key = (String)e.next();
+		while (e.hasMoreElements()) {
+			String key = (String)e.nextElement();
 			if (!sysP.containsKey(key))
 				sysP.setProperty(key, p.getProperty(key));
 		}
@@ -93,7 +96,7 @@ public class UsbHostManager
 	{ return "The property " + JAVAX_USB_USBSERVICES_PROPERTY + " is not defined as the implementation class of UsbServices"; }
 	private static final String USBSERVICES_CLASSNOTFOUNDEXCEPTION(String c)
 	{ return "The UsbServices implementation class "+c+" was found found"; }
-	private static final String USBSERVICES_EXCEPTIONININITIALIZEREXCEPTION(String c)
+	private static final String USBSERVICES_EXCEPTIONININITIALIZERERROR(String c)
 	{ return "an Exception occurred during initialization of the UsbServices Class "+c; }
 	private static final String USBSERVICES_INSTANTIATIONEXCEPTION(String c)
 	{ return "An Exception occurred during instantiation of the UsbServices implementation "+c; }
