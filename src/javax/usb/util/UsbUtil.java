@@ -197,6 +197,41 @@ public class UsbUtil
 	}
 
 	/**
+	 * Get a String description of the specified device-speed Object.
+	 * <p>
+	 * The String will be one of:
+	 * <ul>
+	 * <li>Low</li>
+	 * <li>Full</li>
+	 * <li>Unknown</li>
+	 * <li>null</li>
+	 * <li>Invalid</li>
+	 * </ul>
+	 * The string "null" is used for a null Object.
+	 * The string "Invalid" is used for an Object that
+	 * does not correspond to any of those defined in
+	 * {@link javax.usb.UsbConst UsbConst}.
+	 * @param object The device-speed Object.
+	 * @return A String representing the speed Object.
+	 * @see UsbConst#DEVICE_SPEED_LOW Low Speed.
+	 * @see UsbConst#DEVICE_SPEED_FULL Full Speed.
+	 * @see UsbConst#DEVICE_SPEED_UNKNOWN Unknown Speed.
+	 */
+	public static String getSpeedString(Object object)
+	{
+		if (UsbConst.DEVICE_SPEED_LOW == object)
+			return "Low";
+		if (UsbConst.DEVICE_SPEED_FULL == object)
+			return "Full";
+		if (UsbConst.DEVICE_SPEED_UNKNOWN == object)
+			return "Unknown";
+		if (null == object)
+			return "null";
+
+		return "Invalid";
+	}
+
+	/**
 	 * Create a synchronized UsbPipe.
 	 * @param usbPipe The unsynchronized UsbPipe.
 	 * @return A synchronized UsbPipe.
