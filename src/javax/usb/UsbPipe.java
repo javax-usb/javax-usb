@@ -158,6 +158,8 @@ public interface UsbPipe
 	 * This will block until either all data is transferred or an error occurrs.
 	 * Short packets indicate either the end of data or an error.
 	 * <p>
+	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
+	 * the UsbIrp must be a {@link javax.usb.UsbIrp.ControlUsbIrp ControlUsbIrp}.
 	 * @param irp A UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
 	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
@@ -179,6 +181,8 @@ public interface UsbPipe
 	 * minimal processing is required, and then return.  This method will not
 	 * block until the submission is complete.
 	 * <p>
+	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
+	 * the UsbIrp must be a {@link javax.usb.UsbIrp.ControlUsbIrp ControlUsbIrp}.
 	 * @param irp The UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
 	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
@@ -196,6 +200,9 @@ public interface UsbPipe
 	 * <li>The implementation may optimize the submissions, especially
 	 * in the case of Isochronous transfers.</li>
 	 * </ul>
+	 * <p>
+	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
+	 * the UsbIrps must be {@link javax.usb.UsbIrp.ControlUsbIrp ControlUsbIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
 	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
@@ -214,6 +221,9 @@ public interface UsbPipe
 	 * <li>The implementation may optimize the submissions, especially
 	 * in the case of Isochronous transfers.</li>
 	 * </ul>
+	 * <p>
+	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
+	 * the UsbIrps must be {@link javax.usb.UsbIrp.ControlUsbIrp ControlUsbIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
 	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
