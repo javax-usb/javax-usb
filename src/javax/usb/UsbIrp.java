@@ -76,7 +76,7 @@ public interface UsbIrp
 	 * The amount of data that was transferred.
 	 * <p>
 	 * This defaults to 0, and is set by the implementation during/after submission (if successful).
-	 * This will never be negative.  If {@link isUsbException() isUsbException} is true,
+	 * This will never be negative.  If {@link #isUsbException() isUsbException} is true,
 	 * this value is undefined.
 	 * @return The amount of data that was transferred.
 	 */
@@ -134,7 +134,7 @@ public interface UsbIrp
 	/**
 	 * If a UsbException occured.
 	 * <p>
-	 * If this is true, the {@link getActualLength() actual length} is undefined.
+	 * If this is true, the {@link #getActualLength() actual length} is undefined.
 	 * @return If a UsbException occurred.
 	 */
 	public boolean isUsbException();
