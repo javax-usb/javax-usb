@@ -44,6 +44,12 @@ public interface UsbIrp
 	public long getNumber();
 
 	/**
+	 * Set Number.
+	 * @param number The number.
+	 */
+	public void setNumber(long number);
+
+	/**
 	 * Get the sequence number assigned to the associated submission.
 	 * <p>
 	 * This is assigned by the UsbPipe every time this UsbIrp is
@@ -55,6 +61,12 @@ public interface UsbIrp
 	public long getSequenceNumber();
 
 	/**
+	 * Set the sequence number.
+	 * @param sn The sequence number.
+	 */
+	public void setSequenceNumber(long sn);
+
+	/**
 	 * Get the UsbPipe this has been submitted on.
 	 * <p>
 	 * This is only valid after the irp has been submitted,
@@ -63,6 +75,12 @@ public interface UsbIrp
 	 * @return the UsbPipe associated with the submission
 	 */
 	public UsbPipe getUsbPipe();
+
+	/**
+	 * Set the UsbPipe.
+	 * @param pipe The UsbPipe.
+	 */
+	public void setUsbPipe(UsbPipe pipe);
 
 	/**
 	 * Get this irp's data.
@@ -94,6 +112,12 @@ public interface UsbIrp
 	public int getDataLength();
 
 	/**
+	 * Set the data length.
+	 * @param length The data length.
+	 */
+	public void setDataLength(int length);
+
+	/**
 	 * If this UsbIrp is active (in progress).
 	 * <p>
 	 * This indicates if this UsbIrp is currently being processed and
@@ -111,6 +135,12 @@ public interface UsbIrp
 	 * @return if this submit is done.
 	 */
 	public boolean isCompleted();
+
+	/**
+	 * Set this as completed.
+	 * @param completed If this is completed.
+	 */
+	public void setCompleted(boolean completed);
 
 	/**
 	 * If a UsbException occured.
