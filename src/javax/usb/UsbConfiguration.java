@@ -18,7 +18,7 @@ import java.util.*;
  * This represents a configuration of a USB device.  The device may have multiple
  * configurations, and must have at least one configuration; only one configuration
  * (if any) can be currently active.  If the device is in an unconfigured state
- * none of its configurations will be active.  If this configuration is not
+ * none of its configurations are active.  If this configuration is not
  * active, its device model (UsbInterfaces, UsbEndpoints, and UsbPipes) may be browsed,
  * but no action can be taken.
  * <p>
