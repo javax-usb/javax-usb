@@ -105,7 +105,7 @@ public class UsbHostManager
 	private static final String USBSERVICES_CLASSCASTEXCEPTION(String c)
 	{ return "The class "+c+" does not implement UsbServices"; }
 
-	public static final String JAVAX_USB_PROPERTIES_FILE = "jsr80.properties";
+	public static final String JAVAX_USB_PROPERTIES_FILE = "javax.usb.properties";
 	public static final String JAVAX_USB_USBSERVICES_PROPERTY = "javax.usb.services";
 
 	private static UsbServices usbServices = null;
