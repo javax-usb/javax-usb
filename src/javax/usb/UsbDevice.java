@@ -1,12 +1,12 @@
 package javax.usb;
 
-/**
+/*
  * Copyright (c) 1999 - 2001, International Business Machines Corporation.
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
- *
+ * of the Common Public License:
+ * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
 import javax.usb.event.*;
@@ -24,7 +24,7 @@ import javax.usb.util.UsbInfoListIterator;
  * and {@link javax.usb.UsbEndpoint UsbEndpoint} objects.
  * @author E. Michael Maximilien
  * @author Dan Streetman
- * @since 0.8.0
+ * @since 1.0.0
  */
 public interface UsbDevice extends UsbInfo
 {
@@ -251,8 +251,9 @@ public interface UsbDevice extends UsbInfo
 	 * @return a StandardOperations object to use with this UsbDevice
 	 * @see javax.usb.Request
 	 * @see javax.usb.os.UsbServices#getRequestFactory
+	 * @throw javax.usb.UsbException if the StandardOperations could not be returned
 	 */
-	public StandardOperations getStandardOperations();
+	public StandardOperations getStandardOperations() throws UsbException;
 
 	/**
 	 * Returns a ClassOperations object that can be used to submit
@@ -260,8 +261,9 @@ public interface UsbDevice extends UsbInfo
 	 * @return a ClassOperations object to use with this UsbDevice
 	 * @see javax.usb.Request
 	 * @see javax.usb.os.UsbServices#getRequestFactory
+	 * @throw javax.usb.UsbException if the ClassOperations could not be returned
 	 */
-	public ClassOperations getClassOperations();
+	public ClassOperations getClassOperations() throws UsbException;
 
 	/**
 	 * Returns a VendorOperations object that can be used to submit
@@ -269,8 +271,9 @@ public interface UsbDevice extends UsbInfo
 	 * @return a VendorOperations object to use with this UsbDevice
 	 * @see javax.usb.Request
 	 * @see javax.usb.os.UsbServices#getRequestFactory
+	 * @throw javax.usb.UsbException if the VendorOperations could not be returned
 	 */
-	public VendorOperations getVendorOperations();
+	public VendorOperations getVendorOperations() throws UsbException;
 
 	/**
 	 * Add a UsbDeviceListener to this UsbDevice.

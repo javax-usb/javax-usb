@@ -5,7 +5,7 @@ package javax.usb;
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
+ * of the IBM Public License.
  *
  */
 
@@ -65,5 +65,5 @@ public final class Version extends Object
 	//
 
 	private static final String VERSION_USB_SPECIFICATION = "1.1";
-	private static final String VERSION_JAVAX_USB = "0.9.0";
+	private static final String VERSION_JAVAX_USB = "1.0.0-beta2";
 }

@@ -5,7 +5,7 @@ package javax.usb.util;
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
+ * of the IBM Public License.
  *
  */
 

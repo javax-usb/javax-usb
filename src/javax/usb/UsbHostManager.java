@@ -5,7 +5,7 @@ package javax.usb;
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
+ * of the IBM Public License.
  *
  */
 
@@ -13,6 +13,8 @@ import javax.usb.util.*;
 
 import javax.usb.os.*;
 import javax.usb.event.*;
+
+import java.security.AccessController;
 
 /**
  * Manager class that is the "Facade" to the javax.usb API.  This class is final as 
@@ -74,9 +76,17 @@ public final class UsbHostManager extends Object
      * @return the UsbServices for this USB host 
      * @exception javax.usb.UsbException if something goes wrong accessing or creating
      * the UsbServices object for this platform
+	 * @throws java.lang.SecurityException if the "getUsbServices" javax.usb security
+	 * permission is not granted to the calling code base
      */
     public UsbServices getUsbServices() throws UsbException
     {
+		initProperties();
+		
+		//<TEMP>
+		//checkPermission();
+		//</TEMP>
+
         return UsbServicesUtility.getUsbServices();
     }
 
@@ -96,6 +106,36 @@ public final class UsbHostManager extends Object
                 Tracer.getInstance().setOn( true );
         }
     }
+
+	/**
+	 * Checks to make sure that the javax.usb.home property if this property is not
+	 * set then set it to the current directory and print a message in the Tracer
+	 * @see javax.usb.util.UsbProperties#JUSB_HOME_PROP_NAME
+	 */
+	private void initProperties()
+	{
+		UsbProperties props = getUsbProperties();
+
+		if( !props.isPropertyDefined( UsbProperties.JUSB_HOME_PROP_NAME ) )
+		{
+			String currentDirString = System.getProperty( "user.dir" );
+
+			Tracer.getInstance().println( UsbProperties.JUSB_HOME_PROP_NAME + 
+										  " not defined thus defining to be current directory = " + currentDirString );
+
+			System.setProperty( UsbProperties.JUSB_HOME_PROP_NAME, currentDirString );
+		}
+	}
+
+	/**
+	 * 
+	 * @throws java.lang.SecurityException if the "getUsbServices" javax.usb security
+	 * permission is not granted to the calling code base
+	 */
+	private void checkPermission() throws SecurityException
+	{
+		AccessController.checkPermission( JavaxUsbPermission.GETUSBSERVICES_JAVAX_USB_PERMISSION );
+	}
 
     //-------------------------------------------------------------------------
     // Instance variables

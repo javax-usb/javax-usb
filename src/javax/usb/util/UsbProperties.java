@@ -5,7 +5,7 @@ package javax.usb.util;
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
+ * of the IBM Public License.
  *
  */
 
@@ -70,11 +70,12 @@ public interface UsbProperties
 
     public static final String JUSB_OS_SERVICES_PROP_NAME = "javax.usb.os.services";
 
+	public static final String JUSB_HOME_PROP_NAME = "javax.usb.home";
+
     //-------------------------------------------------------------------------
     // Public constants (properties value)
     //
 
     public static final String JUSB_TRACING_ON_PROP_VALUE = "ON";
     public static final String JUSB_TRACING_TRUE_PROP_VALUE = "TRUE";
-
 }

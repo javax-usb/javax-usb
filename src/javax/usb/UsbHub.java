@@ -1,12 +1,12 @@
 package javax.usb;
 
-/**
+/*
  * Copyright (c) 1999 - 2001, International Business Machines Corporation.
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
- *
+ * of the Common Public License:
+ * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
 import javax.usb.util.UsbInfoListIterator;
@@ -18,7 +18,7 @@ import javax.usb.util.UsbInfoListIterator;
  * See the USB 1.1 specification Chapter 11 for the USB hub specification.
  * @author E. Michael Maximilien
  * @author Dan Streetman
- * @since 0.8.0
+ * @since 1.0.0
  */
 public interface UsbHub extends UsbDevice
 {
@@ -89,6 +89,7 @@ public interface UsbHub extends UsbDevice
 	 * @return a HubClassOperations object to use with this UsbHub
 	 * @see javax.usb.Request
 	 * @see javax.usb.os.UsbServices#getRequestFactory
+	 * @throw javax.usb.UsbException if the HubClassOperations could not be returned
 	 */
-	public HubClassOperations getHubClassOperations();
+	public HubClassOperations getHubClassOperations() throws UsbException;
 }

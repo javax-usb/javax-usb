@@ -1,26 +1,30 @@
 package javax.usb;
 
-/**
+/*
  * Copyright (c) 1999 - 2001, International Business Machines Corporation.
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
- *
+ * of the Common Public License:
+ * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
+
+import javax.usb.util.Recyclable;
 
 /**
  * Defines the basic Request interface
  * Use the RequestFactory from the HostManager to create Request objects
  * <p>
  * <i>NOTE: all getter methods are derived from the USB 1.1 spec definition for the 
- * different standard requests.  See chapter 9.</i>
+ * different standard requests.  See chapter 9.
+ * </i>
  * @author E. Michael Maximilien
  * @since 0.8.0
+ * @version 1.0.0
  * @see javax.usb.UsbHostManager#getUsbServices
  * @see javax.usb.os.UsbServices#getRequestFactory
  */
-public interface Request
+public interface Request extends Recyclable
 {
     //-------------------------------------------------------------------------
     // Public property methods

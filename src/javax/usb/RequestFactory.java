@@ -5,7 +5,7 @@ package javax.usb;
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
+ * of the IBM Public License.
  *
  */
 
@@ -30,6 +30,13 @@ public interface RequestFactory
 	 * @param request the Request object to recycle
 	 */
 	public void recycle( Request request );
+
+	/**
+	 * Indicates to the RequestFactory object that the RequestBundle object can be recycled
+	 * That is can be reused again.
+	 * @param requestBundle the RequestBundle object to recycle
+	 */
+	public void recycle( RequestBundle requestBundle );
 
     //-------------------------------------------------------------------------
     // Public methods - create a RequestBundle
@@ -199,5 +206,5 @@ public interface RequestFactory
 	 * @param data byte array of size 1 for the port bus state
 	 * @exception javax.usb.RequestException if the value to create this Request object is not valid
 	 */
-	public Request createGetState( short wIndex, byte[] data ) throws RequestException;
+	public Request createGetStateRequest( short wIndex, byte[] data ) throws RequestException;
 }

@@ -1,12 +1,12 @@
 package javax.usb;
 
-/**
+/*
  * Copyright (c) 1999 - 2001, International Business Machines Corporation.
  * All Rights Reserved.
  *
  * This software is provided and licensed under the terms and conditions
- * of the Common Public License.
- *
+ * of the Common Public License:
+ * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
 import javax.usb.util.*;
@@ -26,8 +26,9 @@ import javax.usb.util.*;
  * @see javax.usb.os.UsbServices#getRequestFactory
  * @author E. Michael Maximilien
  * @since 0.8.0
+ * @version 1.0.0
  */
-public interface RequestBundle
+public interface RequestBundle extends Recyclable
 {
 	//-------------------------------------------------------------------------
 	// Public methods
