@@ -101,6 +101,7 @@ public interface UsbConfiguration
 	 * @return The configuration String, or null.
 	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
+	 * @exception UsbDisconnectedException If the device has been disconnected.
 	 */
-	public String getConfigurationString() throws UsbException,UnsupportedEncodingException;
+	public String getConfigurationString() throws UsbException,UnsupportedEncodingException,UsbDisconnectedException;
 }
