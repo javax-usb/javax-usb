@@ -14,15 +14,13 @@ package javax.usb;
  * <p>
  * This maintains the version number of the current javax.usb API specification
  * and the supported USB specification version number.
- * @author E. Michael Maximilien
  * @author Dan Streetman
+ * @author E. Michael Maximilien
  */
-public final class Version extends Object
+public class Version
 {
 	/**
-	 * Main entry point for the Version application.
-	 * <p>
-	 * This prints out this text to stdout (with appropriate version numbers):
+	 * Prints out this text to stdout (with appropriate version numbers):
 	 * <p>
 	 * javax.usb API version &lt;getApiVersion()><br>
 	 * USB specification version &lt;getUsbVersion()><br>
@@ -63,5 +61,5 @@ public final class Version extends Object
 	//
 
 	private static final String VERSION_USB_SPECIFICATION = "1.1";
-	private static final String VERSION_JAVAX_USB = "0.9.2";
+	private static final String VERSION_JAVAX_USB = "0.9.3";
 }
