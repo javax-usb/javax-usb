@@ -17,14 +17,20 @@ package javax.usb;
  * actual data buffer, as well as other metadata that gives the user more
  * control and knowledge over how the data is handled.
  * <p>
- * Before submitting this, the data must be {@link #setData(byte[]) set}.
+ * Before submitting this, several steps must be taken:
+ * <ul>
+ * <li>The {@link #getData() data} must be {@link #setData(byte[]) set}.</li>
+ * <li>The {@link #getLength() data length} must be {@link #setLength(int) set}.</li>
+ * <li>The {@link #getOffset() data offset}, if non-zero, must be {@link #setOffset(int) set}.</li>
+ * <li>The {@link #isComplete() complete state} must be false; how this is set (or reset) is implementation-dependent.</li>
+ * </ul>
+ * Since the implementation may change the {@link #getLength() length}, it should be reset if re-submitting this.
  * <p>
  * See the USB 1.1 specification section 5.3.2 for details on USB IRPs.
  * The IRP defined in this API has more than is mentioned in the USB 1.1 specification;
  * all extra fields or methods are guaranteed to be provided on all platforms, either
  * in the Java subsystem implementation or by the native USB implementation.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
 public interface UsbIrp
 {
@@ -35,39 +41,65 @@ public interface UsbIrp
 	public byte[] getData();
 
 	/**
+	 * Get the starting offset of the data.
+	 * <p>
+	 * This indicates the starting byte in the {@link #getData() data}.
+	 * @return The offset to use.
+	 */
+	public int getOffset();
+
+	/**
+	 * The amount of data to transfer or that was transferred.
+	 * <p>
+	 * This should be set to the amount of data to transfer.
+	 * The implementation will set this to the amount of data
+	 * actually transferred.
+	 * @return The amount of data to transfer or that was transferred.
+	 */
+	public int getLength();
+
+	/**
 	 * Set the data.
 	 * @param data The data.
 	 */
-	public void setData( byte[] data );
+	public void setData(byte[] data);
 
 	/**
-	 * Get the amount of data actually transferred.
-	 * <p>
-	 * This is only valid after the irp has {@link #isComplete() completed}.
-	 * <p>
-	 * The actual amount of data transferred may be less than the
-	 * size of the {@link #getData() provided buffer}.
-	 * @return The amount of data transferred.
+	 * Set the offset.
+	 * @param offset The offset.
 	 */
-	public int getDataLength();
+	public void setOffset(int offset);
 
 	/**
-	 * Set the data length.
-	 * @param length The data length.
+	 * Set the amount of data to transfer or that was transferred.
+	 * <p>
+	 * The implementation will set this to the amount of data
+	 * actually transferred.  The implementation <b>must</b> set this
+	 * before calling {@link complete() complete}, regardless of
+	 * whether the submission was successful or not.
+	 * @param length The amount of data to transfer or that was transferred.
 	 */
-	public void setDataLength(int length);
+	public void setLength(int length);
 
-   /**
+	/**
 	 * If this has completed.
+	 * <p>
+	 * This must be false before use.
 	 * @return If the has completed.
 	 */
 	public boolean isComplete();
 
 	/**
-	 * Set this as completed.
-	 * @param completed If this is completed.
+	 * Set this as complete.
+	 * <p>
+	 * This is the last method the implementation calls; it indicates the UsbIrp has completed.  
+	 * The implementation <b>must</b> {@link #setLength(int) set the length},
+	 * even if the submission was unsuccessful, before calling this.
+	 * The implementation will {@link #setUsbException(UsbException) set the UsbException},
+	 * if appropriate, before calling this.
+	 * After calling this {@link #isComplete() isComplete} will return true.
 	 */
-	public void setComplete(boolean complete);
+	public void complete();
 
 	/**
 	 * If a UsbException occured.
@@ -114,7 +146,7 @@ public interface UsbIrp
 	 * <p>
 	 * This contains additional Setup parameters, which Control transfers require.
 	 */
-	public interface ControlUsbIrp extends UsbIrp
+	public static interface ControlUsbIrp extends UsbIrp
 	{
 		/**
 		 * Get the bmRequestType.
@@ -139,14 +171,6 @@ public interface UsbIrp
 		 * @return The wIndex.
 		 */
 		public short getIndex();
-
-		/**
-		 * Get the wLength.
-		 * <p>
-		 * This returns the length of the {@link #getData() data}.
-		 * @return The wLength.
-		 */
-		public short getLength();
 
 		/**
 		 * Set the bmRequestType.
