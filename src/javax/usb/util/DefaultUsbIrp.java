@@ -17,10 +17,8 @@ import javax.usb.*;
  * UsbIrp default implementation.
  * <p>
  * The data must be set either via its {@link #setData(byte[]) setter} or the constructor.
- * This UsbIrp implementation will automatically {@link #setLength(int) set the length}
- * when the data is {@link #setData(byte[]) set}, <i>if</i> the {@link #getLength() current length} is 0.
- * If the current length is non-zero, it will <i>not</i> be modified when the data is set.
  * The {@link #getOffset() offset} defaults to 0, which is usually correct.
+ * The {@link #getLength() length} must be set, as it defaults to 0, which is rarely correct.
  * The {@link #getAcceptShortPacket() defaults to true, which is usually correct.
  * <p>
  * When the implementation finishes processing this (successfully or not), it must set the
