@@ -522,10 +522,6 @@ public class StandardRequest
 
 	/**
 	 * Create a UsbControlIrp with the specified fields.
-	 * <p>
-	 * This passes the specified values to the other
-	 * {@link #createUsbControlIrp(byte, byte, short, short, byte[]) createUsbControlIrp}
-	 * method, with null for the data.
 	 * @param bmRequestType The bmRequestType.
 	 * @param bRequest The bRequest.
 	 * @param wValue The wValue.
@@ -533,7 +529,7 @@ public class StandardRequest
 	 * @return A UsbControlIrp with the specified fields.
 	 */
 	protected static UsbControlIrp createUsbControlIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
-	{ return createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex, null); }
+	{ return new DefaultUsbControlIrp(bmRequestType, bRequest, wValue, wIndex); }
 
 	/**
 	 * Create a UsbControlIrp with the specified fields.
