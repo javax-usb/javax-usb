@@ -24,7 +24,7 @@ package javax.usb;
  * <li>The {@link #getOffset() data offset}, if non-zero, must be {@link #setOffset(int) set}.</li>
  * <li>The {@link #isComplete() complete state} must be false; how this is set (or reset) is implementation-dependent.</li>
  * </ul>
- * Since the implementation may change the {@link #getLength() length}, it should be reset if re-submitting this.
+ * The implementation will set the {@link #getActualLength() data length}.
  * <p>
  * See the USB 1.1 specification section 5.3.2 for details on USB IRPs.
  * The IRP defined in this API has more than is mentioned in the USB 1.1 specification;
@@ -49,14 +49,21 @@ public interface UsbIrp
 	public int getOffset();
 
 	/**
-	 * The amount of data to transfer or that was transferred.
+	 * The amount of data to transfer.
 	 * <p>
 	 * This should be set to the amount of data to transfer.
-	 * The implementation will set this to the amount of data
-	 * actually transferred.
-	 * @return The amount of data to transfer or that was transferred.
+	 * @return The amount of data to transfer.
 	 */
 	public int getLength();
+
+	/**
+	 * The amount of data that was transferred.
+	 * <p>
+	 * The implementation will set this to the amount of data
+	 * actually transferred.
+	 * @return The amount of data that was transferred.
+	 */
+	public int getActualLength();
 
 	/**
 	 * Set the data.
@@ -71,15 +78,21 @@ public interface UsbIrp
 	public void setOffset(int offset);
 
 	/**
-	 * Set the amount of data to transfer or that was transferred.
+	 * Set the amount of data to transfer.
+	 * @param length The amount of data to transfer.
+	 */
+	public void setLength(int length);
+
+	/**
+	 * Set the amount of data that was transferred.
 	 * <p>
 	 * The implementation will set this to the amount of data
 	 * actually transferred.  The implementation <b>must</b> set this
 	 * before calling {@link complete() complete}, regardless of
 	 * whether the submission was successful or not.
-	 * @param length The amount of data to transfer or that was transferred.
+	 * @param length The amount of data that was transferred.
 	 */
-	public void setLength(int length);
+	public void setActualLength(int length);
 
 	/**
 	 * If this has completed.
