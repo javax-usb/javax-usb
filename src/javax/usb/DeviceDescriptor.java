@@ -14,87 +14,90 @@ package javax.usb;
  * <p>
  * See the USB 1.1 specification section 9.6.1.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
 public interface DeviceDescriptor extends Descriptor
 {
     /**
-	 * Get the device class.
-	 * @return The device class.
+	 * Get this descriptor's bcdUSB.
+	 * @return This descriptor's bcdUSB.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(short) This is unsigned.
 	 */
-    public byte getDeviceClass();
+    public short bcdUSB();
+
+    /**
+	 * Get this descriptor's bDeviceClass.
+	 * @return This descriptor's bDeviceClass.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
+	 */
+    public byte bDeviceClass();
 
 	/**
-	 * Get the device subclass.
-	 * @return The device subclass.
+	 * Get this descriptor's bDeviceSubClass.
+	 * @return This descriptor's bDeviceSubClass.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getDeviceSubClass();
+    public byte bDeviceSubClass();
 
     /**
-	 * Get the device protocol.
-	 * @return The device protocol.
+	 * Get this descriptor's bDeviceProtocol.
+	 * @return This descriptor's bDeviceProtocol.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getDeviceProtocol();
+    public byte bDeviceProtocol();
 
     /**
-	 * Get the maximum packet size for the Default Control Pipe.
-	 * @return The maximum packet size for the Default Control Pipe.
+	 * Get this descriptor's bMaxPacketSize.
+	 * @return This descriptor's bMaxPacketSize.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getMaxPacketSize();
+    public byte bMaxPacketSize0();
 
     /**
-	 * Get the device's vendor ID.
-	 * @return The device's vendor ID.
+	 * Get this descriptor's idVendor.
+	 * @return This descriptor's idVendor.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(short) This is unsigned.
 	 */
-    public short getVendorId();
+    public short idVendor();
 
     /**
-	 * Get the device's product ID.
-	 * @return The device's product ID.
+	 * Get this descriptor's idProduct.
+	 * @return This descriptor's idProduct.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(short) This is unsigned.
 	 */
-    public short getProductId();
+    public short idProduct();
 
     /**
-	 * Get the Device level in Binary Coded Decimal.
-	 * @return The device level in BCD.
+	 * Get this descriptor's bcdDevice.
+	 * @return This descriptor's bcdDevice.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(short) This is unsigned.
 	 */
-    public short getBcdDevice();
+    public short bcdDevice();
 
     /**
-	 * Get the USB Binary Coded Decimal.
-	 * <p>
-	 * USB specification leve supported by this device, in BCD.
-	 * @return USB BCD for this device.
+	 * Get this descriptor's iManufacturer.
+	 * @return This descriptor's iManufacturer.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public short getBcdUsb();
+    public byte iManufacturer();
 
     /**
-	 * Get the manufacturer string index.
-	 * <p>
-	 * If this is 0, the device has no manufacturer string.
-	 * @return The manufacturer string index.
+	 * Get this descriptor's iProduct.
+	 * @return This descriptor's iProduct.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getManufacturerIndex();
+    public byte iProduct();
 
     /**
-	 * Get the product string index.
-	 * <p>
-	 * If this is 0, the device has no product string.
-	 * @return The product string index.
+	 * Get this descriptor's iSerialNumber.
+	 * @return This descriptor's iSerialNumber.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getProductIndex();
+    public byte iSerialNumber();
 
     /**
-	 * Get the serial number string index.
-	 * <p>
-	 * If this is 0, the device has no serial number string.
-	 * @return The serial number string index.
+	 * Get this descriptor's bNumConfigurations.
+	 * @return This descriptor's bNumConfigurations.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getSerialNumberIndex();
-
-    /**
-	 * Get the number of configurations for the device.
-	 * @return The number of configurations for this device.
-	 */
-    public byte getNumConfigs();
+    public byte bNumConfigurations();
 }

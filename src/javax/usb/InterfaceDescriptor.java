@@ -14,51 +14,55 @@ package javax.usb;
  * <p>
  * See the USB 1.1 specification section 9.6.3.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
 public interface InterfaceDescriptor extends Descriptor
 {
     /**
-	 * Get the interface number.
-	 * @return The interface number.
+	 * Get this descriptor's bInterfaceNumber.
+	 * @return This descriptor's bInterfaceNumber.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getInterfaceNumber();
+    public byte bInterfaceNumber();
 
     /**
-	 * Get the alternate setting number.
-	 * @return The alternate setting number.
+	 * Get this descriptor's bAlternateSetting.
+	 * @return This descriptor's bAlternateSetting.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getAlternateSetting();
+    public byte bAlternateSetting();
 
     /**
-	 * Get the number of endpoints for this interface setting.
-	 * @return The number of endpoints for this interface setting.
+	 * Get this descriptor's bNumEndpoints.
+	 * @return This descriptor's bNumEndpoints.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getNumEndpoints();
+    public byte bNumEndpoints();
 
     /**
-	 * Get the interface class.
-	 * @return The interface class.
+	 * Get this descriptor's bInterfaceClass.
+	 * @return This descriptor's bInterfaceClass.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getInterfaceClass();
+    public byte bInterfaceClass();
 
     /**
-	 * Get the interface subclass.
-	 * @return The interface subclass.
+	 * Get this descriptor's bInterfaceSubClass.
+	 * @return This descriptor's bInterfaceSubClass.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getInterfaceSubClass();
+    public byte bInterfaceSubClass();
 
     /**
-	 * Get the interface protocol.
-	 * @return The interface protocol.
+	 * Get this descriptor's bInterfaceProtocol.
+	 * @return This descriptor's bInterfaceProtocol.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getInterfaceProtocol();
+    public byte bInterfaceProtocol();
 
     /**
-	 * Get the interface string index.
-	 * <p>
-	 * If this is 0, the interface does not have an interface string.
-	 * @return The interface string index.
+	 * Get this descriptor's iInterface.
+	 * @return This descriptor's iInterface.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getInterfaceIndex();
+    public byte iInterface();
 }

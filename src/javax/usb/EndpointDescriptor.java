@@ -14,77 +14,34 @@ package javax.usb;
  * <p>
  * See the USB 1.1 specification section 9.6.4.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
 public interface EndpointDescriptor extends Descriptor
 {
     /**
-	 * Get the address for this endpoint.
-	 * <p>
-	 * The most significant bit in the address is the
-	 * {@link #getDirection() direction} of data flow
-	 * (see the USB 1.1 specification table 9.10).
-	 * The lower nibble (4 bits) of the address is the
-	 * endpoint number (see the USB 1.1 specification table 9.10).
-	 * @return The address of this endpoint.
+	 * Get this descriptor's bEndpointAddress.
+	 * @return This descriptor's bEndpointAddress.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getEndpointAddress();
+    public byte bEndpointAddress();
 
     /**
-	 * Get the direction of this endpoint.
-	 * <p>
-	 * The direction is either in (device-to-host) or out (host-to-device),
-	 * meaning the endpoint is either a source or a sink, respectively.
-	 * Control-type endpoints are bidirectional, but their address
-	 * must specifiy a direction, since it's binary (two-state, instead
-	 * of three-state; in, out, and bidirectional).  The USB 1.1 specification
-	 * instructs in table 9.10 that the direction should be ignored for Control endpoints.
-     * @return The direction of this endpoint.
-     * @see javax.usb.UsbInfoConst#ENDPOINT_DIRECTION_IN
-     * @see javax.usb.UsbInfoConst#ENDPOINT_DIRECTION_OUT
-     */
-    public byte getDirection();
+	 * Get this descriptor's bmAttributes.
+	 * @return This descriptor's bmAttributes.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
+	 */
+    public byte bmAttributes();
 
     /**
-	 * Get this endpoint's attributes.
-	 * <p>
-	 * See the USB 1.1 specification table 9.10 for details
-	 * on endpoint attributes.
-	 * @return The attribute of this endpoint.
+	 * Get this descriptor's wMaxPacketSize.
+	 * @return This descriptor's wMaxPacketSize.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(short) This is unsigned.
 	 */
-    public byte getAttributes();
+    public short wMaxPacketSize();
 
     /**
-	 * Get the type of this endpoint.
-	 * <p>
-	 * See the USB 1.1 spcification table 9.10 for
-	 * details on endpoint types.
-	 * @return The endpoint's type.
-	 * @see javax.usb.UsbInfoConst#ENDPOINT_TYPE_CONTROL
-	 * @see javax.usb.UsbInfoConst#ENDPOINT_TYPE_BULK
-	 * @see javax.usb.UsbInfoConst#ENDPOINT_TYPE_INT
-	 * @see javax.usb.UsbInfoConst#ENDPOINT_TYPE_ISOC
+	 * Get this descriptor's bInterval.
+	 * @return This descriptor's bInterval.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getType();
-
-    /**
-	 * Get the max packet size for this endpoint.
-	 * <p>
-	 * See the USB 1.1 specification table 9.10 for
-	 * details on endpoint max packet sizes,
-	 * and section 5.3.2 for details on IRPs
-	 * and their segmentation into max-packet-sized packets.
-	 * @return The max packet size for this endpoint.
-	 */
-    public short getMaxPacketSize();
-
-    /**
-	 * Get the interval for this endpoint.
-	 * <p>
-	 * See the USB 1.1 specification table 9.10 for
-	 * details on endpoint intervals.
-	 * @return The endpoint interval.
-	 */
-    public byte getInterval();
-
+    public byte bInterval();
 }

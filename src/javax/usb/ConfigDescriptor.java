@@ -14,48 +14,48 @@ package javax.usb;
  * <p>
  * See the USB 1.1 specification section 9.6.2.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
 public interface ConfigDescriptor extends Descriptor
 {
 	/**
-	 * Get the total length of this descriptor.
-	 * @return The total length of this Descriptor.
+	 * Get this descriptor's wTotalLength.
+	 * @return This descriptor's wTotalLength.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(short) This is unsigned.
 	 */
-	public short getTotalLength();
+	public short wTotalLength();
 
     /**
-	 * Get the number of interfaces for the configuration.
-	 * @return The number of interfaces for this configuration.
+	 * Get this descriptor's bNumInterfaces.
+	 * @return This descriptor's bNumInterfaces.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getNumInterfaces();
+    public byte bNumInterfaces();
 
     /**
-	 * Get the value (number) of this configuration.
-	 * @return The value (number) of this configuration.
+	 * Get this descriptor's bConfigurationValue.
+	 * @return This descriptor's bConfigurationValue.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getConfigValue();
+    public byte bConfigurationValue();
 
     /**
-	 * Get the configuration string index.
-	 * <p>
-	 * If this is 0, the configuration does not have a configuration string.
-	 * @return The configuration string index.
+	 * Get this descriptor's iConfiguration.
+	 * @return This descriptor's iConfiguration.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getConfigIndex();
+    public byte iConfiguration();
 
     /**
-	 * Get the configuration attributes bitmap.
-     * @return The configuration attributes bitmap.
+	 * Get this descriptor's bmAttributes.
+	 * @return This descriptor's bmAttributes.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
      */
-    public byte getAttributes();
+    public byte bmAttributes();
 
     /**
-	 * Get the maximum power this configuration requires.
-	 * <p>
-	 * This is specified in units of 2mA.  For example,
-	 * a value of 50 indicates 100mA.
-	 * @return The maximum power for this configuration.
+	 * Get this descriptor's bMaxPower.
+	 * @return This descriptor's bMaxPower.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getMaxPower();
+    public byte bMaxPower();
 }

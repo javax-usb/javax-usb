@@ -12,20 +12,20 @@ package javax.usb;
 /**
  * Interface for a USB descriptor.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
 public interface Descriptor
 {
     /**
-	 * Get the length of this descriptor.
-	 * @return The length of this descriptor.
+	 * Get this descriptor's bLength.
+	 * @return This descriptor's bLength.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getLength();
+    public byte bLength();
 
     /**
-	 * Get the type of this descriptor.
-	 * @return The type of this descriptor.
+	 * Get this descriptor's bDescriptorType.
+	 * @return This descriptor's bDescriptorType.
+	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */
-    public byte getType();
-
+    public byte bDescriptorType();
 }
