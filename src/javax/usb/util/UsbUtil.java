@@ -558,8 +558,10 @@ public class UsbUtil
 	{
 		public SynchronizedUsbPipe(UsbPipe usbPipe) { this.usbPipe = usbPipe; }
 
-		public void open() throws UsbException,UsbNotActiveException,UsbNotClaimedException
+		public void open() throws UsbPolicyDenied,UsbException,UsbNotActiveException,UsbNotClaimedException
 		{ synchronized (openLock) { usbPipe.open(); } }
+		public void open(Object o) throws UsbPolicyDenied,UsbException,UsbNotActiveException,UsbNotClaimedException
+		{ synchronized (openLock) { usbPipe.open(o); } }
 		public void close() throws UsbException,UsbNotOpenException
 		{ synchronized (openLock) { usbPipe.close(); } }
 		public boolean isActive() { return usbPipe.isActive(); }

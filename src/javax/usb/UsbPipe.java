@@ -36,18 +36,35 @@ public interface UsbPipe
 	/**
 	 * Open this UsbPipe.
 	 * <p>
+	 * This is identical to the other {@link #open(Object) open}, but uses
+	 * a null key.
+	 * @exception UsbPolicyDenied If the UsbInterfacePolicy prevented the open.
+	 * @exception UsbException If the UsbPipe could not be opened.
+	 * @exception UsbNotActiveException If the config or interface setting is not active.
+	 * @exception UsbNotClaimedException If the interface is not claimed.
+	 */
+	public void open() throws UsbPolicyDenied,UsbException,UsbNotActiveException,UsbNotClaimedException;
+
+	/**
+	 * Open this UsbPipe using a key.
+	 * <p>
 	 * The pipe cannot be used for communication until it is open.
 	 * <p>
 	 * The implementation should, to whatever extent the platform allows,
 	 * try to ensure the pipe is usable (not in error) before returning
 	 * successfully.
 	 * <p>
-	 * If the pipe is already open, this does nothing.
+	 * The key will be passed to the UsbInterfacePolicy which may prevent
+	 * the open.
+	 * <p>
+	 * If the pipe has already been opened, this will not succeed.
+	 * @param key The key to pass to the UsbInterfacePolicy.
+	 * @exception UsbPolicyDenied If the UsbInterfacePolicy prevented the open.
 	 * @exception UsbException If the UsbPipe could not be opened.
 	 * @exception UsbNotActiveException If the config or interface setting is not active.
 	 * @exception UsbNotClaimedException If the interface is not claimed.
 	 */
-	public void open() throws UsbException,UsbNotActiveException,UsbNotClaimedException;
+	public void open(Object key) throws UsbPolicyDenied,UsbException,UsbNotActiveException,UsbNotClaimedException;
 
 	/**
 	 * Close this UsbPipe.
@@ -55,7 +72,7 @@ public interface UsbPipe
 	 * The pipe can only be closed while no submissions are pending.
 	 * All submissions can be aborted by {@link #abortAllSubmissions() abortAllSubmissions}.
 	 * <p>
-	 * If the pipe is already closed, this does nothing.
+	 * If the pipe is already closed, this fails.
 	 * @exception UsbException If the UsbPipe could not be closed.
 	 * @exception UsbNotOpenException If the UsbPipe is not open.
 	 */
