@@ -21,7 +21,7 @@ import javax.usb.event.*;
  * The device does not have to be {@link #isConfigured() configured} to use the Default Control Pipe.
  * <p>
  * The implementation is not required to be Thread-safe.  If a Thread-safe UsbDevice
- * is required, use a {@link com.ibm.jusb.util.UsbUtil#synchronizedUsbDevice(UsbDevice) synchronizedUsbDevice}.
+ * is required, use a {@link javax.usb.util.UsbUtil#synchronizedUsbDevice(UsbDevice) synchronizedUsbDevice}.
  * @author Dan Streetman
  * @author E. Michael Maximilien
  */
