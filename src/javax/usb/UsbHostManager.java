@@ -18,7 +18,7 @@ import java.security.*;
  * @author Dan Streetman
  * @author E. Michael Maximilien
  */
-public class UsbHostManager
+public final class UsbHostManager
 {
 	private UsbHostManager() { }
 
