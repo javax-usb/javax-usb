@@ -242,6 +242,42 @@ public interface UsbPipe
 	public void abortAllSubmissions() throws NotOpenException;
 
 	/**
+	 * Create a UsbIrp.
+	 * <p>
+	 * This creates a UsbIrp that may be optimized for use on
+	 * this UsbPipe.  Using this UsbIrp instead of a
+	 * {@link javax.usb.util.DefaultUsbIrp DefaultUsbIrp}
+	 * may increase performance or decrease memory requirements.
+	 * <p>
+	 * The UsbPipe cannot require this UsbIrp to be used, all submit
+	 * methods <i>must</i> accept any UsbIrp implementation
+	 * (or ControlUsbIrp implementation if this is a Control-type UsbPipe).
+	 * @return A UsbIrp ready for use.
+	 */
+	public UsbIrp createUsbIrp();
+
+	/**
+	 * Create a ControlUsbIrp.
+	 * <p>
+	 * This creates a ControlUsbIrp that may be optimized for use on
+	 * this UsbPipe.  Using this ControlUsbIrp instead of a
+	 * {@link javax.usb.util.DefaultControlUsbIrp DefaultControlUsbIrp}
+	 * may increase performance or decrease memory requirements.
+	 * <p>
+	 * The UsbPipe cannot require this ControlUsbIrp to be used, all submit
+	 * methods <i>must</i> accept any ControlUsbIrp implementation.
+	 * <p>
+	 * Note that if this is not a Control-type UsbPipe, none
+	 * of the setup packet fields will be used.
+	 * @param bmRequestType The bmRequestType.
+	 * @param bRequest The bRequest.
+	 * @param wValue The wValue.
+	 * @param wIndex The wIndex.
+	 * @return A ControlUsbIrp ready for use.
+	 */
+	public ControlUsbIrp createControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex);
+
+	/**
 	 * Adds the listener.
 	 * @param listener The UsbPipeListener.
 	 */

@@ -200,6 +200,24 @@ public interface UsbDevice
 	public void asyncSubmit( List list ) throws UsbException;
 
 	/**
+	 * Create a ControlUsbIrp.
+	 * <p>
+	 * This creates a ControlUsbIrp that may be optimized for use on
+	 * this UsbDevice.  Using this UsbIrp instead of a
+	 * {@link javax.usb.util.DefaultControlUsbIrp DefaultControlUsbIrp}
+	 * may increase performance or decrease memory requirements.
+	 * <p>
+	 * The UsbDevice cannot require this ControlUsbIrp to be used, all submit
+	 * methods <i>must</i> accept any ControlUsbIrp implementation.
+	 * @param bmRequestType The bmRequestType.
+	 * @param bRequest The bRequest.
+	 * @param wValue The wValue.
+	 * @param wIndex The wIndex.
+	 * @return A ControlUsbIrp ready for use.
+	 */
+	public ControlUsbIrp createControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex);
+
+	/**
 	 * Add a UsbDeviceListener to this UsbDevice.
 	 * @param listener The UsbDeviceListener to add.
 	 */
