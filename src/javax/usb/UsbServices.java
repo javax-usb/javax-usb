@@ -48,6 +48,24 @@ public interface UsbServices
 	 * on 'mount points' under a single 'root' (/) directory filesystem.
 	 * </li>
 	 * </ol>
+	 * <p>
+	 * The first configuration results in having to maintain
+	 * a list of different and completely unconnected device topologies.
+	 * This means a search for a particular device must be performed on
+	 * all the device topologies.  Since a UsbHub already has a list of
+	 * UsbDevices, and a UsbHub <i>is</i> a UsbDevice, introducing a new,
+	 * different list is not a desirable action, since it introduces extra
+	 * unnecessary steps in performing actions, like searching.
+	 * <p>
+	 * As an example, a recursive search for a certain device
+	 * in the first configuration involves getting the first root UsbHub,
+	 * getting all its attached UsbDevices, and checking each device;
+	 * any of those devices which are UsbHubs can be also searched recursively.
+	 * Then, the entire operation must be performed on the next root UsbHub,
+	 * and this is repeated for all the root UsbHubs in the array/list.
+	 * In the second configuration, the virtual root UsbHub is recursively
+	 * searched in a single operation.
+	 * <p>
 	 * The second configuration is what is used in this API.  The implementation
 	 * is responsible for creating a single root UsbHub which is completely
 	 * virtual (and available through the UsbServices object).  Every
@@ -65,41 +83,7 @@ public interface UsbServices
 	 * hub is attached/detached).  This API specification suggests that the
 	 * number of ports for the root UsbHub equal the number of directly
 	 * attached UsbHubs.
-	 * <p>
-	 * The major deciding factors are listed here to show why the decision
-	 * to use the second option was made.
-	 * <ul>
-	 * <li>The first configuration results in having to maintain
-	 * a list of different and completely unconnected device topologies.
-	 * This means a search for a particular device must be performed on
-	 * all the device topologies.
-	 * </li>
-	 * <li>Since a UsbHub already has a list of UsbDevices, and
-	 * a UsbHub <i>is</i> a UsbDevice, introducing a new, different
-	 * list (as in option 1) is not a desirable action, since it
-	 * introduces extra unnecessary steps in performing actions, like
-	 * searching.
-	 * <li>As an example, a recursive search for a certain device
-	 * in the first configuration involves getting the first root UsbHub,
-	 * getting all its attached UsbDevices, and checking each device;
-	 * any of those devices which are UsbHubs can be also searched recursively.
-	 * Then, the entire operation must be performed on the next root UsbHub,
-	 * and this is repeated for all the root UsbHubs in the array/list.
-	 * In the second configuration, the virtual root UsbHub is recursively
-	 * searched in a single operation.
-	 * <li>The device model hierarchy was intentionally unified by making
-	 * all the Interfaces extends UsbInfo.  This way every part of the
-	 * device model structure can be collected into a UsbInfoList or
-	 * handled as a UsbInfo.  The first configuration breaks this
-	 * since a list (which could be a UsbInfoList) is required as part
-	 * of the device model structure (the top level).
-	 * <li>Having multiple root UsbHubs is not a desirable 'feature',
-	 * which results in also having multiple topology trees.
-	 * The second configuration allows for a <i>single</i> 'true' root UsbHub,
-	 * which really is at the 'root' of a <i>single</i> topology tree.
-	 * </li>
-	 * </ul>
-	 * @return The virtual UsbHub object
+	 * @return The virtual UsbHub object.
 	 * @exception UsbException If there is an error accessing javax.usb.
 	 * @exception SecurityException If current client not configured to access javax.usb.
 	 */
