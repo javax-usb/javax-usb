@@ -24,8 +24,10 @@ import java.security.AccessController;
  * <p>
  * See the GoF (Design Pattern book) page 127 for details about usage and applicability 
  * of the Singleton pattern.
+ * </p>
+ * </p>
  * @author E. Michael Maximilien
- * @author Dan Streetman
+ * @since 0.8.0
  */
 public final class UsbHostManager extends Object
 {
@@ -57,12 +59,14 @@ public final class UsbHostManager extends Object
     //
 
     /** @return the loaded UsbProperties for this host */
-    public synchronized UsbProperties getUsbProperties() 
+    public UsbProperties getUsbProperties() 
     { 
         if( usbProperties == null )
         {
             usbProperties = new DefaultProperties();
             usbProperties.loadProperties();
+
+            initTracer();
         }
 
         return usbProperties;
@@ -75,8 +79,10 @@ public final class UsbHostManager extends Object
 	 * @throws java.lang.SecurityException if the "getUsbServices" javax.usb security
 	 * permission is not granted to the calling code base
      */
-    public synchronized UsbServices getUsbServices() throws UsbException
+    public UsbServices getUsbServices() throws UsbException
     {
+		initProperties();
+		
 		//<TEMP>
 		//checkPermission();
 		//</TEMP>
@@ -88,6 +94,39 @@ public final class UsbHostManager extends Object
     // Private methods
     //
 
+    /** Initialize the Tracer looking at the UsbProperties file */
+    private void initTracer()
+    {
+        if( usbProperties.isPropertyDefined( UsbProperties.JUSB_TRACING_PROP_NAME ) )
+        {
+            String tracingPropValue = usbProperties.getPropertyString( UsbProperties.JUSB_TRACING_PROP_NAME );
+
+            if( tracingPropValue.equalsIgnoreCase( UsbProperties.JUSB_TRACING_ON_PROP_VALUE ) ||
+                tracingPropValue.equalsIgnoreCase( UsbProperties.JUSB_TRACING_TRUE_PROP_VALUE ) )
+                Tracer.getInstance().setOn( true );
+        }
+    }
+
+	/**
+	 * Checks to make sure that the javax.usb.home property if this property is not
+	 * set then set it to the current directory and print a message in the Tracer
+	 * @see javax.usb.util.UsbProperties#JUSB_HOME_PROP_NAME
+	 */
+	private void initProperties()
+	{
+		UsbProperties props = getUsbProperties();
+
+		if( !props.isPropertyDefined( UsbProperties.JUSB_HOME_PROP_NAME ) )
+		{
+			String currentDirString = System.getProperty( "user.dir" );
+
+			Tracer.getInstance().println( UsbProperties.JUSB_HOME_PROP_NAME + 
+										  " not defined thus defining to be current directory = " + currentDirString );
+
+			System.setProperty( UsbProperties.JUSB_HOME_PROP_NAME, currentDirString );
+		}
+	}
+
 	/**
 	 * 
 	 * @throws java.lang.SecurityException if the "getUsbServices" javax.usb security
@@ -98,35 +137,11 @@ public final class UsbHostManager extends Object
 		AccessController.checkPermission( JavaxUsbPermission.GETUSBSERVICES_JAVAX_USB_PERMISSION );
 	}
 
-    /**
-     * Creates the correct UsbServices for this host and platform
-     * @return a UsbServices instance
-     * @exception jcomm.usb.UsbException if the current platform is not supported
-     */
-    private UsbServices createUsbServices() throws UsbException
-    {
-        if (!getUsbProperties().isPropertyDefined( UsbProperties.JUSB_OS_SERVICES_PROP_NAME ))
-            throw new UsbException( "The " + UsbProperties.JUSB_OS_SERVICES_PROP_NAME + " property must be defined as the classname of the implementation." );
-
-        String className = getUsbProperties().getPropertyString( UsbProperties.JUSB_OS_SERVICES_PROP_NAME );
-
-        try {
-            return (UsbServices)(Class.forName(className)).newInstance();
-        } catch( ClassNotFoundException cnfe ) {
-			throw new UsbException( "Could not find UsbServices class = " + className );
-        } catch( ClassCastException cce ) {
-			throw new UsbException( "The UsbServices class: " + className + " does not implement the javax.usb.os.UsbServices interface" );
-        } catch( Exception e ) {
-			throw new UsbException( "Error instantiation UsbServices class name: " + className + ", Exception.message = " + e.getMessage() );
-		}
-    }
-
     //-------------------------------------------------------------------------
     // Instance variables
     //
 
     private UsbProperties usbProperties = null;
-	private UsbServices usbServices = null;
 
     //-------------------------------------------------------------------------
     // Class variables

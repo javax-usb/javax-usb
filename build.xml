@@ -4,6 +4,7 @@
 	XML Ant (http://www.apache.org/ant) build file for JSR80 (javax.usb)
 	@author E. Michael Maximilien                                          
 	@author Dan Streetman                                                  
+	@version 1.0.0                                                         
 
 	All properties are changable via the '.ant-global.properties' file     
 	which should (optionally) be located in the user's home directory.     
@@ -22,6 +23,13 @@
 	<property environment="Jsr80Env"/>
 
 	<property name="Jsr80Env.JSR80_API_VERSION" value="1.0.0-beta2"/>
+	<property name="Jsr80Env.JSR80_DIST_NAME" value="jsr80-${Jsr80Env.JSR80_API_VERSION}"/>
+	<property name="Jsr80Env.JSR80_DIST_ZIP_FILE" value="${Jsr80Env.JSR80_DIST_NAME}.zip"/>
+	<property name="Jsr80Env.JSR80_DIST_TAR_FILE" value="${Jsr80Env.JSR80_DIST_NAME}.tar"/>
+
+	<property name="Jsr80Env.JSR80_JAVA_POLICY_FILE_NAME" value=".java.policy"/>
+
+	<property name="Jsr80Env.JSR80_BUILDFILE" value="build.xml"/>
 
 	<property name="Jsr80Env.JSR80_SRC_JARFILE_DIR" value="src"/>
 	<property name="Jsr80Env.JSR80_SRC_JARFILE" value="jsr80_src.jar"/>
@@ -35,6 +43,7 @@
 	<property name="Jsr80Env.JSR80_QUIET" value="off"/>
 	<property name="Jsr80Env.JSR80_COMPRESS" value="on"/>
 	
+	<property name="Jsr80Env.JSR80_DIST_DIR" value="dist"/>
 	<property name="Jsr80Env.JSR80_SRC_DIR" value="src"/>
 	<property name="Jsr80Env.JSR80_DEST_DIR" value="src"/>
 	<property name="Jsr80Env.JSR80_DOCS_DIR" value="docs"/>
@@ -47,8 +56,20 @@
 	<property name="Jsr80Env.JSR80_JDOC_FOOTER" value="javax.usb API v${Jsr80Env.JSR80_API_VERSION}"/>
 
 	<!-- Variable defaults -->
+	<property name="jsr80.tmp.dir" value="TMP-DIR"/>
+	<property name="jsr80.dist.name.dir" value="${Jsr80Env.JSR80_DIST_NAME}"/>
+	<property name="jsr80.dist.zip.file" value="${Jsr80Env.JSR80_DIST_ZIP_FILE}"/>
+	<property name="jsr80.dist.tar.file" value="${Jsr80Env.JSR80_DIST_TAR_FILE}"/>
 	<property name="jsr80.manifest.file" value="jsr80.mf"/>
 
+	<property name="jsr80.java.policy.file" value="${Jsr80Env.JSR80_JAVA_POLICY_FILE_NAME}"/>
+
+	<property name="jsr80.buildfile" value="${Jsr80Env.JSR80_BUILDFILE}"/>
+	<property name="jsr80.readme.file" value="README"/>
+	<property name="jsr80.license.file" value="LICENSE"/>
+	<property name="jsr80.whatsnew.file" value="WHATSNEW"/>
+
+	<property name="jsr80.dist.dir" value="${Jsr80Env.JSR80_DIST_DIR}"/>
 	<property name="jsr80.src.dir" value="${Jsr80Env.JSR80_SRC_DIR}"/>
 	<property name="jsr80.dest.dir" value="${Jsr80Env.JSR80_DEST_DIR}"/>
 	<property name="jsr80.docs.dir" value="${Jsr80Env.JSR80_DOCS_DIR}"/>
@@ -93,6 +114,7 @@
 		<echo message="  all              == compile jars jdoc"/>
 		<echo message="  clean            Clean all classes"/>
 		<echo message="  compile          Compile all classes"/>
+		<echo message="  dist             Create ZIP and TAR distribution files of API"/>
 		<echo message="  help             Show this help"/>
 		<echo message="  jars             Create JAR files"/>
 		<echo message="  jdoc             Create JavaDOC"/>
@@ -172,7 +194,57 @@
 		<echo message="Java Documentation placed in ${jsr80.jdoc.dir}"/>
 	</target>
 
-	<!-- Do everything -->
+	<!-- 
+		Builds a release distribution and Zip for this API version 
+	-->
+	<target name="dist" depends="init,all">
+		<!-- Creating distribution directories -->
+		<mkdir dir="${jsr80.dist.dir}"/>
+		<mkdir dir="${jsr80.dist.dir}/src"/>
+		<mkdir dir="${jsr80.dist.dir}/lib"/>
+		<mkdir dir="${jsr80.dist.dir}/docs"/>
+
+		<!-- Copying main project files -->
+		<copy file="${jsr80.buildfile}" todir="${jsr80.dist.dir}"/>
+		<copy file="${jsr80.readme.file}" todir="${jsr80.dist.dir}"/>
+		<copy file="${jsr80.license.file}" todir="${jsr80.dist.dir}"/>
+		<copy file="${jsr80.whatsnew.file}" todir="${jsr80.dist.dir}"/>
+
+		<!-- Default policy? -->
+		<!-- <copy file="${jsr80.java.policy.file}" todir="${jsr80.dist.dir}"/> -->
+
+		<!-- Copying docs files (directories) -->
+		<copy todir="${jsr80.dist.dir}/docs">
+			<fileset dir="${jsr80.docs.dir}"/>
+		</copy>
+
+		<!-- Copying src files -->
+		<copy todir="${jsr80.dist.dir}/src">
+			<fileset dir="${jsr80.src.dir}" includes="javax/usb/**" excludes="**/*.class"/>
+		</copy>
+
+		<!-- Creating Zip distribution file -->
+		<echo message="Creating temp directory ${jsr80.tmp.dir}/${jsr80.dist.name.dir}"/>
+		<mkdir dir="${jsr80.tmp.dir}/${jsr80.dist.name.dir}"/>
+		<copy todir="${jsr80.tmp.dir}/${jsr80.dist.name.dir}">
+			<fileset dir="${jsr80.dist.dir}"/>
+		</copy>
+
+		<zip zipfile="${jsr80.dist.zip.file}" basedir="${jsr80.tmp.dir}"/>
+		<echo message="Zip distribution file ${jsr80.dist.zip.file} created sucessfully"/>
+
+		<tar tarfile="${jsr80.dist.tar.file}" basedir="${jsr80.tmp.dir}"/>
+		<gzip zipfile="${jsr80.dist.tar.file}.gz" src="${jsr80.dist.tar.file}"/>
+		<delete file="${jsr80.dist.tar.file}"/>
+		<echo message="Tar distribution file ${jsr80.dist.tar.file}.gz created sucessfully"/>
+
+		<echo message="Cleaning temp directory ${jsr80.tmp.dir}"/>
+		<delete dir="${jsr80.tmp.dir}"/>
+		<echo message="Cleaning distribution directory ${jsr80.dist.dir}"/>
+		<delete dir="${jsr80.dist.dir}"/>
+	</target>
+
+	<!-- Creates a full blown distribution -->
 	<target name="all" depends="clean,compile,jars,jdoc"/>
 
 	<!-- Clean all classfiles -->
@@ -193,6 +265,10 @@
 
 		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false"
 			dir="${jsr80.jdoc.dir}"/>
+		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false"
+			file="${jsr80.dist.zip.file}"/>
+		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false"
+			file="${jsr80.dist.tar.file}.gz"/>
 	</target>
 
 </project>

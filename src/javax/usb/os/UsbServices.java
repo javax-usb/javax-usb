@@ -20,22 +20,16 @@ import javax.usb.event.UsbServicesListener;
  * Each platform needs to provide a class implementing this interface.  That class
  * <b>must</b> define a no-argument (default) constructor which will used via reflection
  * to bootstrap the javax.usb implementation for the particular platform in question.
+ * </p>
  * @author E. Michael Maximilien
  * @author Dan Streetman
  * @since 0.8.0
  */
-public interface UsbServices
+public interface UsbServices extends UsbTopologyServices
 {
-    /**
-	 * Get the virtual UsbRootHub to which all Host Controller UsbHubs are attached.
-	 * <p>
-	 * See the javax.usb.UsbRootHub Class for more details.
-     * @return the 'virtual' UsbRootHub object
-     * @exception javax.usb.UsbException if something goes wrong trying to get the root hub
-	 * @throws java.lang.SecurityException if current client not configured to access javax.usb
-	 * @see javax.usb.UsbRootHub
-     */
-    public UsbRootHub getUsbRootHub() throws UsbException, SecurityException;
+    //-------------------------------------------------------------------------
+    // Public registration methods
+    //
 
     /**
      * Adds a new UsbServicesListener object to receive events when the USB host
@@ -50,6 +44,63 @@ public interface UsbServices
      * @param listener the UsbServicesListener to register     
      */
     public void removeUsbServicesListener( UsbServicesListener listener );
+
+    //-------------------------------------------------------------------------
+    // Public getter methods
+    //
+
+	/**
+	 * @return the RequestFactory used to create Request object for the USB operations
+	 * @see javax.usb.Request
+	 * @see javax.usb.StandardOperations
+	 */ 
+	public RequestFactory getRequestFactory();
+
+	/**
+	 * Get a new instance of a RequestFactory.
+	 * <p>
+	 * Since the factory returned by {@link #getRequestFactory() getRequestFactory()}
+	 * is a 'shared' instance, it may be used by multiple clients
+	 * in the same JVM.  If this factory implements the
+	 * {@link javax.usb.Request#recycle() recycling of Requests}, it is
+	 * possible for a misbehaving client to retain a reference to, and
+	 * modify parts of, a Request that the misbehaving client has recycled.
+	 * If this potentially corrupt Request is given out to another (behaving)
+	 * client, the misbehaving client may cause the behaving client to
+	 * experience errors.
+	 * <p>
+	 * This method returns a newly created instance of a RequestFactory,
+	 * so that a client can be sure they are using a 'clean' pool of
+	 * Requests.  If a client uses this they should retain the reference
+	 * instead of calling this multiple times.
+	 */ 
+	public RequestFactory getNewRequestFactory();
+
+	/**
+	 * @return a UsbIrpFactory
+	 * @see javax.usb.UsbIrp
+	 */
+	public UsbIrpFactory getUsbIrpFactory();
+
+	/**
+	 * Get a new instance of a UsbIrpFactory.
+	 * <p>
+	 * Since the factory returned by {@link #getUsbIrpFactory() getUsbIrpFactory()}
+	 * is a 'shared' instance, it may be used by multiple clients
+	 * in the same JVM.  If this factory implements the
+	 * {@link javax.usb.UsbIrp#recycle() recycling of UsbIrps}, it is
+	 * possible for a misbehaving client to retain a reference to, and
+	 * modify parts of, a UsbIrp that the misbehaving client has recycled.
+	 * If this potentially corrupt UsbIrp is given out to another (behaving)
+	 * client, the misbehaving client may cause the behaving client to
+	 * experience errors.
+	 * <p>
+	 * This method returns a newly created instance of a UsbIrpFactory,
+	 * so that a client can be sure they are using a 'clean' pool of
+	 * UsbIrps.  If a client uses this they should retain the reference
+	 * instead of calling this multiple times.
+	 */
+	public UsbIrpFactory getNewUsbIrpFactory();
 
 	/**
 	 * Get the (minimum) version number of the javax.usb API

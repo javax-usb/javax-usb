@@ -9,8 +9,6 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
-import java.util.*;
-
 import javax.usb.event.UsbPipeListener;
 
 /**
@@ -33,8 +31,9 @@ import javax.usb.event.UsbPipeListener;
  * This pipe's configuration and interface setting must be active to use this pipe.
  * Any attempt to use a UsbPipe belonging to an inactive configuration or interface setting
  * will throw a NotActiveException.
- * @author Dan Streetman
  * @author E. Michael Maximilien
+ * @author Dan Streetman
+ * @since 0.8.0
  */
 public interface UsbPipe
 {
@@ -189,6 +188,30 @@ public interface UsbPipe
 	public UsbEndpoint getUsbEndpoint();
 
 	/**
+	 * Get the sequence number.
+	 * <p>
+	 * This sequence number can be used to track submissions.
+	 * <p>
+	 * The number is always greater than zero, but the initial number is
+	 * not specified.  If the sequence number reaches its
+	 * maximum value, it will wrap to one.
+	 * <p>
+	 * Every submission, synchronous or asynchronous, byte[] or
+	 * UsbIrp, will increment the sequence number by exactly one.
+	 * Each submission is associated with the current sequence number
+	 * when it is submitted; e.g. if the UsbPipe's current sequence number
+	 * is 13, a submission will then be given the sequence number of 13
+	 * and the UsbPipe's sequence number will be incremented to 14.
+	 * <p>
+	 * The sequence number is available from
+	 * {@link javax.usb.UsbIrp#getSequenceNumber() UsbIrps} and
+	 * {@link javax.usb.UsbPipe.SubmitResult#getSequenceNumber() SubmitResults}.
+	 * @return this UsbPipe's current sequence number.
+	 * @throws javax.usb.NotActiveException if the config or interface setting is not active.
+	 */
+	public long getSequenceNumber();
+
+	/**
 	 * Synchonously submit a byte[] to the UsbPipe.
 	 * <p>
 	 * This can be used for input and output.
@@ -226,16 +249,38 @@ public interface UsbPipe
 	/**
 	 * Asynchonously submit a byte[] to the UsbPipe.
 	 * <p>
-	 * This creates a default UsbIrp for the data and submits it.
-	 * This is the same as
-	 * {@link #asyncSubmit(UsbIrp) asyncSubmit(UsbIrp irp)}.
-	 * This method is primarily a convienience method for those who wish to do simple submission.
-	 * @param data The data to submit.
-	 * @returns The UsbIrp created and submitted.
-	 * @throws javax.usb.UsbException if there was an error during submission
+	 * This can be used for input and output.
+	 * This may only be called when the pipe is idle or busy.
+	 * There is no guarantee that the javax.usb implementation or
+	 * platform USB stack supports multiple (queued) submissions.
+	 * This will block until the operation is submitted (not completed),
+	 * either sucessfully or with an error.
+	 * <p>
+	 * The SubmitResult.getDataLength() value will indicate the number of bytes sucessfully transferred
+	 * to or from the target endpoint (depending on direction) <b>only if</b> the operation was successful.
+	 * The return value will never exceed the total size of the provided buffer.
+	 * Nothing is guaranteed if the operation was not sucessful except the UsbException should
+	 * accurately reflect the cause of the error.
+	 * <p>
+	 * Short packets are accepted.  There is no way to disable short packet acceptance using this method.
+	 * See the USB 1.1 specification sec 5.3.2 for details on short packets and short packet detection.
+	 * <p>
+<!-- This will not be true after implementing UsbPipe Policies -->
+	 * The javax.usb implementation or platform's USB stack may impose minimum or maximum
+	 * limits on the buffer size, which may vary according to the pipe type.
+	 * <p>
+	 * Note that the words 'submission' and 'submit' are used somewhat vaguely; these methods
+	 * are methods to <i>submit</i> (verb) a <i>submission</i> (noun).  However, the asynchronous submission
+	 * methods only wait until the 'submission' has been passed to the lower layers for actual
+	 * execution over the 'wire'.  The synchronous submission methods wait until the entire
+	 * submission is complete (all data has been transferred).
+	 * @param data the buffer to use for this operation
+	 * @return a UsbPipe.SubmitResult future object associated with this operation
+	 * @throws javax.usb.UsbException if there was an error during the submission
 	 * @throws javax.usb.NotActiveException if the config or interface setting is not active.
+	 * @see javax.usb.UsbPipe.SubmitResult
 	 */
-	public UsbIrp asyncSubmit( byte[] data ) throws UsbException;
+	public UsbPipe.SubmitResult asyncSubmit( byte[] data ) throws UsbException;
 
 	/**
 	 * Synchonously submit a UsbIrp to the UsbPipe.
@@ -298,42 +343,6 @@ public interface UsbPipe
 	public void asyncSubmit( UsbIrp irp ) throws UsbException;
 
 	/**
-	 * Synchronously submit a List of UsbIrps.
-	 * <p>
-	 * This allows a contiguous submission of multiple UsbIrps.
-	 * Each UsbIrp is submitted in turn.  The only difference
-	 * between this and manual submission of each UsbIrp is:
-	 * <ul>
-	 * <li>This guarantees sycnhronized submisson of all the UsbIrps.</li>
-	 * <li>The implementation may optimize submission, especially in the
-	 * case of Isochronous UsbIrps.</li>
-	 * </ul>
-	 * @param list The List of UsbIrps.
-	 * @throws javax.usb.UsbException if there was an error during the submission
-	 * @throws javax.usb.NotActiveException if the config or interface setting is not active.
-	 * @throws java.util.IllegalArgumentException if the List does not contain UsbIrp(s).
-	 */
-	public void syncSubmit( List list ) throws UsbException;
-
-	/**
-	 * Asynchronously submit a List of UsbIrps.
-	 * <p>
-	 * This allows a contiguous submission of multiple UsbIrps.
-	 * Each UsbIrp is submitted in turn.  The only difference
-	 * between this and manual submission of each UsbIrp is:
-	 * <ul>
-	 * <li>This guarantees sycnhronized submisson of all the UsbIrps.</li>
-	 * <li>The implementation may optimize submission, especially in the
-	 * case of Isochronous UsbIrps.</li>
-	 * </ul>
-	 * @param list The List of UsbIrps.
-	 * @throws javax.usb.UsbException if there was an error during the submission
-	 * @throws javax.usb.NotActiveException if the config or interface setting is not active.
-	 * @throws java.util.IllegalArgumentException if the List does not contain UsbIrp(s).
-	 */
-	public void asyncSubmit( List list ) throws UsbException;
-
-	/**
 	 * Stop all submissions in progress
 	 * <p>
 	 * This will abort all submission in progress on the pipe,
@@ -360,5 +369,120 @@ public interface UsbPipe
 	 * @param listener the UsbPipeListener to remove
 	 */
 	public void removeUsbPipeListener( UsbPipeListener listener );
+
+	//-------------------------------------------------------------------------
+	// Public inner interface
+	//
+
+	/**
+	 * Defines a Future object for asynchronous submit results.
+	 * @author E. Michael Maximilien
+	 * @author Dan Streetman
+	 * @version 0.0.1 (JDK 1.1.x)
+	 */
+	public interface SubmitResult
+	{
+		/**
+		 * This number represents a unique (per UsbPipe) sequential number for this submission.
+		 * <p>
+		 * The number is unique per specific UsbPipe.  The initial number is not specified,
+		 * but the number will always be positive (greater than zero).  The number will be
+		 * incremented by one (1) for each submission on a specific UsbPipe where a SubmitResult
+		 * is generated.
+		 * @return a unique (per UsbPipe) number for this submission.
+		 */
+		public long getNumber();
+
+		/**
+		 * Get the sequence number of the associated submission.
+		 * <p>
+		 * This is similar to {@link #getNumber() getNumber} with the exception
+		 * that this is incremented for every submission, not just submissions
+		 * that generate a SubmitResult.
+		 * See UsbPipe's {@link javax.usb.UsbPipe#getSequenceNumber() getSequenceNumber}
+		 * for details.
+		 * @return the sequence number assigned to the associated submission.
+		 * @see javax.usb.UsbPipe#getSequenceNumber()
+		 */
+		public long getSequenceNumber();
+
+		/**
+		 * Get the pipe tht generated this SubmitResult.
+		 * @return the UsbPipe associated with the submission
+		 */
+		public UsbPipe getUsbPipe();
+	
+		/**
+		 * Get the data from the submission assocaited with this SubmitResult.
+		 * @return the data associated with the submission
+		 */
+		public byte[] getData();
+	
+		/**
+		 * Get the length of the data actually transferred to/from the target endpoint.
+		 * <p>
+		 * This is only valid after the submission completes successfully,
+		 * which may be determined by isCompleted() and isInUsbException().
+		 * @return the amount of data transferred in this submission
+		 */
+		public int getDataLength();
+	
+		/**
+		 * If the submission assocaited with this SubmitResult is complete.
+		 * @return true if this submit is done
+		 */
+		public boolean isCompleted();
+	
+		/**
+		 * Wait (block) until this submission is completed.
+		 * <p>
+		 * It is guaranteed that the submission will be complete when this
+		 * this method returns.
+		 * <p>
+		 * The implementation may or may not use synchronization on the SubmitResult.
+		 */
+		public void waitUntilCompleted();
+	
+		/**
+		 * Wait (block) until this submission is completed.
+		 * <p>
+		 * This method will return when at least one of the following
+		 * conditions are met:
+		 * <ul>
+		 * <li>The submission is complete.</li>
+		 * <li>The specified amount of time has elapsed.</li>
+		 * </ul>
+		 * The implementation may take some additional processing time
+		 * beyond the specified timeout, but should attempt to keep the
+		 * additional time to a minumim.  This method will not return
+		 * due to timeout until at least the specified amount of time
+		 * has passed.
+		 * <p>
+		 * The implementation may or may not use synchronization on the SubmitResult.
+		 * @param timeout the number of milliseconds to wait before giving up
+		 */
+		public void waitUntilCompleted( long timeout );
+	
+		/**
+		 * Get the UsbException that occured during submission.
+		 * @return any javax.usb.UsbException the submission may have caused
+		 */
+		public UsbException getUsbException();
+	
+		/**
+		 * If a UsbException occured.
+		 * @return true if this SubmitResult has a UsbException
+		 */
+		public boolean isInUsbException();
+
+		/**
+		 * Recycle this SubmitResult.
+		 * <p>
+		 * This should be called when the SubmitResult is no longer needed.
+		 * No fields or methods on this SubmitResult should be called after this method.
+		 */
+		public void recycle();
+
+	}
 
 }
