@@ -11,96 +11,115 @@ package javax.usb.os;
 
 import javax.usb.*;
 
-import javax.usb.event.UsbServicesEvent;
-import javax.usb.event.UsbServicesListener;
+import javax.usb.event.*;
 
 /**
  * Defines an interface for all necessary USB OS services.
  * <p>
- * Each platform needs to provide a class implementing this interface.  That class
+ * Each platform needs to provide a class implementing this interface.	That class
  * <b>must</b> define a no-argument (default) constructor which will used via reflection
  * to bootstrap the javax.usb implementation for the particular platform in question.
  * </p>
  * @author E. Michael Maximilien
  * @author Dan Streetman
- * @since 0.8.0
  */
-public interface UsbServices extends UsbTopologyServices
+public interface UsbServices
 {
-    //-------------------------------------------------------------------------
-    // Public registration methods
-    //
-
-    /**
-     * Adds a new UsbServicesListener object to receive events when the USB host
-     * has changes.  For instance a new device is plugged in or unplugged.
-     * @param listener the UsbServicesListener to register     
-     */
-    public void addUsbServicesListener( UsbServicesListener listener );
-
-    /**
-     * Adds a new UsbServicesListener object to receive events when the USB host
-     * has changes.  For instance a new device is plugged in or unplugged.
-     * @param listener the UsbServicesListener to register     
-     */
-    public void removeUsbServicesListener( UsbServicesListener listener );
-
-    //-------------------------------------------------------------------------
-    // Public getter methods
-    //
-
 	/**
-	 * @return the RequestFactory used to create Request object for the USB operations
-	 * @see javax.usb.Request
-	 * @see javax.usb.StandardOperations
-	 */ 
-	public RequestFactory getRequestFactory();
-
-	/**
-	 * Get a new instance of a RequestFactory.
+	 * Get the virtual UsbHub to which all physical Host Controller UsbHubs are attached.
 	 * <p>
-	 * Since the factory returned by {@link #getRequestFactory() getRequestFactory()}
-	 * is a 'shared' instance, it may be used by multiple clients
-	 * in the same JVM.  If this factory implements the
-	 * {@link javax.usb.Request#recycle() recycling of Requests}, it is
-	 * possible for a misbehaving client to retain a reference to, and
-	 * modify parts of, a Request that the misbehaving client has recycled.
-	 * If this potentially corrupt Request is given out to another (behaving)
-	 * client, the misbehaving client may cause the behaving client to
-	 * experience errors.
+	 * The USB root hub is a special hub at the top of the topology tree.
+	 * The USB 1.1 specification mentions root hubs in sec 5.2.3,
+	 * where it states that 'the host includes an embedded hub called
+	 * the root hub'.  The implication of this seems to be that the
+	 * (hardware) Host Controller device is the root hub, since
+	 * the Host Controller device 'emulates' a USB hub, and in
+	 * systems with only one physical Host Controller device, its
+	 * emulated hub is in effect the root hub.  However when
+	 * multiple Host Controller devices are considered, there are
+	 * two (2) options that were considered:
+	 * <ol>
+	 * <li>Have an array or list of the available topology trees,
+	 * with each physical Host Controller's emulated root hub as
+	 * the root UsbHub of that particular topology tree.  This
+	 * configuration could be compared to the MS-DOS/Windows decision
+	 * to assign drive letters to different physical drives (partitions).
+	 * </li>
+	 * <li>Have a 'virtual' root hub, which is completely virtual (not
+	 * associated with any physical device) and is created and managed
+	 * solely by the javax.usb implementation.  This configuration could
+	 * be compared to the UNIX descision to put all physical drives
+	 * on 'mount points' under a single 'root' (/) directory filesystem.
+	 * </li>
+	 * </ol>
+	 * The second configuration is what is used in this API.  The implementation
+	 * is responsible for creating a single root UsbHub which is completely
+	 * virtual (and available through the UsbServices object).  Every
+	 * UsbHub attached to this virtual root UsbHub corresponds to a
+	 * physical Host Controller's emulated hub.  I.e., the first level of
+	 * UsbDevices under the virtual root UsbHub are all UsbHubs corresponding
+	 * to a particular Host Controller on the system.  Note that since
+	 * the root UsbHub is a virtual hub, the number of ports is not
+	 * posible to specify; so all that is guaranteed is the number of ports
+	 * is at least equal to the number of UsbHubs attached to the root UsbHub.
+	 * The number of ports on the virtual root UsbHub may change if UsbHubs
+	 * are attached or detached (e.g., if a Host Controller is physically
+	 * hot-removed from the system or hot-plugged, or if its driver is
+	 * dynamically loaded, or for any other reason a top-level Host Controller's
+	 * hub is attached/detached).  This API specification suggests that the
+	 * number of ports for the root UsbHub equal the number of directly
+	 * attached UsbHubs.
 	 * <p>
-	 * This method returns a newly created instance of a RequestFactory,
-	 * so that a client can be sure they are using a 'clean' pool of
-	 * Requests.  If a client uses this they should retain the reference
-	 * instead of calling this multiple times.
-	 */ 
-	public RequestFactory getNewRequestFactory();
-
-	/**
-	 * @return a UsbIrpFactory
-	 * @see javax.usb.UsbIrp
+	 * The major deciding factors are listed here to show why the decision
+	 * to use the second option was made.
+	 * <ul>
+	 * <li>The first configuration results in having to maintain
+	 * a list of different and completely unconnected device topologies.
+	 * This means a search for a particular device must be performed on
+	 * all the device topologies.
+	 * </li>
+	 * <li>Since a UsbHub already has a list of UsbDevices, and
+	 * a UsbHub <i>is</i> a UsbDevice, introducing a new, different
+	 * list (as in option 1) is not a desirable action, since it
+	 * introduces extra unnecessary steps in performing actions, like
+	 * searching.
+	 * <li>As an example, a recursive search for a certain device
+	 * in the first configuration involves getting the first root UsbHub,
+	 * getting all its attached UsbDevices, and checking each device;
+	 * any of those devices which are UsbHubs can be also searched recursively.
+	 * Then, the entire operation must be performed on the next root UsbHub,
+	 * and this is repeated for all the root UsbHubs in the array/list.
+	 * In the second configuration, the virtual root UsbHub is recursively
+	 * searched in a single operation.
+	 * <li>The device model hierarchy was intentionally unified by making
+	 * all the Interfaces extends UsbInfo.  This way every part of the
+	 * device model structure can be collected into a UsbInfoList or
+	 * handled as a UsbInfo.  The first configuration breaks this
+	 * since a list (which could be a UsbInfoList) is required as part
+	 * of the device model structure (the top level).
+	 * <li>Having multiple root UsbHubs is not a desirable 'feature',
+	 * which results in also having multiple topology trees.
+	 * The second configuration allows for a <i>single</i> 'true' root UsbHub,
+	 * which really is at the 'root' of a <i>single</i> topology tree.
+	 * </li>
+	 * </ul>
+	 * @return The virtual UsbHub object
+	 * @exception UsbException If there is an error accessing javax.usb.
+	 * @exception SecurityException If current client not configured to access javax.usb.
 	 */
-	public UsbIrpFactory getUsbIrpFactory();
+	public UsbHub getUsbHub() throws UsbException,SecurityException;
 
 	/**
-	 * Get a new instance of a UsbIrpFactory.
-	 * <p>
-	 * Since the factory returned by {@link #getUsbIrpFactory() getUsbIrpFactory()}
-	 * is a 'shared' instance, it may be used by multiple clients
-	 * in the same JVM.  If this factory implements the
-	 * {@link javax.usb.UsbIrp#recycle() recycling of UsbIrps}, it is
-	 * possible for a misbehaving client to retain a reference to, and
-	 * modify parts of, a UsbIrp that the misbehaving client has recycled.
-	 * If this potentially corrupt UsbIrp is given out to another (behaving)
-	 * client, the misbehaving client may cause the behaving client to
-	 * experience errors.
-	 * <p>
-	 * This method returns a newly created instance of a UsbIrpFactory,
-	 * so that a client can be sure they are using a 'clean' pool of
-	 * UsbIrps.  If a client uses this they should retain the reference
-	 * instead of calling this multiple times.
+	 * Add UsbServicesListener.
+	 * @param listener The UsbServicesListener.
 	 */
-	public UsbIrpFactory getNewUsbIrpFactory();
+	public void addUsbServicesListener( UsbServicesListener listener );
+
+	/**
+	 * Remove UsbServicesListener.
+	 * @param listener The UsbServicesListener.
+	 */
+	public void removeUsbServicesListener( UsbServicesListener listener );
 
 	/**
 	 * Get the (minimum) version number of the javax.usb API
