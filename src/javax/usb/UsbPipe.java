@@ -225,6 +225,8 @@ public interface UsbPipe
 	 * and if the implementation permits, synchronously on the native level.</li>
 	 * <li>The implementation may optimize the submissions, especially
 	 * in the case of Isochronous transfers.</li>
+	 * <li>If any of the UsbIrps fails (initial submisson or UsbIrp status),
+	 * none of the remaining UsbIrps will be submitted.</li>
 	 * </ul>
 	 * <p>
 	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
@@ -247,6 +249,8 @@ public interface UsbPipe
 	 * and if the implementation permits, synchronously on the native level.</li>
 	 * <li>The implementation may optimize the submissions, especially
 	 * in the case of Isochronous transfers.</li>
+	 * <li>If any of the UsbIrps fails (initial submissions only),
+	 * none of the remaining UsbIrps will be submitted.</li>
 	 * </ul>
 	 * <p>
 	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
