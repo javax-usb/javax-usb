@@ -360,9 +360,7 @@ control-type header required for control communication.  Otherwise, the
 can be divided into four different categories; the data buffer, status,
 short packets, and the \myclass{UsbException}.
 
-\begin{figure}
-\label{UsbIrps}
-\end{figure}
+\myfigure{figs/UsbIrps}{UsbControlIrp and UsbIrp}{UsbIrps}
 
 First, the data buffer is simply a byte[] but there are additional methods that
 are used to modify the transfer of data.  There are methods to set and get the
@@ -452,9 +450,7 @@ set either the actual length of transferred data or the \myclass{UsbException} o
 simplest communication example, which does not show the use of data offset or
 length, and assumes no listeners are being used.
 
-\begin{figure}
-\label{DCP}
-\end{figure}
+\myfigure{figs/DCP}{Default Control Pipe}{DCP}
 
 \mysectionend
 
@@ -496,9 +492,7 @@ While it is not shown in the example, if any \myinterface{UsbPipeListener}s had 
 the \myinterface{UsbPipe}, they would receive either a \myclass{UsbPipeDataEvent} or a \myclass{UsbPipeErrorEvent},
 depending on whether the communication succeeded or not.
 
-\begin{figure}
-\label{UsbPipeSync}
-\end{figure}
+\myfigure{figs/UsbPipeSync}{UsbPipe synchronous submission}{UsbPipeSync}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % UsbPipe submission, asynchronous
@@ -527,9 +521,7 @@ and finally completing the \myinterface{UsbIrp}.  Next the \myinterface{UsbPipeL
 \myclass{UsbPipeDataEvent} or \myclass{UsbPipeErrorEvent}, depending on whether the submission was
 successful or not.
 
-\begin{figure}
-\label{UsbPipeAsync}
-\end{figure}
+\myfigure{figs/UsbPipeAsync}{UsbPipe asynchronous submission}{UsbPipeAsync}
 
 \mysectionend
 
@@ -557,9 +549,7 @@ occurred during data transfer.  In both cases, after the data transfer is comple
 or an error occurs, any listeners that have been added to the pipe will receive
 a \myclass{UsbPipeDataEvent} or \myclass{UsbPipeErrorEvent}.
 
-\begin{figure}
-\label{UsbPipeByteArray}
-\end{figure}
+\myfigure{figs/UsbPipeByteArray}{UsbPipe byte array submissions}{UsbPipeByteArray}
 
 \mysectionend
 
@@ -582,9 +572,7 @@ add a \myinterface{UsbDeviceListener} to the \myinterface{UsbDevice}.  Then, whe
 disconnected, both the \myinterface{UsbServicesListener} and the \myinterface{UsbDeviceListener} will be
 notified with a \myclass{UsbServicesEvent} and a \myclass{UsbDeviceEvent}, respectively.
 
-\begin{figure}
-\label{Hotplugging}
-\end{figure}
+\myfigure{figs/Hotplugging}{Hotplugging}{Hotplugging}
 
 \mysectionend
 
@@ -601,9 +589,7 @@ many more specific \myclass{Exception}s such as \myclass{UsbBabbleException}, \m
 and others.  Also, there are some \myclass{RuntimeException}s such as \myclass{UsbNotActiveException}
 and \myclass{UsbNotClaimedException}.
 
-\begin{figure}
-\label{Exceptions}
-\end{figure}
+\myfigure{figs/Exceptions}{Exceptions}{Exceptions}
 
 \mysectionend
 
