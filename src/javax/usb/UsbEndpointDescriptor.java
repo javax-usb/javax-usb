@@ -10,7 +10,7 @@ package javax.usb;
  */
 
 /**
- * Interface for USB endpoint descriptor.
+ * Interface for a USB endpoint descriptor.
  * <p>
  * See the USB 1.1 specification section 9.6.4.
  * @author Dan Streetman

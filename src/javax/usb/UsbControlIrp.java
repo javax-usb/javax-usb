@@ -10,7 +10,7 @@ package javax.usb;
  */
 
 /**
- * Defines a Control-type USB Irp (I/O Request Packet).
+ * Interface for a control-type USB IRP (I/O Request Packet).
  * <p>
  * This is identical to a UsbIrp, except this also contains the Control-specific
  * setup packet information.

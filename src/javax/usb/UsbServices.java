@@ -12,7 +12,7 @@ package javax.usb;
 import javax.usb.event.*;
 
 /**
- * Entry point for the JSR80 Implementation.
+ * Interface for a javax.usb implementation.
  * <p>
  * This is instantiated by the UsbHostManager.
  * The implementation must include a no-parameter constructor.

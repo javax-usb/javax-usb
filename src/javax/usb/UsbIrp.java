@@ -10,7 +10,7 @@ package javax.usb;
  */
 
 /**
- * Defines a USB Irp (I/O Request Packet).
+ * Interface for a USB IRP (I/O Request Packet).
  * <p>
  * Some USB communication requires addiitonal metadata that describes how the actual
  * data should be handled when being transferred.  This UsbIrp encapsulates the

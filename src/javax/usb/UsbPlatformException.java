@@ -10,7 +10,7 @@ package javax.usb;
  */
 
 /**
- * Platform-specific UsbException.
+ * Exception indicating a platform-specific UsbException.
  * <p>
  * This indicates an error occurred that is specific to the operating system or platform.
  * This provides access to the specific {@link #getErrorCode() error code} and/or
