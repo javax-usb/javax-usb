@@ -29,7 +29,6 @@ package javax.usb;
  * in the Java subsystem implementation or by the native USB implementation.
  * @author Dan Streetman
  * @author E. Michael Maximilien
- * @since 0.8.0
  */
 public interface UsbIrp
 {
@@ -163,6 +162,12 @@ public interface UsbIrp
 	 * @return any javax.usb.UsbException the submission may have caused.
 	 */
 	public UsbException getUsbException();
+
+	/**
+	 * Set the UsbException.
+	 * @param uE The UsbException.
+	 */
+	public void setUsbException(UsbException uE);
 
 	/**
 	 * If short packets should be accepted.
