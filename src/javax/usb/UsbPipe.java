@@ -74,9 +74,10 @@ public interface UsbPipe
 	 * <p>
 	 * If the pipe is already closed, this fails.
 	 * @exception UsbException If the UsbPipe could not be closed.
+	 * @exception UsbNotActiveException If the UsbPipe is not active.
 	 * @exception UsbNotOpenException If the UsbPipe is not open.
 	 */
-	public void close() throws UsbException,UsbNotOpenException;
+	public void close() throws UsbException,UsbNotActiveException,UsbNotOpenException;
 
 	/**
 	 * If this pipe is active.
@@ -131,10 +132,11 @@ public interface UsbPipe
 	 * @param data The buffer to use.
 	 * @return The number of bytes actually transferred.
 	 * @exception UsbException If an error occurs.
+	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the data is null.
 	 */
-	public int syncSubmit( byte[] data ) throws UsbException,UsbNotOpenException,IllegalArgumentException;
+	public int syncSubmit( byte[] data ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
 
 	/**
 	 * Asynchonously submit a byte[] to the UsbPipe.
@@ -158,10 +160,11 @@ public interface UsbPipe
 	 * @param data The buffer to use.
 	 * @return A UsbIrp representing the submission.
 	 * @exception UsbException If an error occurs.
+	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the data is null.
 	 */
-	public UsbIrp asyncSubmit( byte[] data ) throws UsbException,UsbNotOpenException,IllegalArgumentException;
+	public UsbIrp asyncSubmit( byte[] data ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
 
 	/**
 	 * Synchonously submit a UsbIrp to the UsbPipe.
@@ -181,10 +184,11 @@ public interface UsbPipe
 	 * the UsbIrp must be a {@link javax.usb.UsbControlIrp UsbControlIrp}.
 	 * @param irp A UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
+	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the UsbIrp is not valid.
 	 */
-	public void syncSubmit( UsbIrp irp ) throws UsbException,UsbNotOpenException,IllegalArgumentException;
+	public void syncSubmit( UsbIrp irp ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
 
 	/**
 	 * Asynchonously submit a UsbIrp to the UsbPipe.
@@ -205,10 +209,11 @@ public interface UsbPipe
 	 * the UsbIrp must be a {@link javax.usb.UsbControlIrp UsbControlIrp}.
 	 * @param irp The UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
+	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the UsbIrp is not valid.
 	 */
-	public void asyncSubmit( UsbIrp irp ) throws UsbException,UsbNotOpenException,IllegalArgumentException;
+	public void asyncSubmit( UsbIrp irp ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
 
 	/**
 	 * Synchonously submit a List of UsbIrps to the UsbPipe.
@@ -226,10 +231,11 @@ public interface UsbPipe
 	 * the UsbIrps must be {@link javax.usb.UsbControlIrp UsbControlIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
+	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the list is empty or contains any non-UsbIrp objects, or those UsbIrp(s) are invalid.
 	 */
-	public void syncSubmit( List list ) throws UsbException,UsbNotOpenException,IllegalArgumentException;
+	public void syncSubmit( List list ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
 
 	/**
 	 * Asynchonously submit a List of UsbIrps to the UsbPipe.
@@ -247,10 +253,11 @@ public interface UsbPipe
 	 * the UsbIrps must be {@link javax.usb.UsbControlIrp UsbControlIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
+	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the list is empty or contains any non-UsbIrp objects, or those UsbIrp(s) are invalid.
 	 */
-	public void asyncSubmit( List list ) throws UsbException,UsbNotOpenException,IllegalArgumentException;
+	public void asyncSubmit( List list ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
 
 	/**
 	 * Stop all submissions in progress
@@ -258,9 +265,10 @@ public interface UsbPipe
 	 * This will abort all submission in progress on the pipe,
 	 * and block until all submissions are complete.
 	 * There will be no submissions pending after this returns.
+	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 */
-	public void abortAllSubmissions() throws UsbNotOpenException;
+	public void abortAllSubmissions() throws UsbNotActiveException,UsbNotOpenException;
 
 	/**
 	 * Create a UsbIrp.
