@@ -19,14 +19,19 @@ package javax.usb;
  * <p>
  * Before submitting this, at least some of these (depending on UsbIrp implementation) must be performed:
  * <ul>
- * <li>The {@link #getData() data} must be {@link #setData(byte[]) set}; the default is an empty byte[].</li>
- * <li>The {@link #getOffset() data offset}, may be {@link #setOffset(int) set}; the default is no offset.</li>
- * <li>The {@link #getLength() data length} may be {@link #setLength(int) set}; the default is the full data length (see {@link #getLength() getLength()} for details).</li>
+ * <li>The {@link #getData() data} must be {@link #setData(byte[]) set}.</li>
+ * <li>The {@link #getOffset() data offset}, may be {@link #setOffset(int) set}; the default is 0.</li>
+ * <li>The {@link #getLength() data length} may be {@link #setLength(int) set}; the default is the full data length.</li>
  * <li>The {@link #getAcceptShortPacket() Short Packet policy} may be {@link #setAcceptShortPacket(boolean) set}; the default is true.</li>
  * <li>The {@link #getUsbException() UsbException} must be null (and {@link #isUsbException() isUsbException} must be false).</li>
  * <li>The {@link #isComplete() complete state} must be false.</li>
  * </ul>
  * Any UsbIrp implementation must behave as specified in this interface's documentation, including the specified defaults.
+ * Note that {@link #setData(byte[]) setData()} not only sets the data, but also
+ * {@link #setLength(int) sets the length} to the length of the new data buffer.  This behavior allows
+ * the default case, where the offset is 0 and the length is the full data buffer, to work correctly.
+ * Only the data must be set, the offset and length are set to correct values.  If the offset and/or length
+ * should be non-standard values, then they must be set <i>after</i> the data is set.
  * <p>
  * The javax.usb implementation will set the {@link #getActualLength() data length} and, if unsuccessful, the
  * {@link #getUsbException() UsbException}, after processing.  Finally, it will call {@link #complete() complete}.
@@ -40,8 +45,7 @@ public interface UsbIrp
 	/**
 	 * Get the data.
 	 * <p>
-	 * This defaults to an empty byte[].  This will never return null,
-	 * if there is no data it will return an empty byte[].
+	 * This defaults to an empty byte[].  This will never return null.
 	 * @return The data.
 	 */
 	public byte[] getData();
@@ -51,7 +55,7 @@ public interface UsbIrp
 	 * <p>
 	 * This indicates the starting byte in the {@link #getData() data}.
 	 * <p>
-	 * This defaults to no offset (0).
+	 * This defaults to no offset (0).  This will never be negative.
 	 * @return The offset to use.
 	 */
 	public int getOffset();
@@ -60,26 +64,17 @@ public interface UsbIrp
 	 * The amount of data to transfer.
 	 * <p>
 	 * This should be set to the amount of data to transfer.
+	 * The default is the full length of the data buffer.
+	 * This will never be negative.
 	 * <p>
-	 * This defaults to returning a dynamic value based on the current
-	 * {@link #getOffset() offset} and {@link #getData() data}.length;
-	 * specifically, this will return
-	 * <code>getData().length - getOffset()</code>.  This default behavior
-	 * allows for the most common case, where the length should be all data in the buffer,
-	 * to be correct without extra work.  Note that if data.length - offset is negative,
-	 * this will return 0; in no case will this ever return a negative number.
-	 * <p>
-	 * If the length has been {@link #setLength(int) set} to a non-negative number, this will
-	 * return that regardless of the current offset or data length.
+	 * This will be automatically reset every time the data is
+	 * {@link #setData(byte[]) set}.
 	 * @return The amount of data to transfer.
 	 */
 	public int getLength();
 
 	/**
 	 * The amount of data that was transferred.
-	 * <p>
-	 * This will never return a negative number, nor greater than
-	 * {@link #getData() getData()}.length.
 	 * @return The amount of data that was transferred.
 	 */
 	public int getActualLength();
@@ -87,26 +82,27 @@ public interface UsbIrp
 	/**
 	 * Set the data.
 	 * <p>
-	 * A null parameter is converted to an empty byte[].
+	 * <i>Note that the {@link #getLength() length} will be reset
+	 * when this is called</i>.  This will {@link #setLength(int) set the length}
+	 * to {@link #getData() getData()}.length.
 	 * @param data The data.
+	 * @exception IllegalArgumentException If the data is null.
 	 */
 	public void setData(byte[] data);
 
 	/**
 	 * Set the offset.
-	 * <p>
-	 * A negative value is converted to 0.
 	 * @param offset The offset.
+	 * @exception IllegalArgumentException If the offset is negative.
 	 */
 	public void setOffset(int offset);
 
 	/**
 	 * Set the amount of data to transfer.
 	 * <p>
-	 * If the value is 0 or greater, that specific value is used.
-	 * A negative value causes {@link #getLength() getLength()} to resume
-	 * its default behavior.
+	 * This must be set <i>after</i> the data is {@link #setData(byte[]) set}.
 	 * @param length The amount of data to transfer.
+	 * @exception IllegalArgumentException If the length is negative.
 	 */
 	public void setLength(int length);
 
@@ -118,6 +114,7 @@ public interface UsbIrp
 	 * before calling {@link #complete() complete}, regardless of
 	 * whether the submission was successful or not.
 	 * @param length The amount of data that was transferred.
+	 * @exception IllegalArgumentException If the length is negative.
 	 */
 	public void setActualLength(int length);
 
@@ -148,15 +145,15 @@ public interface UsbIrp
 	 * short packet detection.
 	 * If short packets are accepted (true), a short packet indicates the end of data.
 	 * If short packets are not accepted (false), a short packet will generate
-	 * an UsbException.
-	 * <p>
-	 * This is set by the application and will never be changed by the implementation.
+	 * an UsbException.  The default is true.
 	 * @return If short packects should be accepted.
 	 */
 	public boolean getAcceptShortPacket();
 
 	/**
 	 * Set if short packets should be accepted.
+	 * <p>
+	 * This should be set by the application.
 	 * @param accept If short packets should be accepted.
 	 */
 	public void setAcceptShortPacket( boolean accept );
@@ -173,10 +170,11 @@ public interface UsbIrp
 	 * Set this as complete.
 	 * <p>
 	 * This is the last method the implementation calls; it indicates the UsbIrp has completed.  
-	 * The implementation will set the {@link #setActualLength(int) actual length},
+	 * The implementation will {@link #setActualLength(int) set the actual length},
 	 * even if the submission was unsuccessful, before calling this.
 	 * The implementation will {@link #setUsbException(UsbException) set the UsbException},
 	 * if appropriate, before calling this.
+	 * <p>
 	 * After calling this {@link #isComplete() isComplete} will return true.
 	 */
 	public void complete();

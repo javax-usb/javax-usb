@@ -15,7 +15,7 @@ import java.io.UnsupportedEncodingException;
  * Interface for a USB string descriptor.
  * @author Dan Streetman
  */
-public interface StringDescriptor extends Descriptor
+public interface UsbStringDescriptor extends UsbDescriptor
 {
 	/**
 	 * Get this descriptor's bString.

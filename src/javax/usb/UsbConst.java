@@ -28,7 +28,7 @@ public interface UsbConst
 	public static final Object DEVICE_SPEED_FULL    = new Object();
 
 	//**************************************************************************
-	// Config constants
+	// Configuration constants
 
     public static final byte CONFIG_POWERED_MASK  = (byte)0x60;
     public static final byte CONFIG_SELF_POWERED  = (byte)0x40;

@@ -15,7 +15,7 @@ package javax.usb;
  * See the USB 1.1 specification section 9.6.4.
  * @author Dan Streetman
  */
-public interface EndpointDescriptor extends Descriptor
+public interface UsbEndpointDescriptor extends UsbDescriptor
 {
     /**
 	 * Get this descriptor's bEndpointAddress.

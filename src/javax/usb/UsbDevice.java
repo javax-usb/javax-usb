@@ -45,7 +45,7 @@ public interface UsbDevice
 	 * This is a convienence method, which uses
 	 * {@link #getString(byte) getString}.
 	 * @return The manufacturer String, or null.
-	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
     public String getManufacturerString() throws UsbException,UnsupportedEncodingException;
@@ -56,7 +56,7 @@ public interface UsbDevice
 	 * This is a convienence method, which uses
 	 * {@link #getString(byte) getString}.
 	 * @return The serial number String, or null.
-	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
     public String getSerialNumberString() throws UsbException,UnsupportedEncodingException;
@@ -67,7 +67,7 @@ public interface UsbDevice
 	 * This is a convienence method, which uses
 	 * {@link #getString(byte) getString}.
 	 * @return The product String, or null.
-	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
     public String getProductString() throws UsbException,UnsupportedEncodingException;
@@ -86,46 +86,46 @@ public interface UsbDevice
     public Object getSpeed();
 
     /**
-	 * Get all UsbConfigs for this device.
+	 * Get all UsbConfigurations for this device.
 	 * <p>
 	 * The List is unmodifiable.
-	 * @return All UsbConfigs for this device.
+	 * @return All UsbConfigurations for this device.
 	 */
-    public List getUsbConfigs();
+    public List getUsbConfigurations();
 
 	/**
-	 * Get the specified UsbConfig.
+	 * Get the specified UsbConfiguration.
 	 * <p>
-	 * If the specified UsbConfig does not exist, null is returned.
+	 * If the specified UsbConfiguration does not exist, null is returned.
 	 * Config number 0 is reserved for the Not Configured state (see the USB 1.1 specification
-	 * section 9.4.2).  Obviously, no UsbConfig exists for the Not Configured state.
-	 * @return The specified UsbConfig, or null.
+	 * section 9.4.2).  Obviously, no UsbConfiguration exists for the Not Configured state.
+	 * @return The specified UsbConfiguration, or null.
 	 */
-	public UsbConfig getUsbConfig( byte number );
+	public UsbConfiguration getUsbConfiguration( byte number );
 
 	/**
-	 * If this UsbDevice contains the specified UsbConfig.
+	 * If this UsbDevice contains the specified UsbConfiguration.
 	 * <p>
 	 * This will return false for zero (the Not Configured state).
-	 * @return If the specified UsbConfig is contained in this UsbDevice.
+	 * @return If the specified UsbConfiguration is contained in this UsbDevice.
 	 */
-	public boolean containsUsbConfig( byte number );
+	public boolean containsUsbConfiguration( byte number );
 
 	/**
-	 * Get the number of the active UsbConfig.
+	 * Get the number of the active UsbConfiguration.
 	 * <p>
 	 * If the device is in a Not Configured state, this will return zero.
 	 * @return The active config number.
 	 */
-	public byte getActiveUsbConfigNumber();
+	public byte getActiveUsbConfigurationNumber();
 
     /**
-	 * Get the active UsbConfig.
+	 * Get the active UsbConfiguration.
 	 * <p>
 	 * If this device is Not Configured, this returns null.
-	 * @return The active UsbConfig, or null.
+	 * @return The active UsbConfiguration, or null.
 	 */
-    public UsbConfig getActiveUsbConfig();
+    public UsbConfiguration getActiveUsbConfiguration();
 
 	/**
 	 * If this UsbDevice is configured.
@@ -142,26 +142,26 @@ public interface UsbDevice
 	 * The descriptor may be cached.
 	 * @return The device descriptor.
 	 */
-	public DeviceDescriptor getDeviceDescriptor();
+	public UsbDeviceDescriptor getUsbDeviceDescriptor();
 
 	/**
 	 * Get the specified string descriptor.
 	 * <p>
-	 * This is a convienence method.  The StringDescriptor may be cached.
+	 * This is a convienence method.  The UsbStringDescriptor may be cached.
 	 * If the device does not support strings or does not define the
 	 * specified string descriptor, this returns null.
 	 * @param index The index of the string descriptor to get.
 	 * @return The specified string descriptor.
 	 * @exception UsbException If an error occurred while getting the string descriptor.
 	 */
-	public StringDescriptor getStringDescriptor( byte index ) throws UsbException;
+	public UsbStringDescriptor getUsbStringDescriptor( byte index ) throws UsbException;
 
 	/**
 	 * Get the String from the specified string descriptor.
 	 * <p>
 	 * This is a convienence method, which uses
-	 * {@link #getStringDescriptor(byte) getStringDescriptor()}.
-	 * {@link javax.usb.StringDescriptor#getString() getString()}.
+	 * {@link #getUsbStringDescriptor(byte) getUsbStringDescriptor()}.
+	 * {@link javax.usb.UsbStringDescriptor#getString() getString()}.
 	 * @param index The index of the string to get.
 	 * @return The specified String.
 	 * @exception UsbException If an error occurred while getting the String.
@@ -170,58 +170,58 @@ public interface UsbDevice
 	public String getString( byte index ) throws UsbException,UnsupportedEncodingException;
 
 	/**
-	 * Submit a ControlUsbIrp synchronously to the Default Control Pipe.
-	 * @param irp The ControlUsbIrp.
+	 * Submit a UsbControlIrp synchronously to the Default Control Pipe.
+	 * @param irp The UsbControlIrp.
 	 * @exception UsbException If an error occurrs.
 	 */
-	public void syncSubmit( ControlUsbIrp irp ) throws UsbException;
+	public void syncSubmit( UsbControlIrp irp ) throws UsbException;
 
 	/**
-	 * Submit a ControlUsbIrp asynchronously to the Default Control Pipe.
-	 * @param irp The ControlUsbIrp.
+	 * Submit a UsbControlIrp asynchronously to the Default Control Pipe.
+	 * @param irp The UsbControlIrp.
 	 * @exception UsbException If an error occurrs.
 	 */
-	public void asyncSubmit( ControlUsbIrp irp ) throws UsbException;
+	public void asyncSubmit( UsbControlIrp irp ) throws UsbException;
 
 	/**
-	 * Submit a List of ControlUsbIrps synchronously to the Default Control Pipe.
+	 * Submit a List of UsbControlIrps synchronously to the Default Control Pipe.
 	 * <p>
-	 * All ControlUsbIrps are guaranteed to be atomically (with respect to other clients
+	 * All UsbControlIrps are guaranteed to be atomically (with respect to other clients
 	 * of this API) submitted to the Default Control Pipe.  Atomicity on a native level
 	 * is implementation-dependent.
-	 * @param list The List of ControlUsbIrps.
+	 * @param list The List of UsbControlIrps.
 	 * @exception UsbException If an error occurrs.
 	 */
 	public void syncSubmit( List list ) throws UsbException;
 
 	/**
-	 * Submit a List of ControlUsbIrps asynchronously to the Default Control Pipe.
+	 * Submit a List of UsbControlIrps asynchronously to the Default Control Pipe.
 	 * <p>
-	 * All ControlUsbIrps are guaranteed to be atomically (with respect to other clients
+	 * All UsbControlIrps are guaranteed to be atomically (with respect to other clients
 	 * of this API) submitted to the Default Control Pipe.  Atomicity on a native level
 	 * is implementation-dependent.
-	 * @param list The List of ControlUsbIrps.
+	 * @param list The List of UsbControlIrps.
 	 * @exception UsbException If an error occurrs.
 	 */
 	public void asyncSubmit( List list ) throws UsbException;
 
 	/**
-	 * Create a ControlUsbIrp.
+	 * Create a UsbControlIrp.
 	 * <p>
-	 * This creates a ControlUsbIrp that may be optimized for use on
+	 * This creates a UsbControlIrp that may be optimized for use on
 	 * this UsbDevice.  Using this UsbIrp instead of a
-	 * {@link javax.usb.util.DefaultControlUsbIrp DefaultControlUsbIrp}
+	 * {@link javax.usb.util.DefaultUsbControlIrp DefaultUsbControlIrp}
 	 * may increase performance or decrease memory requirements.
 	 * <p>
-	 * The UsbDevice cannot require this ControlUsbIrp to be used, all submit
-	 * methods <i>must</i> accept any ControlUsbIrp implementation.
+	 * The UsbDevice cannot require this UsbControlIrp to be used, all submit
+	 * methods <i>must</i> accept any UsbControlIrp implementation.
 	 * @param bmRequestType The bmRequestType.
 	 * @param bRequest The bRequest.
 	 * @param wValue The wValue.
 	 * @param wIndex The wIndex.
-	 * @return A ControlUsbIrp ready for use.
+	 * @return A UsbControlIrp ready for use.
 	 */
-	public ControlUsbIrp createControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex);
+	public UsbControlIrp createUsbControlIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex);
 
 	/**
 	 * Add a UsbDeviceListener to this UsbDevice.

@@ -45,9 +45,10 @@ public interface UsbPipe
 	 * <p>
 	 * If the pipe is already open, this does nothing.
 	 * @exception UsbException If the UsbPipe could not be opened.
-	 * @exception NotActiveException If the config or interface setting is not active.
+	 * @exception UsbNotActiveException If the config or interface setting is not active.
+	 * @exception UsbNotClaimedException If the interface is not claimed.
 	 */
-	public void open() throws UsbException,NotActiveException;
+	public void open() throws UsbException,UsbNotActiveException,UsbNotClaimedException;
 
 	/**
 	 * Close this UsbPipe.
@@ -57,9 +58,9 @@ public interface UsbPipe
 	 * <p>
 	 * If the pipe is already closed, this does nothing.
 	 * @exception UsbException If the UsbPipe could not be closed.
-	 * @exception NotActiveException If the config or interface setting is not active.
+	 * @exception UsbNotOpenException If the UsbPipe is not open.
 	 */
-	public void close() throws UsbException,NotActiveException;
+	public void close() throws UsbException,UsbNotOpenException;
 
 	/**
 	 * If this pipe is active.
@@ -98,7 +99,7 @@ public interface UsbPipe
 	 * There is no maximum size restriction; the implementation will segment the buffer
 	 * into multiple transactions if required.  There may be a minimum size, but it
 	 * will not be more than the
-	 * {@link javax.usb.EndpointDescriptor#wMaxPacketSize() maximum packet size}.
+	 * {@link javax.usb.UsbEndpointDescriptor#wMaxPacketSize() maximum packet size}.
 	 * <p>
 	 * This will block until either all data is transferred or an error occurrs.
 	 * Short packets indicate either the end of data or an error.
@@ -114,9 +115,9 @@ public interface UsbPipe
 	 * @param data The buffer to use.
 	 * @return The number of bytes actually transferred.
 	 * @exception UsbException If an error occurs.
-	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
+	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 */
-	public int syncSubmit( byte[] data ) throws UsbException,NotOpenException;
+	public int syncSubmit( byte[] data ) throws UsbException,UsbNotOpenException;
 
 	/**
 	 * Asynchonously submit a byte[] to the UsbPipe.
@@ -127,7 +128,7 @@ public interface UsbPipe
 	 * There is no maximum size restriction; the implementation will segment the buffer
 	 * into multiple transactions if required.  There may be a minimum size, but it
 	 * will not be more than the
-	 * {@link javax.usb.EndpointDescriptor#wMaxPacketSize() maximum packet size}.
+	 * {@link javax.usb.UsbEndpointDescriptor#wMaxPacketSize() maximum packet size}.
 	 * <p>
 	 * The implementation should only place this on a queue, or perform whatever
 	 * minimal processing is required, and then return.  This method will not
@@ -140,9 +141,9 @@ public interface UsbPipe
 	 * @param data The buffer to use.
 	 * @return A UsbIrp representing the submission.
 	 * @exception UsbException If an error occurs.
-	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
+	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 */
-	public UsbIrp asyncSubmit( byte[] data ) throws UsbException,NotOpenException;
+	public UsbIrp asyncSubmit( byte[] data ) throws UsbException,UsbNotOpenException;
 
 	/**
 	 * Synchonously submit a UsbIrp to the UsbPipe.
@@ -153,18 +154,18 @@ public interface UsbPipe
 	 * There is no maximum size restriction; the implementation will segment the buffer
 	 * into multiple transactions if required.  There may be a minimum size, but it
 	 * will not be more than the
-	 * {@link javax.usb.EndpointDescriptor#wMaxPacketSize() maximum packet size}.
+	 * {@link javax.usb.UsbEndpointDescriptor#wMaxPacketSize() maximum packet size}.
 	 * <p>
 	 * This will block until either all data is transferred or an error occurrs.
 	 * Short packets indicate either the end of data or an error.
 	 * <p>
 	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
-	 * the UsbIrp must be a {@link javax.usb.ControlUsbIrp ControlUsbIrp}.
+	 * the UsbIrp must be a {@link javax.usb.UsbControlIrp UsbControlIrp}.
 	 * @param irp A UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
-	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
+	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 */
-	public void syncSubmit( UsbIrp irp ) throws UsbException,NotOpenException;
+	public void syncSubmit( UsbIrp irp ) throws UsbException,UsbNotOpenException;
 
 	/**
 	 * Asynchonously submit a UsbIrp to the UsbPipe.
@@ -175,19 +176,19 @@ public interface UsbPipe
 	 * There is no maximum size restriction; the implementation will segment the buffer
 	 * into multiple transactions if required.  There may be a minimum size, but it
 	 * will not be more than the
-	 * {@link javax.usb.EndpointDescriptor#wMaxPacketSize() maximum packet size}.
+	 * {@link javax.usb.UsbEndpointDescriptor#wMaxPacketSize() maximum packet size}.
 	 * <p>
 	 * The implementation should only place this on a queue, or perform whatever
 	 * minimal processing is required, and then return.  This method will not
 	 * block until the submission is complete.
 	 * <p>
 	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
-	 * the UsbIrp must be a {@link javax.usb.ControlUsbIrp ControlUsbIrp}.
+	 * the UsbIrp must be a {@link javax.usb.UsbControlIrp UsbControlIrp}.
 	 * @param irp The UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
-	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
+	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 */
-	public void asyncSubmit( UsbIrp irp ) throws UsbException,NotOpenException;
+	public void asyncSubmit( UsbIrp irp ) throws UsbException,UsbNotOpenException;
 
 	/**
 	 * Synchonously submit a List of UsbIrps to the UsbPipe.
@@ -202,13 +203,13 @@ public interface UsbPipe
 	 * </ul>
 	 * <p>
 	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
-	 * the UsbIrps must be {@link javax.usb.ControlUsbIrp ControlUsbIrps}.
+	 * the UsbIrps must be {@link javax.usb.UsbControlIrp UsbControlIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
-	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
+	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the list is empty or contains any non-UsbIrp Objects.
 	 */
-	public void syncSubmit( List list ) throws UsbException,NotOpenException;
+	public void syncSubmit( List list ) throws UsbException,UsbNotOpenException;
 
 	/**
 	 * Asynchonously submit a List of UsbIrps to the UsbPipe.
@@ -223,13 +224,13 @@ public interface UsbPipe
 	 * </ul>
 	 * <p>
 	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
-	 * the UsbIrps must be {@link javax.usb.ControlUsbIrp ControlUsbIrps}.
+	 * the UsbIrps must be {@link javax.usb.UsbControlIrp UsbControlIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
-	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
+	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the list is empty or contains any non-UsbIrp Objects.
 	 */
-	public void asyncSubmit( List list ) throws UsbException,NotOpenException;
+	public void asyncSubmit( List list ) throws UsbException,UsbNotOpenException;
 
 	/**
 	 * Stop all submissions in progress
@@ -237,9 +238,9 @@ public interface UsbPipe
 	 * This will abort all submission in progress on the pipe,
 	 * and block until all submissions are complete.
 	 * There will be no submissions pending after this returns.
-	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
+	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 */
-	public void abortAllSubmissions() throws NotOpenException;
+	public void abortAllSubmissions() throws UsbNotOpenException;
 
 	/**
 	 * Create a UsbIrp.
@@ -251,21 +252,21 @@ public interface UsbPipe
 	 * <p>
 	 * The UsbPipe cannot require this UsbIrp to be used, all submit
 	 * methods <i>must</i> accept any UsbIrp implementation
-	 * (or ControlUsbIrp implementation if this is a Control-type UsbPipe).
+	 * (or UsbControlIrp implementation if this is a Control-type UsbPipe).
 	 * @return A UsbIrp ready for use.
 	 */
 	public UsbIrp createUsbIrp();
 
 	/**
-	 * Create a ControlUsbIrp.
+	 * Create a UsbControlIrp.
 	 * <p>
-	 * This creates a ControlUsbIrp that may be optimized for use on
-	 * this UsbPipe.  Using this ControlUsbIrp instead of a
-	 * {@link javax.usb.util.DefaultControlUsbIrp DefaultControlUsbIrp}
+	 * This creates a UsbControlIrp that may be optimized for use on
+	 * this UsbPipe.  Using this UsbControlIrp instead of a
+	 * {@link javax.usb.util.DefaultUsbControlIrp DefaultUsbControlIrp}
 	 * may increase performance or decrease memory requirements.
 	 * <p>
-	 * The UsbPipe cannot require this ControlUsbIrp to be used, all submit
-	 * methods <i>must</i> accept any ControlUsbIrp implementation.
+	 * The UsbPipe cannot require this UsbControlIrp to be used, all submit
+	 * methods <i>must</i> accept any UsbControlIrp implementation.
 	 * <p>
 	 * Note that if this is not a Control-type UsbPipe, none
 	 * of the setup packet fields will be used.
@@ -273,9 +274,9 @@ public interface UsbPipe
 	 * @param bRequest The bRequest.
 	 * @param wValue The wValue.
 	 * @param wIndex The wIndex.
-	 * @return A ControlUsbIrp ready for use.
+	 * @return A UsbControlIrp ready for use.
 	 */
-	public ControlUsbIrp createControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex);
+	public UsbControlIrp createUsbControlIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex);
 
 	/**
 	 * Adds the listener.

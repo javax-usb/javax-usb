@@ -13,7 +13,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Interface for a USB config.
+ * Interface for a USB configuration.
  * <p>
  * This represents a configuration of a USB device.  The device may have multiple
  * configurations, and must have at least one configuration; only one configuration
@@ -26,11 +26,11 @@ import java.util.*;
  * @author Dan Streetman
  * @author E. Michael Maximilien
  */
-public interface UsbConfig
+public interface UsbConfiguration
 {
 	/**
-	 * If this UsbConfig is active.
-	 * @return if this UsbConfig is active.
+	 * If this UsbConfiguration is active.
+	 * @return if this UsbConfiguration is active.
 	 */
 	public boolean isActive();
 
@@ -72,35 +72,35 @@ public interface UsbConfig
 	public UsbInterface getUsbInterface( byte number );
 
 	/**
-	 * If the specified UsbInterface is contained in this UsbConfig.
+	 * If the specified UsbInterface is contained in this UsbConfiguration.
 	 * @param number The interface number.
-	 * @return If this config contains the specified UsbInterface.
+	 * @return If this configuration contains the specified UsbInterface.
 	 */
 	public boolean containsUsbInterface( byte number );
 
     /**
-	 * Get the parent UsbDevice that this UsbConfig belongs to.
-	 * @return the UsbDevice that this UsbConfig belongs to.
+	 * Get the parent UsbDevice that this UsbConfiguration belongs to.
+	 * @return the UsbDevice that this UsbConfiguration belongs to.
 	 */
     public UsbDevice getUsbDevice();
 
 	/**
-	 * Get the config descriptor.
+	 * Get the configuration descriptor.
 	 * <p>
 	 * The descriptor may be cached.
-	 * @return The config descriptor.
+	 * @return The configuration descriptor.
 	 */
-	public ConfigDescriptor getConfigDescriptor();
+	public UsbConfigurationDescriptor getUsbConfigurationDescriptor();
 
 	/**
-	 * Get the config String.
+	 * Get the configuration String.
 	 * <p>
 	 * This is a convienence method.  The String may be cached.
 	 * If the device does not support strings or does not define the
-	 * config string, this returns null.
-	 * @return The config String, or null.
-	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * configuration string, this returns null.
+	 * @return The configuration String, or null.
+	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
-	public String getConfigString() throws UsbException,UnsupportedEncodingException;
+	public String getConfigurationString() throws UsbException,UnsupportedEncodingException;
 }

@@ -14,12 +14,12 @@ import java.util.*;
 import javax.usb.*;
 
 /**
- * ControlUsbIrp default implementation.
+ * UsbControlIrp default implementation.
  * <p>
  * This extends DefaultUsbIrp with the Control-specific methods.
  * @author Dan Streetman
  */
-public class DefaultControlUsbIrp extends DefaultUsbIrp implements ControlUsbIrp
+public class DefaultUsbControlIrp extends DefaultUsbIrp implements UsbControlIrp
 {
 	/**
 	 * Constructor.
@@ -28,7 +28,7 @@ public class DefaultControlUsbIrp extends DefaultUsbIrp implements ControlUsbIrp
 	 * @param wValue The wValue.
 	 * @param wIndex The wIndex.
 	 */
-	public DefaultControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
+	public DefaultUsbControlIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
 	{
 		super();
 		this.bmRequestType = bmRequestType;
@@ -48,7 +48,7 @@ public class DefaultControlUsbIrp extends DefaultUsbIrp implements ControlUsbIrp
 	 * @param wValue The wValue.
 	 * @param wIndex The wIndex.
 	 */
-	public DefaultControlUsbIrp(byte[] data, int offset, int length, boolean shortPacket, byte bmRequestType, byte bRequest, short wValue, short wIndex)
+	public DefaultUsbControlIrp(byte[] data, int offset, int length, boolean shortPacket, byte bmRequestType, byte bRequest, short wValue, short wIndex)
 	{
 		super(data, offset, length, shortPacket);
 		this.bmRequestType = bmRequestType;

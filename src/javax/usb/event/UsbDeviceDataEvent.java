@@ -27,13 +27,13 @@ public class UsbDeviceDataEvent extends UsbDeviceEvent
 	/**
 	 * Constructor.
 	 * @param source The UsbDevice.
-	 * @param irp The ControlUsbIrp.
+	 * @param irp The UsbControlIrp.
 	 * @param data The data.
 	 * @param offset The offset.
 	 * @param length The amount of data transferred.
 	 * @exception IllegalArgumentException If the offset, length or data is invalid.
 	 */
-	public UsbDeviceDataEvent( UsbDevice source, ControlUsbIrp irp, byte[] data, int offset, int length ) throws IllegalArgumentException
+	public UsbDeviceDataEvent( UsbDevice source, UsbControlIrp irp, byte[] data, int offset, int length ) throws IllegalArgumentException
 	{
 		super(source);
 		controlUsbIrp = irp;
@@ -48,10 +48,10 @@ public class UsbDeviceDataEvent extends UsbDeviceEvent
 	}
 
 	/**
-	 * Get the ControlUsbIrp.
-	 * @return The ControlUsbIrp.
+	 * Get the UsbControlIrp.
+	 * @return The UsbControlIrp.
 	 */
-	public ControlUsbIrp getControlUsbIrp() { return controlUsbIrp; }
+	public UsbControlIrp getUsbControlIrp() { return controlUsbIrp; }
 
 	/**
 	 * Get the data.
@@ -62,7 +62,7 @@ public class UsbDeviceDataEvent extends UsbDeviceEvent
 	 */
 	public byte[] getData() { return data; }
 
-	private ControlUsbIrp controlUsbIrp = null;
+	private UsbControlIrp controlUsbIrp = null;
 	private byte[] data = null;
 
 }

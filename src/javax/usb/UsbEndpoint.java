@@ -22,20 +22,20 @@ public interface UsbEndpoint
 	public UsbInterface getUsbInterface();
 
 	/**
-	 * Get the Descriptor for this UsbEndpoint.
+	 * Get the descriptor for this UsbEndpoint.
 	 * <p>
 	 * The descriptor may be cached.
 	 * @return The descriptor for this UsbEndpoint.
 	 */
-	public EndpointDescriptor getEndpointDescriptor();
+	public UsbEndpointDescriptor getUsbEndpointDescriptor();
 
 	/**
 	 * Get this endpoint's direction.
 	 * <p>
 	 * This is the logical AND of the
 	 * {@link javax.usb.UsbConst#ENDPOINT_DIRECTION_MASK direction mask} and the
-	 * {@link #getEndpointDescriptor() endpoint descriptor}'s
-	 * {@link javax.usb.EndpointDescriptor#bEndpointAddress() address}.
+	 * {@link #getUsbEndpointDescriptor() endpoint descriptor}'s
+	 * {@link javax.usb.UsbEndpointDescriptor#bEndpointAddress() address}.
 	 * @return This endpoint's direction.
 	 * @see javax.usb.UsbConst#ENDPOINT_DIRECTION_IN
 	 * @see javax.usb.UsbConst#ENDPOINT_DIRECTION_OUT
@@ -47,8 +47,8 @@ public interface UsbEndpoint
 	 * <p>
 	 * This is the logical AND of the
 	 * {@link javax.usb.UsbConst#ENDPOINT_TYPE_MASK type mask} and the
-	 * {@link #getEndpointDescriptor() endpoint descriptor}'s
-	 * {@link javax.usb.EndpointDescriptor#bmAttributes() attributes}.
+	 * {@link #getUsbEndpointDescriptor() endpoint descriptor}'s
+	 * {@link javax.usb.UsbEndpointDescriptor#bmAttributes() attributes}.
 	 * @return This endpoint's type.
 	 * @see javax.usb.UsbConst#ENDPOINT_TYPE_CONTROL
 	 * @see javax.usb.UsbConst#ENDPOINT_TYPE_BULK

@@ -10,21 +10,23 @@ package javax.usb;
  */
 
 /**
- * Exception indicating an operation was attempted on a
- * {@link javax.usb.UsbPipe#isOpen() closed} UsbPipe.
+ * Exception indicating an operation was attempted on an
+ * {@link javax.usb.UsbConfiguration#isActive() inactive UsbConfiguration},
+ * {@link javax.usb.UsbInterface#isActive() inactive UsbInterface}, and/or
+ * {@link javax.usb.UsbPipe#isActive() inactive UsbPipe}.
  * @author Dan Streetman
  */
-public class NotOpenException extends RuntimeException
+public class UsbNotActiveException extends RuntimeException
 {
 	/**
 	 * Constructor.
 	 */
-	public NotOpenException() { super(); }
+	public UsbNotActiveException() { super(); }
 
 	/**
 	 * Constructor.
 	 * @param s The detail message.
 	 */
-	public NotOpenException(String s) { super(s); }
+	public UsbNotActiveException(String s) { super(s); }
 
 }

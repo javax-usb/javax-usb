@@ -261,27 +261,27 @@ public class UsbUtil
 		public String getProductString() throws UsbException,UnsupportedEncodingException
 		{ synchronized (submitLock) { return usbDevice.getProductString(); } }
 		public Object getSpeed() { return usbDevice.getSpeed(); }
-		public List getUsbConfigs() { return usbDevice.getUsbConfigs(); }
-		public UsbConfig getUsbConfig( byte number ) { return usbDevice.getUsbConfig(number); }
-		public boolean containsUsbConfig( byte number ) { return usbDevice.containsUsbConfig(number); }
-		public byte getActiveUsbConfigNumber() { return usbDevice.getActiveUsbConfigNumber(); }
-		public UsbConfig getActiveUsbConfig() { return usbDevice.getActiveUsbConfig(); }
+		public List getUsbConfigurations() { return usbDevice.getUsbConfigurations(); }
+		public UsbConfiguration getUsbConfiguration( byte number ) { return usbDevice.getUsbConfiguration(number); }
+		public boolean containsUsbConfiguration( byte number ) { return usbDevice.containsUsbConfiguration(number); }
+		public byte getActiveUsbConfigurationNumber() { return usbDevice.getActiveUsbConfigurationNumber(); }
+		public UsbConfiguration getActiveUsbConfiguration() { return usbDevice.getActiveUsbConfiguration(); }
 		public boolean isConfigured() { return usbDevice.isConfigured(); }
-		public DeviceDescriptor getDeviceDescriptor() { return usbDevice.getDeviceDescriptor(); }
-		public StringDescriptor getStringDescriptor( byte index ) throws UsbException
-		{ synchronized (submitLock) { return usbDevice.getStringDescriptor(index); } }
+		public UsbDeviceDescriptor getUsbDeviceDescriptor() { return usbDevice.getUsbDeviceDescriptor(); }
+		public UsbStringDescriptor getUsbStringDescriptor( byte index ) throws UsbException
+		{ synchronized (submitLock) { return usbDevice.getUsbStringDescriptor(index); } }
 		public String getString( byte index ) throws UsbException,UnsupportedEncodingException
 		{ synchronized (submitLock) { return usbDevice.getString(index); } }
-		public void syncSubmit( ControlUsbIrp irp ) throws UsbException
+		public void syncSubmit( UsbControlIrp irp ) throws UsbException
 		{ synchronized (submitLock) { usbDevice.syncSubmit(irp); } }
-		public void asyncSubmit( ControlUsbIrp irp ) throws UsbException
+		public void asyncSubmit( UsbControlIrp irp ) throws UsbException
 		{ synchronized (submitLock) { usbDevice.asyncSubmit(irp); } }
 		public void syncSubmit( List list ) throws UsbException
 		{ synchronized (submitLock) { usbDevice.syncSubmit(list); } }
 		public void asyncSubmit( List list ) throws UsbException
 		{ synchronized (submitLock) { usbDevice.asyncSubmit(list); } }
-		public ControlUsbIrp createControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
-		{ return usbDevice.createControlUsbIrp(bmRequestType, bRequest, wValue, wIndex); }
+		public UsbControlIrp createUsbControlIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
+		{ return usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex); }
 		public void addUsbDeviceListener( UsbDeviceListener listener )
 		{ synchronized (listenerLock) { usbDevice.addUsbDeviceListener(listener); } }
 		public void removeUsbDeviceListener( UsbDeviceListener listener )
@@ -303,31 +303,31 @@ public class UsbUtil
 	{
 		public SynchronizedUsbPipe(UsbPipe usbPipe) { this.usbPipe = usbPipe; }
 
-		public void open() throws UsbException,NotActiveException
+		public void open() throws UsbException,UsbNotActiveException,UsbNotClaimedException
 		{ synchronized (openLock) { usbPipe.open(); } }
-		public void close() throws UsbException,NotActiveException
+		public void close() throws UsbException,UsbNotOpenException
 		{ synchronized (openLock) { usbPipe.close(); } }
 		public boolean isActive() { return usbPipe.isActive(); }
 		public boolean isOpen() { return usbPipe.isOpen(); }
 		public UsbEndpoint getUsbEndpoint() { return usbPipe.getUsbEndpoint(); }
-		public int syncSubmit( byte[] data ) throws UsbException,NotOpenException
+		public int syncSubmit( byte[] data ) throws UsbException,UsbNotOpenException
 		{ synchronized (submitLock) { return usbPipe.syncSubmit(data); } }
-		public UsbIrp asyncSubmit( byte[] data ) throws UsbException,NotOpenException
+		public UsbIrp asyncSubmit( byte[] data ) throws UsbException,UsbNotOpenException
 		{ synchronized (submitLock) { return usbPipe.asyncSubmit(data); } }
-		public void syncSubmit( UsbIrp irp ) throws UsbException,NotOpenException
+		public void syncSubmit( UsbIrp irp ) throws UsbException,UsbNotOpenException
 		{ synchronized (submitLock) { usbPipe.syncSubmit(irp); } }
-		public void asyncSubmit( UsbIrp irp ) throws UsbException,NotOpenException
+		public void asyncSubmit( UsbIrp irp ) throws UsbException,UsbNotOpenException
 		{ synchronized (submitLock) { usbPipe.asyncSubmit(irp); } }
-		public void syncSubmit( List list ) throws UsbException,NotOpenException
+		public void syncSubmit( List list ) throws UsbException,UsbNotOpenException
 		{ synchronized (submitLock) { usbPipe.syncSubmit(list); } }
-		public void asyncSubmit( List list ) throws UsbException,NotOpenException
+		public void asyncSubmit( List list ) throws UsbException,UsbNotOpenException
 		{ synchronized (submitLock) { usbPipe.asyncSubmit(list); } }
-		public void abortAllSubmissions() throws NotOpenException
+		public void abortAllSubmissions() throws UsbNotOpenException
 		{ synchronized (submitLock) { usbPipe.abortAllSubmissions(); } }
 		public UsbIrp createUsbIrp()
 		{ return usbPipe.createUsbIrp(); }
-		public ControlUsbIrp createControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
-		{ return usbPipe.createControlUsbIrp(bmRequestType, bRequest, wValue, wIndex); }
+		public UsbControlIrp createUsbControlIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
+		{ return usbPipe.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex); }
 		public void addUsbPipeListener( UsbPipeListener listener )
 		{ usbPipe.addUsbPipeListener(listener); }
 		public void removeUsbPipeListener( UsbPipeListener listener )

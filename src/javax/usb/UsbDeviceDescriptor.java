@@ -15,7 +15,7 @@ package javax.usb;
  * See the USB 1.1 specification section 9.6.1.
  * @author Dan Streetman
  */
-public interface DeviceDescriptor extends Descriptor
+public interface UsbDeviceDescriptor extends UsbDescriptor
 {
     /**
 	 * Get this descriptor's bcdUSB.

@@ -16,7 +16,7 @@ package javax.usb;
  * setup packet information.
  * @author Dan Streetman
  */
-public interface ControlUsbIrp extends UsbIrp
+public interface UsbControlIrp extends UsbIrp
 {
 	/**
 	 * Get the bmRequestType.

@@ -15,7 +15,7 @@ package javax.usb;
  * See the USB 1.1 specification section 9.6.2.
  * @author Dan Streetman
  */
-public interface ConfigDescriptor extends Descriptor
+public interface UsbConfigurationDescriptor extends UsbDescriptor
 {
 	/**
 	 * Get this descriptor's wTotalLength.
@@ -54,6 +54,8 @@ public interface ConfigDescriptor extends Descriptor
 
     /**
 	 * Get this descriptor's bMaxPower.
+	 * <p>
+	 * This is specified in units of 2mA.
 	 * @return This descriptor's bMaxPower.
 	 * @see javax.usb.util.UsbUtil#unsignedInt(byte) This is unsigned.
 	 */

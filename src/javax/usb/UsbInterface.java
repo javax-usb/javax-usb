@@ -78,7 +78,7 @@ public interface UsbInterface
 	 * If this interface alternate setting is active.
 	 * <p>
 	 * The interface itself is active if and only if its parent
-	 * configuration is {@link javax.usb.UsbConfig#isActive() active}.
+	 * configuration is {@link javax.usb.UsbConfiguration#isActive() active}.
 	 * If the interface itself is not active, none of its alternate settings
 	 * are active.
 	 * @return if this interface alternate setting is active.
@@ -154,10 +154,10 @@ public interface UsbInterface
 	public boolean containsUsbEndpoint( byte address );
 
     /**
-	 * Get the parent UsbConfig that this UsbInterface belongs to.
-	 * @return The UsbConfig that this interface belongs to.
+	 * Get the parent UsbConfiguration that this UsbInterface belongs to.
+	 * @return The UsbConfiguration that this interface belongs to.
 	 */
-    public UsbConfig getUsbConfig();
+    public UsbConfiguration getUsbConfiguration();
 
 	/**
 	 * Get the interface descriptor.
@@ -165,7 +165,7 @@ public interface UsbInterface
 	 * The descriptor may be cached.
 	 * @return The interface descriptor.
 	 */
-	public InterfaceDescriptor getInterfaceDescriptor();
+	public UsbInterfaceDescriptor getUsbInterfaceDescriptor();
 
 	/**
 	 * Get the interface String.
@@ -174,7 +174,7 @@ public interface UsbInterface
 	 * If the device does not support strings or does not define the
 	 * interface string, this returns null.
 	 * @return The interface String, or null.
-	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
 	public String getInterfaceString() throws UsbException,UnsupportedEncodingException;

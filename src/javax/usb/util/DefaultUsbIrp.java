@@ -16,32 +16,21 @@ import javax.usb.*;
 /**
  * UsbIrp default implementation.
  * <p>
- * This uses the defaults as defined in the {@link javax.usb.UsbIrp interface}.
+ * The behavior and defaults follow those defined in the {@link javax.usb.UsbIrp interface}.
  * Any of the fields may be updated if the default is not appropriate; in most cases
  * the {@link #getData() data} will be the only field that needs to be {@link #setData(byte[]) set}.
- * <p>
- * When the implementation finishes processing this (successfully or not), it must set the
- * {@link #getActualLength() actual length} via its {@link #setActualLength(int) setter}.
- * If unsuccessful, the implementation must set the
- * {@link #getUsbException() UsbException} via its {@link #setUsbException(UsbException) setter}.
- * The implementation will then set this {@link #complete() complete}.
  * @author Dan Streetman
  */
 public class DefaultUsbIrp implements UsbIrp
 {
-	/**
-	 * Constructor.
-	 */
+	/** Constructor. */
 	public DefaultUsbIrp() { }
 
 	/**
 	 * Constructor.
 	 * @param data The data.
 	 */
-	public DefaultUsbIrp(byte[] data)
-	{
-		setData(data);
-	}
+	public DefaultUsbIrp(byte[] data) { setData(data); }
 
 	/**
 	 * Constructor.
@@ -65,80 +54,74 @@ public class DefaultUsbIrp implements UsbIrp
 	public byte[] getData() { return data; }
 
 	/**
-	 * Set the data.
-	 * <p>
-	 * If the data is null, an empty byte[] will be substituted.
-	 * @param d The data.
-	 */
-	public void setData( byte[] d )
-	{
-		if (null == d)
-			data = new byte[0];
-		else
-			data = d;
-	}
-
-	/**
 	 * Get the offset.
-	 * <p>
-	 * The behavior is defined in {@link javax.usb.UsbIrp#getOffset() the interface}.
 	 * @return The offset.
 	 */
-	public int getOffset() { return 0 > offset ? 0 : offset; }
-
-	/**
-	 * Set the offset.
-	 * <p>
-	 * The behavior is defined in {@link javax.usb.UsbIrp#setOffset(int) the interface}.
-	 * @param o The offset.
-	 */
-	public void setOffset(int o) { offset = o; }
+	public int getOffset() { return offset; }
 
 	/**
 	 * Get the length.
-	 * <p>
-	 * The behavior is defined in {@link javax.usb.UsbIrp#getLength() the interface}.
 	 * @return The length.
 	 */
-	public int getLength()
+	public int getLength() { return length; }
+
+	/**
+	 * Get the actual length.
+	 * @return The actual length.
+	 */
+	public int getActualLength() { return actualLength; }
+
+	/**
+	 * Set the data.
+	 * @param d The data.
+	 * @exception IllegalArgumentException If the data is null.
+	 */
+	public void setData( byte[] d ) throws IllegalArgumentException
 	{
-		if (0 > length) {
-			int dynamicLength = getData().length - getOffset();
-			return 0 > dynamicLength ? 0 : dynamicLength;
-		} else {
-			return length;
-		}
+		if (null == d)
+			throw new IllegalArgumentException("Data cannot be null.");
+
+		data = d;
+	}
+
+	/**
+	 * Set the offset.
+	 * @param o The offset.
+	 * @exception IllegalArgumentException If the offset is negative.
+	 */
+	public void setOffset(int o) throws IllegalArgumentException
+	{
+		if (0 > o)
+			throw new IllegalArgumentException("Offset cannot be negative.");
+
+		offset = o;
 	}
 
 	/**
 	 * Set the length.
-	 * <p>
-	 * The behavior is defined in {@link javax.usb.UsbIrp#setLength(int) the interface}.
 	 * @param l The length.
+	 * @exception IllegalArgumentException If the length is negative.
 	 */
-	public void setLength(int l) { length = l; }
-
-	/**
-	 * Get the actual length.
-	 * <p>
-	 * The behavior is defined in {@link javax.usb.UsbIrp#getActualLength() the interface}.
-	 * @return The actual length.
-	 */
-	public int getActualLength()
+	public void setLength(int l) throws IllegalArgumentException
 	{
-		if (0 > actualLength)
-			return 0;
-		else if (getData().length < actualLength)
-			return getData().length;
-		else
-			return actualLength;
+		if (0 > l)
+			throw new IllegalArgumentException("Length cannot be negative");
+
+		length = l;
 	}
 
 	/**
 	 * Set the actual length.
 	 * @param l The actual length.
+	 * @exception IllegalArgumentException If the length is negative.
 	 */
-	public void setActualLength(int l) throws IllegalArgumentException { actualLength = l; }
+	public void setActualLength(int l) throws IllegalArgumentException
+	{
+		if (0 > l)
+			throw new IllegalArgumentException("Actual length cannot be negative");
+
+		actualLength = l;
+	}
 
 	/**
 	 * If a UsbException occurred.
@@ -218,8 +201,8 @@ public class DefaultUsbIrp implements UsbIrp
 	 * Wait until {@link #isComplete() complete}, or the timeout has expired.
 	 * <p>
 	 * This will block until this is {@link #isComplete() complete},
-	 * or the timeout has expired.  The timeout is ignored if it is
-	 * 0 or less.
+	 * or the timeout has expired.  If the timeout is 0 or less,
+	 * this behaves as the {@link #waitUntilComplete() no-timeout method}.
 	 * @param timeout The maximum number of milliseconds to wait.
 	 */
 	public void waitUntilComplete( long timeout )
@@ -244,9 +227,9 @@ public class DefaultUsbIrp implements UsbIrp
 	protected byte[] data = new byte[0];
 	protected boolean complete = false;
 	protected boolean acceptShortPacket = true;
-	protected int offset = -1;
-	protected int length = -1;
-	protected int actualLength = -1;
+	protected int offset = 0;
+	protected int length = 0;
+	protected int actualLength = 0;
 	protected UsbException usbException = null;
 	private Object waitLock = new Object();
 }

@@ -13,7 +13,7 @@ package javax.usb;
  * Interface for a USB descriptor.
  * @author Dan Streetman
  */
-public interface Descriptor
+public interface UsbDescriptor
 {
     /**
 	 * Get this descriptor's bLength.
