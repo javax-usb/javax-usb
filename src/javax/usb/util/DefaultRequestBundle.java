@@ -118,7 +118,7 @@ public class DefaultRequestBundle extends Object implements RequestBundle
 	/** @return true if the Request object is a StandardRequest otherwise false */
 	protected boolean isStandardRequest( Request request )
 	{
-		byte requestCode = request.getRequest();
+		byte requestCode = request.getRequestCode();
 
 		switch( requestCode )
 		{

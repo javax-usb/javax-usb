@@ -136,7 +136,7 @@ public interface UsbOperations
 		 * If a UsbException occured.
 		 * @return true if this SubmitResult has a UsbException
 		 */
-		public boolean isInUsbException();
+		public boolean isUsbException();
 
 		/**
 		 * Recycle this SubmitResult.

@@ -10,7 +10,7 @@ package javax.usb;
  */
 
 /**
- * Defines a Factory for creating UsbIrp and UsbCompositeIrp objects.
+ * Defines a Factory for creating UsbIrp objects.
  * @author Dan Streetman
  * @since 0.8.0
  */

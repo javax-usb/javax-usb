@@ -19,9 +19,7 @@ import javax.usb.util.Recyclable;
  * different standard requests.  See chapter 9.
  * </i>
  * @author E. Michael Maximilien
- * @author Dan Streetman  - getDataLength() added 12/18/01
- * @since 0.8.0
- * @version 1.0.0
+ * @author Dan Streetman
  * @see javax.usb.UsbHostManager#getUsbServices
  * @see javax.usb.os.UsbServices#getRequestFactory
  */
@@ -37,7 +35,7 @@ public interface Request extends Recyclable
 	public byte getRequestType();
 
 	/** @return the Request code byte for this request */
-	public byte getRequest();
+	public byte getRequestCode();
 
 	/** @return the wValue for this request */
 	public short getValue();
@@ -79,20 +77,58 @@ public interface Request extends Recyclable
 	 */
 	public int getDataLength();
 
+	/**
+	 * Set the length of valid data for this request.
+	 * <p>
+	 * The implementation will call this with the valid data length.
+	 * @param length The length of the valid data.
+	 */
+	public void setDataLength(int length);
+
 	/** @return the data byte[] for this request */
 	public byte[] getData();
 
 	/** 
 	 * Sets the Data array for this Request object
 	 * @param data the byte[] data value
-	 * @throws javax.usb.UsbRuntimeException if data supplied is invalid for 
-	 * the Request Data
 	 */
-	public void setData( byte[] data ) throws UsbRuntimeException;
+	public void setData( byte[] data );
 
-	//-------------------------------------------------------------------------
-	// Other public methods
-	//
+	/**
+	 * Get the UsbException that occurred during this request.
+	 * <p>
+	 * This is null if no exception occurred.
+	 * @return The UsbException.
+	 */
+	public UsbException getUsbException();
+
+	/**
+	 * Set the UsbException the occurred.
+	 * <p>
+	 * This will be called by the implementation to set the UsbException.
+	 * @param usbException The UsbException.
+	 */
+	public void setUsbException( UsbException usbException );
+
+	/**
+	 * If a UsbException occurred.
+	 * @return If a UsbException occurred.
+	 */
+	public boolean isUsbException();
+
+	/**
+	 * If this is completed.
+	 * @return If this is completed.
+	 */
+	public boolean isCompleted();
+
+	/**
+	 * Set this as completed (or not).
+	 * <p>
+	 * The implementation will call this when this is completed.
+	 * @param completed If this is completed.
+	 */
+	public void setCompleted( boolean completed );
 
 	/**
 	 * @return a formated byte[] representing this Request object
