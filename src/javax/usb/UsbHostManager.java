@@ -28,10 +28,12 @@ public final class UsbHostManager
 	 * @exception UsbException If the is an error creating the UsbSerivces implementation.
 	 * @exception SecurityException If the caller does not have security access.
 	 */
-	public static synchronized UsbServices getUsbServices() throws UsbException,SecurityException
+	public static UsbServices getUsbServices() throws UsbException,SecurityException
 	{
-		if (null == usbServices)
-			usbServices = createUsbServices();
+		synchronized (servicesLock) {
+			if (null == usbServices)
+				usbServices = createUsbServices();
+		}
 
 		return usbServices;
 	}
@@ -44,10 +46,12 @@ public final class UsbHostManager
 	 * @exception UsbException If an error occurrs while loading the properties.
 	 * @exception SecurityException If the caller does not have security access.
 	 */
-	public static synchronized Properties getProperties() throws UsbException,SecurityException
+	public static Properties getProperties() throws UsbException,SecurityException
 	{
-		if (!propertiesLoaded)
-			setupProperties();
+		synchronized (propertiesLock) {
+			if (!propertiesLoaded)
+				setupProperties();
+		}
 
 		return (Properties)properties.clone();
 	}
@@ -134,6 +138,8 @@ public final class UsbHostManager
 
 	private static boolean propertiesLoaded = false;
 	private static Properties properties = new Properties();
+	private static Object propertiesLock = new Object();
 
 	private static UsbServices usbServices = null;
+	private static Object servicesLock = new Object();
 }
