@@ -16,6 +16,12 @@ import javax.usb.event.*;
 
 /**
  * Interface for a USB device.
+ * <p>
+ * The submission methods contained in this UsbDevice operate on the device's Default Control Pipe.
+ * The device does not have to be {@link #isConfigured() configured} to use the Default Control Pipe.
+ * <p>
+ * The implementation is not required to be Thread-safe.  If a Thread-safe UsbDevice
+ * is required, use a {@link com.ibm.jusb.util.UsbUtil#synchronizedUsbDevice(UsbDevice) synchronizedUsbDevice}.
  * @author Dan Streetman
  * @author E. Michael Maximilien
  */
