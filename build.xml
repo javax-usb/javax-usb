@@ -38,7 +38,7 @@
 	<property name="Jsr80Env.JSR80_JDOC_AUTHOR" value="yes"/>
 	<property name="Jsr80Env.JSR80_JDOC_NODEPRECATED" value="no"/>
 	<property name="Jsr80Env.JSR80_JDOC_NODEPRECATEDLIST" value="no"/>
-	<property name="Jsr80Env.JSR80_JDOC_FAILONERROR" value="yes"/>
+	<property name="Jsr80Env.JSR80_JDOC_FAILONERROR" value="no"/>
 	<property name="Jsr80Env.JSR80_JDOC_PUBLIC" value="no"/>
 	<property name="Jsr80Env.JSR80_JDOC_PROTECTED" value="no"/>
 	<property name="Jsr80Env.JSR80_JDOC_PACKAGE" value="yes"/>
