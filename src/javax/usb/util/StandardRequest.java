@@ -48,8 +48,9 @@ public class StandardRequest
 	 * @param featureSelector The Feature Selector.
 	 * @param target The target interface number or endpoint address.
 	 * @exception UsbException If unsuccessful.
+	 * @exception IllegalArgumentException If the recipient or target is invalid.
 	 */
-	public void clearFeature(byte recipient, short featureSelector, short target) throws UsbException
+		public void clearFeature(byte recipient, short featureSelector, short target) throws UsbException,IllegalArgumentException
 	{ clearFeature(usbDevice, recipient, featureSelector, target); }
 
 	/**
@@ -72,10 +73,11 @@ public class StandardRequest
 	 * @param index The Descriptor Index.
 	 * @param langid The String Descriptor Language ID.
 	 * @param data The data to fill with the Descriptor.
+	 * @return The actual length of transferred data.
 	 * @exception UsbException If unsuccessful.
 	 */
-	public void getDescriptor(byte type, byte index, short langid, byte[] data) throws UsbException
-	{ getDescriptor(usbDevice, type, index, langid, data); }
+	public int getDescriptor(byte type, byte index, short langid, byte[] data) throws UsbException
+	{ return getDescriptor(usbDevice, type, index, langid, data); }
 
 	/**
 	 * Get Interface.
@@ -98,8 +100,9 @@ public class StandardRequest
 	 * @param target The target interface number or endpoint address.
 	 * @return The status of the specified recipient.
 	 * @exception UsbException If unsuccessful.
+	 * @exception IllegalArgumentException If the recipient or target is invalid.
 	 */
-	public short getStatus(byte recipient, short target) throws UsbException
+	public short getStatus(byte recipient, short target) throws UsbException,IllegalArgumentException
 	{ return getStatus(usbDevice, recipient, target); }
 
 	/**
@@ -133,10 +136,11 @@ public class StandardRequest
 	 * @param index The Descriptor Index.
 	 * @param langid The String Descriptor Language ID.
 	 * @param data The Descriptor.
+	 * @return The actual length of transferred data.
 	 * @exception UsbException If unsuccessful.
 	 */
-	public void setDescriptor(byte type, byte index, short langid, byte[] data) throws UsbException
-	{ setDescriptor(usbDevice, type, index, langid, data); }
+	public int setDescriptor(byte type, byte index, short langid, byte[] data) throws UsbException
+	{ return setDescriptor(usbDevice, type, index, langid, data); }
 
 	/**
 	 * Set Feature.
@@ -147,8 +151,9 @@ public class StandardRequest
 	 * @param featureSelector The Feature Selector.
 	 * @param target The target interface number or endpoint address, or Test Selector.
 	 * @exception UsbException If unsuccessful.
+	 * @exception IllegalArgumentException If the recipient or target is invalid.
 	 */
-	public void setFeature(byte recipient, short featureSelector, short target) throws UsbException
+	public void setFeature(byte recipient, short featureSelector, short target) throws UsbException,IllegalArgumentException
 	{ setFeature(usbDevice, recipient, featureSelector, target); }
 
 	/**
@@ -264,16 +269,21 @@ public class StandardRequest
 	 * @param index The Descriptor Index.
 	 * @param langid The String Descriptor Language ID.
 	 * @param data The data to fill with the Descriptor.
+	 * @return The actual length of transferred data.
 	 * @exception UsbException If unsuccessful.
 	 */
-	public static void getDescriptor(UsbDevice usbDevice, byte type, byte index, short langid, byte[] data) throws UsbException
+	public static int getDescriptor(UsbDevice usbDevice, byte type, byte index, short langid, byte[] data) throws UsbException
 	{
 		byte bmRequestType = REQUESTTYPE_GET_DESCRIPTOR;
 		byte bRequest = UsbConst.REQUEST_GET_DESCRIPTOR;
 		short wValue = (short)((type << 8) | index);
 		short wIndex = langid;
 
-		usbDevice.syncSubmit(createControlUsbIrp(bmRequestType, bRequest, wValue, wIndex, data));
+		ControlUsbIrp controlUsbIrp = createControlUsbIrp(bmRequestType, bRequest, wValue, wIndex, data);
+
+		usbDevice.syncSubmit(controlUsbIrp);
+
+		return controlUsbIrp.getActualLength();
 	}
 
 	/**
@@ -402,16 +412,21 @@ public class StandardRequest
 	 * @param index The Descriptor Index.
 	 * @param langid The String Descriptor Language ID.
 	 * @param data The Descriptor.
+	 * @return The actual length of transferred data.
 	 * @exception UsbException If unsuccessful.
 	 */
-	public static void setDescriptor(UsbDevice usbDevice, byte type, byte index, short langid, byte[] data) throws UsbException
+	public static int setDescriptor(UsbDevice usbDevice, byte type, byte index, short langid, byte[] data) throws UsbException
 	{
 		byte bmRequestType = REQUESTTYPE_SET_DESCRIPTOR;
 		byte bRequest = UsbConst.REQUEST_SET_DESCRIPTOR;
 		short wValue = (short)((type << 8) | index);
 		short wIndex = langid;
 
-		usbDevice.syncSubmit(createControlUsbIrp(bmRequestType, bRequest, wValue, wIndex, data));
+		ControlUsbIrp controlUsbIrp = createControlUsbIrp(bmRequestType, bRequest, wValue, wIndex, data);
+
+		usbDevice.syncSubmit(controlUsbIrp);
+
+		return controlUsbIrp.getActualLength();
 	}
 
 	/**
@@ -429,8 +444,9 @@ public class StandardRequest
 	 * @param featureSelector The Feature Selector.
 	 * @param target The target interface number or endpoint address, or Test Selector.
 	 * @exception UsbException If unsuccessful.
+	 * @exception IllegalArgumentException If the recipient or target is invalid.
 	 */
-	public static void setFeature(UsbDevice usbDevice, byte recipient, short featureSelector, short target) throws UsbException
+	public static void setFeature(UsbDevice usbDevice, byte recipient, short featureSelector, short target) throws UsbException,IllegalArgumentException
 	{
 		checkRecipient(recipient);
 
