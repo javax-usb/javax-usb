@@ -213,7 +213,7 @@ public class StandardRequest
 		short wValue = featureSelector;
 		short wIndex = target;
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
+		usbDevice.syncSubmit(usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
 	}
 
 	/**
@@ -230,7 +230,11 @@ public class StandardRequest
 		short wIndex = 0;
 		byte[] data = new byte[1];
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex, data));
+		UsbControlIrp usbControlIrp = usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex);
+		usbControlIrp.setData(data);
+		usbControlIrp.setAcceptShortPacket(false);
+
+		usbDevice.syncSubmit(usbControlIrp);
 
 		return data[0];
 	}
@@ -279,11 +283,12 @@ public class StandardRequest
 		short wValue = (short)((type << 8) | index);
 		short wIndex = langid;
 
-		UsbControlIrp controlUsbIrp = createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex, data);
+		UsbControlIrp usbControlIrp = usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex);
+		usbControlIrp.setData(data);
 
-		usbDevice.syncSubmit(controlUsbIrp);
+		usbDevice.syncSubmit(usbControlIrp);
 
-		return controlUsbIrp.getActualLength();
+		return usbControlIrp.getActualLength();
 	}
 
 	/**
@@ -301,7 +306,11 @@ public class StandardRequest
 		short wIndex = interfaceNumber;
 		byte[] data = new byte[1];
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex, data));
+		UsbControlIrp usbControlIrp = usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex);
+		usbControlIrp.setData(data);
+		usbControlIrp.setAcceptShortPacket(false);
+
+		usbDevice.syncSubmit(usbControlIrp);
 
 		return data[0];
 	}
@@ -335,7 +344,11 @@ public class StandardRequest
 		short wIndex = target;
 		byte[] data = new byte[2];
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex, data));
+		UsbControlIrp usbControlIrp = usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex);
+		usbControlIrp.setData(data);
+		usbControlIrp.setAcceptShortPacket(false);
+
+		usbDevice.syncSubmit(usbControlIrp);
 
 		return (short)((data[1] << 8) | data[0]);
 	}
@@ -358,7 +371,7 @@ public class StandardRequest
 		short wValue = deviceAddress;
 		short wIndex = 0;
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
+		usbDevice.syncSubmit(usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
 	}
 
 	/**
@@ -374,7 +387,7 @@ public class StandardRequest
 		short wValue = configurationValue;
 		short wIndex = 0;
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
+		usbDevice.syncSubmit(usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
 	}
 
 	/**
@@ -422,11 +435,12 @@ public class StandardRequest
 		short wValue = (short)((type << 8) | index);
 		short wIndex = langid;
 
-		UsbControlIrp controlUsbIrp = createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex, data);
+		UsbControlIrp usbControlIrp = usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex);
+		usbControlIrp.setData(data);
 
-		usbDevice.syncSubmit(controlUsbIrp);
+		usbDevice.syncSubmit(usbControlIrp);
 
-		return controlUsbIrp.getActualLength();
+		return usbControlIrp.getActualLength();
 	}
 
 	/**
@@ -455,7 +469,7 @@ public class StandardRequest
 		short wValue = featureSelector;
 		short wIndex = target;
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
+		usbDevice.syncSubmit(usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
 	}
 
 	/**
@@ -472,7 +486,7 @@ public class StandardRequest
 		short wValue = alternateSetting;
 		short wIndex = interfaceNumber;
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
+		usbDevice.syncSubmit(usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex));
 	}
 
 	/**
@@ -490,7 +504,11 @@ public class StandardRequest
 		short wIndex = endpointAddress;
 		byte[] data = new byte[2];
 
-		usbDevice.syncSubmit(createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex, data));
+		UsbControlIrp usbControlIrp = usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex);
+		usbControlIrp.setData(data);
+		usbControlIrp.setAcceptShortPacket(false);
+
+		usbDevice.syncSubmit(usbControlIrp);
 
 		return (short)((data[1] << 8) | data[0]);
 	}
@@ -518,31 +536,6 @@ public class StandardRequest
 		default:
 			throw new IllegalArgumentException("Recipient must be device (0x00), interface (0x01), or endpoint (0x02)");
 		}
-	}
-
-	/**
-	 * Create a UsbControlIrp with the specified fields.
-	 * @param bmRequestType The bmRequestType.
-	 * @param bRequest The bRequest.
-	 * @param wValue The wValue.
-	 * @param wIndex The wIndex.
-	 * @return A UsbControlIrp with the specified fields.
-	 */
-	protected static UsbControlIrp createUsbControlIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
-	{ return new DefaultUsbControlIrp(bmRequestType, bRequest, wValue, wIndex); }
-
-	/**
-	 * Create a UsbControlIrp with the specified fields.
-	 * @param bmRequestType The bmRequestType.
-	 * @param bRequest The bRequest.
-	 * @param wValue The wValue.
-	 * @param wIndex The wIndex.
-	 * @param data The data.
-	 * @return A UsbControlIrp with the specified fields.
-	 */
-	protected static UsbControlIrp createUsbControlIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex, byte[] data)
-	{
-		return new DefaultUsbControlIrp(data, 0, data.length, true, bmRequestType, bRequest, wValue, wIndex);
 	}
 
 	protected static final byte REQUESTTYPE_CLEAR_FEATURE =
