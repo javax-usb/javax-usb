@@ -22,18 +22,31 @@ public class UsbUtil
 	private UsbUtil() { }
 
 	/**
-	 * @return a UsbInfoIterator of UsbDevice in breadth-first search (BFS) order
-	 * @param usbHub the UsbHub object whose children will be queried
-	 * <i>NOTE: since UsbHub are UsbDevice then they are also included in return list</i>
+	 * @return Connected UsbDevices in breadth-first search (BFS) order.
+	 * @param usbHub The UsbHub object whose children will be queried.
 	 */
-	public UsbInfoIterator bfsUsbDevices( UsbHub usbHub )
+	public UsbInfoList bfsUsbDevices( UsbHub usbHub )
+	{
+		UsbInfoList usbDevices = new DefaultUsbInfoList();
+		UsbInfoList list;
+		int depth = 0;
+
+		do {
+			list = bfs( usbHub, depth++ );
+			usbDevices.addUsbInfoList( list );
+		} while ( !list.isEmpty() );
+
+		return usbDevices;
+	}
 
 	/**
-	 * @return a UsbInfoIterator of UsbDevice in depth-first search (DFS) order
-	 * @param usbHub the UsbHub object whose children will be queried
-	 * <i>NOTE: since UsbHub are UsbDevice then they are also included in return list</i>
+	 * @return Connected UsbDevices in depth-first search (DFS) order.
+	 * @param usbHub the UsbHub object whose children will be queried.
 	 */
-	public UsbInfoIterator dfsUsbDevices( UsbHub usbHub )
+	public UsbInfoList dfsUsbDevices( UsbHub usbHub )
+	{
+		return dfs( usbHub );
+	}
 
 	/**
 	 * Get the specified byte's value as an unsigned integer.
@@ -277,4 +290,66 @@ public class UsbUtil
 
 		return sb.toString();
 	}
+
+    //-------------------------------------------------------------------------
+    // Protected methods
+    //
+
+	/**
+	 * Recursive DFS method.
+	 * @param usbHub the UsbHub to get UsbDevices from.
+	 * @return a UsbInfoList of all UsbDevices 
+	 */
+	protected static UsbInfoList dfs( UsbHub usbHub )
+	{
+		UsbInfoList dfsDevices = new DefaultUsbInfoList();
+
+		dfsDevices.addUsbInfo( usbHub );
+
+		UsbInfoListIterator usbDevices = usbHub.getAttachedUsbDevices();
+
+		while ( usbDevices.hasNext() ) {
+			UsbDevice device = (UsbDevice)usbDevices.nextUsbInfo();
+
+			if ( device.isUsbHub() )
+				dfsDevices.addUsbInfoList( dfs( (UsbHub)device ) );
+			else
+				dfsDevices.addUsbInfo( device );
+		}
+
+		return dfsDevices;
+	}
+
+	/**
+	 * Recursive BFS method.
+	 * <p>
+	 * This recurses until it reaches the specified depth (or forever if depth is 0)
+	 * or it runs out of UsbHubs.  A BFS list is returned of all UsbDevices
+	 * at the specified depth.
+	 * @param usbHub the UsbHub to get UsbDevices from.
+	 * @param depth the depth to return UsbDevices at.
+	 * @return a UsbInfoList of all devices at the requested depth under the UsbHub.
+	 */
+	protected static UsbInfoList bfs( UsbHub usbHub, int depth )
+	{
+		UsbInfoList bfsDevices = new DefaultUsbInfoList();
+
+		if ( 0 == depth ) {
+			bfsDevices.addUsbInfo( usbHub );
+			return bfsDevices;
+		}
+
+		UsbInfoListIterator usbDevices = usbHub.getAttachedUsbDevices();
+
+		while (usbDevices.hasNext())
+		{
+			UsbDevice device = (UsbDevice)usbDevices.nextUsbInfo();
+
+			if ( device.isUsbHub() )
+				bfsDevices.addUsbInfoList( bfs( (UsbHub)device, depth-1 ) );
+		}
+
+		return bfsDevices;
+	}
+
 }
