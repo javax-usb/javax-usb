@@ -12,15 +12,28 @@ package javax.usb.util;
 import javax.usb.*;
 
 /**
- * General utility methods
+ * Usb utility methods.
  * @author Dan Streetman
  * @author E. Michael Maximilien
- * @since 0.8.0
  */
-public class UsbUtil {
-
+public class UsbUtil
+{
 	/** Private constructor */
 	private UsbUtil() { }
+
+	/**
+	 * @return a UsbInfoIterator of UsbDevice in breadth-first search (BFS) order
+	 * @param usbHub the UsbHub object whose children will be queried
+	 * <i>NOTE: since UsbHub are UsbDevice then they are also included in return list</i>
+	 */
+	public UsbInfoIterator bfsUsbDevices( UsbHub usbHub )
+
+	/**
+	 * @return a UsbInfoIterator of UsbDevice in depth-first search (DFS) order
+	 * @param usbHub the UsbHub object whose children will be queried
+	 * <i>NOTE: since UsbHub are UsbDevice then they are also included in return list</i>
+	 */
+	public UsbInfoIterator dfsUsbDevices( UsbHub usbHub )
 
 	/**
 	 * Get the specified byte's value as an unsigned integer.
@@ -249,19 +262,6 @@ public class UsbUtil {
 			throw new UsbException( "Could not determine UsbIrp direction (Data array too short)" );
 		}
 	}
-
-
-	/**
-	 * @return the low byte of the short value passed
-	 * @param s the short value
-	 */
-	public static byte lowByte( short s ) { return (byte)s; }
-
-	/**
-	 * @return the high byte of the short value passed
-	 * @param s the short value
-	 */
-	public static byte highByte( short s ) { return (byte)( s >> 8 ); }
 
 	/**
 	 * @return a formatted hex string from the byte[] passed
