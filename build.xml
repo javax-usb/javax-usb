@@ -13,11 +13,12 @@
 	<!-- User overrides from environment -->
 	<property environment="Jsr80Env"/>
 
-	<property name="Jsr80Env.JSR80_SRC_DIR" value="src"/>
-	<property name="Jsr80Env.JSR80_DEST_DIR" value="src"/>
-	<property name="Jsr80Env.JSR80_JDOC_DIR" value="docs/jdoc"/>
-	
-	<property name="Jsr80Env.JSR80_JARFILE_DIR" value="lib"/>
+	<property name="Jsr80Env.JSR80_BASE_DIR" value="."/>
+
+	<property name="Jsr80Env.JSR80_SRC_DIR" value="${Jsr80Env.JSR80_BASE_DIR}/src"/>
+	<property name="Jsr80Env.JSR80_DEST_DIR" value="${Jsr80Env.JSR80_SRC_DIR}"/>
+	<property name="Jsr80Env.JSR80_JDOC_DIR" value="${Jsr80Env.JSR80_BASE_DIR}/docs/jdoc"/>
+	<property name="Jsr80Env.JSR80_JARFILE_DIR" value="${Jsr80Env.JSR80_BASE_DIR}/lib"/>
 	<property name="Jsr80Env.JSR80_JARFILE" value="jsr80.jar"/>
 
 	<property name="Jsr80Env.JSR80_DEPRECATION" value="on"/>
@@ -49,7 +50,6 @@
 	<property name="jsr80.src.dir" value="${Jsr80Env.JSR80_SRC_DIR}"/>
 	<property name="jsr80.dest.dir" value="${Jsr80Env.JSR80_DEST_DIR}"/>
 	<property name="jsr80.jdoc.dir" value="${Jsr80Env.JSR80_JDOC_DIR}"/>
-
 	<property name="jsr80.jarfile.dir" value="${Jsr80Env.JSR80_JARFILE_DIR}"/>
 	<property name="jsr80.jarfile" value="${Jsr80Env.JSR80_JARFILE}"/>
 
