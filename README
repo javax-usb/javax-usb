@@ -1,0 +1,142 @@
+#
+# This file constitutes the main README for the JSR80 API
+# @author Dan Streetman (ddstreet@us.ibm.com)
+# @author E. Michael Maximilien (maxim@us.ibm.com) 
+#
+
+This API release is based on the version 1.0.0 of the JSR80 specification.
+
+The JCP web site for the JSR80 is: http://jcp.org/detail/80.jsp
+The IBM dW web site for this project is: http://oss.software.ibm.com/developerworks/projects/javaxusb
+
+****************
+* Requirements *
+****************
+
+Java	Standard Edition version 1.2 or greater - Micro Edition has not been tested but may work
+ANT	http://jakarta.apache.org/ant
+jUnit   http://junit.org
+
+(jUnit is only required to build/run the test cases)
+
+*********
+* Build *
+*********
+
+The ANT tool uses XML buildfiles to create the project.  The default
+name for the buildfile is 'build.xml'.  The default target (for the
+buildfile provided) is 'help'.
+
+Since the buildfile provided is called 'build.xml', you don't need to
+specify it.  The help target lists all available targets:
+
+all
+clean
+compile
+dist
+help
+jars
+jdoc
+mrproper
+version
+test-all
+test-clean
+test-compile
+test-run
+
+all:
+Calls the clean, compile, jars, jdoc targets.
+
+clean:
+Removes all .class files for the project.
+
+compile:
+Creates all .class files for the project.
+
+dist:
+Creates a tar.gz and .zip file containing the project and
+associated files under a version'ed directory.
+
+help:
+Shows the list of targets with brief description.
+
+jars:
+Creates source and class jarfiles.
+
+jdoc:
+Creates JavaDoc for the project.
+
+mrproper:
+Calls clean target, then removes tar.gz and .zip files, and all
+JavaDoc (including the directory containing the JavaDoc).
+
+version:
+Calls compile target, then runs the javax.usb.Version class which
+prints out API version information.
+
+test-all:
+Calls test-clean, test-compile, and test-run targets.
+
+test-clean:
+Cleans all test .class files.
+
+test-compile:
+Creates all test .class files.
+
+test-run:
+Runs all test cases.  Note that most of the API is interfaces; to test
+the interfaces, the test cases need an implementation.  Essentially
+the test cases are testing the implementation's adherence to the
+interfaces.  Note also that these test cases are NOT the official TCK
+tests that are produced in the JCP process.
+
+To build the API, simply
+
+% ant all
+
+Then add the .class jarfile, which is placed (by default) in the lib/
+directory, to your CLASSPATH.
+
+****************
+* Installation *
+****************
+
+Create the .class jarfile (jsr80.jar) and put it into your CLASSPATH.
+
+***********************
+* Directory Structure *
+***********************
+
+docs/
+docs/jdoc
+lib/
+src/
+
+docs:
+This contains documentation for the project.
+
+docs/jdoc:
+This is the default location for the JavaDoc (which is created using
+the jdoc target).
+
+lib:
+This is the default location for the .class jarfile (jsr80.jar).
+
+src:
+This is the location of the source .java files.
+
+src/test:
+This is the location of the test .java files.
+
+********************
+* More Information *
+********************
+
+You can visit the project page for more information:
+
+http://oss.software.ibm.com/developerworks/projects/javaxusb/
+
+There is an API mailing list (to subscribe follow the links from the
+project page):
+
+javaxusb-api-discuss@oss.software.ibm.com
