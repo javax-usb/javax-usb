@@ -60,9 +60,17 @@ public class DefaultUsbIrp implements UsbIrp
 
 	/**
 	 * Set the data.
+	 * <p>
+	 * If the data is null, an empty byte[] will be substituted.
 	 * @param d The data.
 	 */
-	public void setData( byte[] d ) { data = d; }
+	public void setData( byte[] d )
+	{
+		if (null == d)
+			data = new byte[0];
+		else
+			data = d;
+	}
 
 	/**
 	 * Get the offset.
@@ -222,7 +230,7 @@ public class DefaultUsbIrp implements UsbIrp
 		}
 	}
 
-	protected byte[] data = null;
+	protected byte[] data = new byte[0];
 	protected boolean complete = false;
 	protected boolean acceptShortPacket = true;
 	protected int offset = -1;
