@@ -12,15 +12,14 @@ package javax.usb;
 /**
  * Interface for a USB endpoint.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
 public interface UsbEndpoint
 {
-    /**
+	/**
 	 * Get the parent UsbInterface that this UsbEndpoint belongs to.
 	 * @return The parent interface.
 	 */
-    public UsbInterface getUsbInterface();
+	public UsbInterface getUsbInterface();
 
 	/**
 	 * Get the Descriptor for this UsbEndpoint.
@@ -30,11 +29,39 @@ public interface UsbEndpoint
 	 */
 	public EndpointDescriptor getEndpointDescriptor();
 
-    /**
+	/**
+	 * Get this endpoint's direction.
+	 * <p>
+	 * This is the logical AND of the
+	 * {@link javax.usb.UsbConst#ENDPOINT_DIRECTION_MASK direction mask} and the
+	 * {@link getEndpointDescriptor() endpoint descriptor}'s
+	 * {@link javax.usb.EndpointDescriptor#bEndpointAddress() address}.
+	 * @return This endpoint's direction.
+	 * @see javax.usb.UsbConst#ENDPOINT_DIRECTION_IN
+	 * @see javax.usb.UsbConst#ENDPOINT_DIRECTION_OUT
+	 */
+	public byte getDirection();
+
+	/**
+	 * Get this endpoint's type.
+	 * <p>
+	 * This is the logical AND of the
+	 * {@link javax.usb.UsbConst#ENDPOINT_TYPE_MASK type mask} and the
+	 * {@link getEndpointDescriptor() endpoint descriptor}'s
+	 * {@link javax.usb.EndpointDescriptor#bmAttributes() attributes}.
+	 * @return This endpoint's type.
+	 * @see javax.usb.UsbConst#ENDPOINT_TYPE_CONTROL
+	 * @see javax.usb.UsbConst#ENDPOINT_TYPE_BULK
+	 * @see javax.usb.UsbConst#ENDPOINT_TYPE_INTERRUPT
+	 * @see javax.usb.UsbConst#ENDPOINT_TYPE_ISOCHRONOUS
+	 */
+	public byte getType();
+
+	/**
 	 * Get the UsbPipe for this UsbEndpoint.
 	 * <p>
 	 * This is the only method of communication to this endpoint.
 	 * @return This UsbEndpoint's UsbPipe.
 	 */
-    public UsbPipe getUsbPipe();
+	public UsbPipe getUsbPipe();
 }
