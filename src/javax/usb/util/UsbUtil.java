@@ -31,6 +31,7 @@ public class UsbUtil {
 	 * and the most significant 3 bytes (24 bits) of the
 	 * integer will be zero.
 	 * @param b the byte to convert.
+	 * @return An unsigned int representing the specified byte.
 	 */
 	public static int unsignedInt( byte b ) { return 0x000000ff & ((int)b); }
 
@@ -43,8 +44,48 @@ public class UsbUtil {
 	 * and the most significant 2 bytes (16 bits) of the
 	 * integer will be zero.
 	 * @param s the short to convert.
+	 * @return An unsigned int representing the specified short.
 	 */
 	public static int unsignedInt( short s ) { return 0x0000ffff & ((int)s); }
+
+	/**
+	 * Get the specified byte's value as an unsigned long.
+	 * <p>
+	 * This converts the specified byte into a long.
+	 * The least significant byte (8 bits) of the long
+	 * will be identical to the byte (8 bits) provided,
+	 * and the most significant 7 bytes (56 bits) of the
+	 * long will be zero.
+	 * @param b the byte to convert.
+	 * @return An unsigned long representing the specified byte.
+	 */
+	public static long unsignedLong( byte b ) { return 0x00000000000000ff & ((long)b); }
+
+	/**
+	 * Get the specified short's value as an unsigned long.
+	 * <p>
+	 * This converts the specified byte into a long.
+	 * The least significant short (16 bits) of the long
+	 * will be identical to the short (16 bits) provided,
+	 * and the most significant 6 bytes (48 bits) of the
+	 * long will be zero.
+	 * @param s the short to convert.
+	 * @return An unsigned long representing the specified short.
+	 */
+	public static long unsignedLong( short s ) { return 0x000000000000ffff & ((long)s); }
+
+	/**
+	 * Get the specified int's value as an unsigned long.
+	 * <p>
+	 * This converts the specified int into a long.
+	 * The least significant int (32 bits) of the long
+	 * will be identical to the int (32 bits) provided,
+	 * and the most significant int (32 bits) of the
+	 * long will be zero.
+	 * @param i the int to convert.
+	 * @return An unsigned long representing the specified int.
+	 */
+	public static long unsignedLong( int i ) { return 0x00000000ffffffff & ((long)i); }
 
 	/**
 	 * Get the endpoint type String for the specified endpoint type
@@ -91,41 +132,65 @@ public class UsbUtil {
 	/**
 	 * Format a byte into a proper length hex String.
 	 * <p>
-	 * This is identical to Integer.toHexString()
+	 * This is identical to Long.toHexString()
 	 * except this pads (with 0's) to the proper size.
 	 * @param b the byte to convert
 	 */
 	public static String toHexString( byte b )
 	{
-		return toHexString( unsignedInt( b ), '0', 2, 2 );
+		return toHexString( unsignedLong( b ), '0', 2, 2 );
 	}
 
 	/**
 	 * Format a short into a proper length hex String.
 	 * <p>
-	 * This is identical to Integer.toHexString()
+	 * This is identical to Long.toHexString()
 	 * except this pads (with 0's) to the proper size.
 	 * @param s the short to convert
 	 */
 	public static String toHexString( short s )
 	{
-		return toHexString( unsignedInt( s ), '0', 4, 4 );
+		return toHexString( unsignedLong( s ), '0', 4, 4 );
 	}
 
 	/**
-	 * Format a int into the specified length hex String.
+	 * Format a int into a proper length hex String.
 	 * <p>
-	 * This is identical to Integer.toHexString()
-	 * except this pads (with 0's), or truncates, to the specified size.
-	 * If max < min the functionaliy is exactly as Integer.toHexString().
+	 * This is identical to Long.toHexString()
+	 * except this pads (with 0's) to the proper size.
 	 * @param i the integer to convert
+	 */
+	public static String toHexString( int i )
+	{
+			return toHexString( unsignedLong( i ), '0', 8, 8 );
+	}
+
+	/**
+	 * Format a long into the specified length hex String.
+	 * <p>
+	 * This is identical to Long.toHexString()
+	 * except this pads (with 0's) to the proper size.
+	 * @param l the long to convert
+	 */
+	public static String toHexString( long l )
+	{
+			return toHexString( l, '0', 16, 16 );
+	}
+
+	/**
+	 * Format a long into the specified length hex String.
+	 * <p>
+	 * This is identical to Long.toHexString()
+	 * except this pads (with 0's), or truncates, to the specified size.
+	 * If max < min the functionaliy is exactly as Long.toHexString().
+	 * @param l the long to convert
 	 * @param c the character to use for padding
 	 * @param min the min length of the resulting String
 	 * @param max the max length of the resulting String
 	 */
-	public static String toHexString( int i, char c, int min, int max )
+	public static String toHexString( long l, char c, int min, int max )
 	{
-		StringBuffer sb = new StringBuffer( Integer.toHexString( i ) );
+		StringBuffer sb = new StringBuffer( Long.toHexString( l ) );
 
 		if ( max < min )
 			return sb.toString();
