@@ -179,6 +179,14 @@ public interface UsbIrp
 	public boolean isComplete();
 
 	/**
+	 * Set this as complete or not.
+	 * <p>
+	 * This is what {@link #isComplete() isComplete} returns.
+	 * @param complete If this is complete or not.
+	 */
+	public void setComplete(boolean complete);
+
+	/**
 	 * Set this as complete.
 	 * <p>
 	 * This is the last method the implementation calls; it indicates the UsbIrp has completed.  
