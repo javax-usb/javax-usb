@@ -64,5 +64,5 @@ public class Version
 	//
 
 	private static final String VERSION_USB_SPECIFICATION = "1.1";
-	private static final String VERSION_JAVAX_USB = "0.10.2";
+	private static final String VERSION_JAVAX_USB = "0.10.2-CVS";
 }
