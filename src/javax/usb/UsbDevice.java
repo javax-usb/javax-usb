@@ -168,14 +168,14 @@ public interface UsbDevice
 	 * @param irp The ControlUsbIrp.
 	 * @exception UsbException If an error occurrs.
 	 */
-	public void syncSubmit( UsbIrp.ControlUsbIrp irp ) throws UsbException;
+	public void syncSubmit( ControlUsbIrp irp ) throws UsbException;
 
 	/**
 	 * Submit a ControlUsbIrp asynchronously to the Default Control Pipe.
 	 * @param irp The ControlUsbIrp.
 	 * @exception UsbException If an error occurrs.
 	 */
-	public void asyncSubmit( UsbIrp.ControlUsbIrp irp ) throws UsbException;
+	public void asyncSubmit( ControlUsbIrp irp ) throws UsbException;
 
 	/**
 	 * Submit a List of ControlUsbIrps synchronously to the Default Control Pipe.

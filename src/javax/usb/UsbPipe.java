@@ -160,7 +160,7 @@ public interface UsbPipe
 	 * Short packets indicate either the end of data or an error.
 	 * <p>
 	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
-	 * the UsbIrp must be a {@link javax.usb.UsbIrp.ControlUsbIrp ControlUsbIrp}.
+	 * the UsbIrp must be a {@link javax.usb.ControlUsbIrp ControlUsbIrp}.
 	 * @param irp A UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
 	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
@@ -183,7 +183,7 @@ public interface UsbPipe
 	 * block until the submission is complete.
 	 * <p>
 	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
-	 * the UsbIrp must be a {@link javax.usb.UsbIrp.ControlUsbIrp ControlUsbIrp}.
+	 * the UsbIrp must be a {@link javax.usb.ControlUsbIrp ControlUsbIrp}.
 	 * @param irp The UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
 	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
@@ -203,7 +203,7 @@ public interface UsbPipe
 	 * </ul>
 	 * <p>
 	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
-	 * the UsbIrps must be {@link javax.usb.UsbIrp.ControlUsbIrp ControlUsbIrps}.
+	 * the UsbIrps must be {@link javax.usb.ControlUsbIrp ControlUsbIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
 	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
@@ -224,7 +224,7 @@ public interface UsbPipe
 	 * </ul>
 	 * <p>
 	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
-	 * the UsbIrps must be {@link javax.usb.UsbIrp.ControlUsbIrp ControlUsbIrps}.
+	 * the UsbIrps must be {@link javax.usb.ControlUsbIrp ControlUsbIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
 	 * @exception NotOpenException If the pipe is not {@link #isOpen() open}.
