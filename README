@@ -1,15 +1,13 @@
 
-This API release is based on the version 1.0.0 of the JSR80 specification.
-
 The JCP web site for the JSR80 is: http://jcp.org/detail/80.jsp
-The IBM dW web site for this project is: http://oss.software.ibm.com/developerworks/projects/javaxusb
+The web site for this project is: http://javax-usb.org
 
 ****************
 * Requirements *
 ****************
 
-Java	Standard Edition version 1.2 or greater - Micro Edition has not been tested but may work
-ANT	http://jakarta.apache.org/ant (optional.jar file also required!!!)
+Java Standard Edition version 1.2 or greater - Micro Edition has not been tested but may work
+ANT	 http://jakarta.apache.org/ant
 
 *********
 * Build *
@@ -17,7 +15,8 @@ ANT	http://jakarta.apache.org/ant (optional.jar file also required!!!)
 
 The ANT tool uses XML buildfiles to create the project.  Simply run ant
 in the toplevel directory to see a help listing of all targets.  The
-target "all" compiles everything and creates jarfiles.
+
+target "all" does everything.
 
 ****************
 * Installation *
@@ -30,10 +29,10 @@ Create the .class jarfile and put it into your CLASSPATH.
 ********************
 
 You can visit the project page for more information:
+http://javax-usb.org
 
-http://oss.software.ibm.com/developerworks/projects/javaxusb/
+There is also a mailing list:
+javax-usb-devel@lists.sourceforge.net
 
-There is an API mailing list (to subscribe follow the links from the
-project page):
-
-javaxusb-api-discuss@oss.software.ibm.com
+Archived at:
+http://sourceforge.net/mailarchive/forum.php?forum=javax-usb-devel
