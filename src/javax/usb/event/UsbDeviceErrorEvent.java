@@ -20,23 +20,41 @@ import javax.usb.*;
  */
 public class UsbDeviceErrorEvent extends UsbDeviceEvent
 {
-    /**
-     * Constructor.
-     * @param source The UsbDevice.
-     * @param uE The UsbException.
-     */
-    public UsbDeviceErrorEvent( UsbDevice source, UsbException uE )
-    {
-        super(source);
-        usbException = uE;
-    }
+	/**
+	 * Constructor.
+	 * @param source The UsbDevice.
+	 * @param uE The UsbException.
+	 * @deprecated This must not be called, the UsbControlIrp must be provided.
+	 */
+	public UsbDeviceErrorEvent( UsbDevice source, UsbException uE )
+	{
+		super( source ); /* required to compile */
+		throw new RuntimeException("This constructor is deprecated and must not be used");
+	}
+
+	/**
+	 * Constructor.
+	 * @param source The UsbDevice.
+	 * @param irp The UsbControlIrp associated with this error.
+	 */
+	public UsbDeviceErrorEvent( UsbDevice source, UsbControlIrp irp )
+	{
+		super( source );
+		usbControlIrp = irp;
+	}
 
 	/**
 	 * Get the associated UsbException.
 	 * @return The associated UsbException.
 	 */
-	public UsbException getUsbException() { return usbException; }
+	public UsbException getUsbException() { return getUsbControlIrp().getUsbException(); }
 
-	private UsbException usbException = null;
+	/**
+	 * Get the UsbControlIrp associated with this event.
+	 * @return The UsbControlIrp.
+	 */
+	public UsbControlIrp getUsbControlIrp() { return usbControlIrp; }
+
+	private UsbControlIrp usbControlIrp = null;
 
 }
