@@ -50,16 +50,13 @@ public interface UsbHub extends UsbDevice
 	 * Get a specific UsbPort by port number.
 	 * <p>
 	 * This gets the UsbPort with the specified number.
-	 * Note that the USB 1.1. specification implies (states?)
-	 * that port numbers start with 1, not 0.  For example,
-	 * see the USB 1.1 specification table 11.8 offset 7,
-	 * where the port numbers start at 1, and 0 is not a valid
-	 * port number.	 Therefore,
-	 * <code>getUsbPort(number) == (UsbPort)getUsbPorts().getUsbInfo(number-1)</code>.
-	 * Additionally, the returned UsbPort's getNumber() method will return
-	 * the specified number.
-	 * @param number the number of the port to get
-	 * @see #getUsbPorts()
+	 * The port numbering is 1-based (not 0-based), and
+	 * the max port number is 255.  See the USB 1.1 specification
+	 * table 11.8 offset 7.
+	 * <p>
+	 * If the specified port does not exist, this returns null.
+	 * @param number The number (1-based) of the port to get.
+	 * @return The specified port, or null.
 	 */
 	public UsbPort getUsbPort( byte number );
 
