@@ -28,6 +28,7 @@
 	<property name="Jsr80Env.JSR80_QUIET" value="off"/>
 	<property name="Jsr80Env.JSR80_COMPRESS" value="on"/>
 	
+	<property name="Jsr80Env.JSR80_JDOC_OVERVIEW" value="${Jsr80Env.JSR80_SRC_DIR}/javax/usb/overview.html"/>
 	<property name="Jsr80Env.JSR80_JDOC_WINDOWTITLE" value="JavaDOC for javax.usb API"/>
 	<property name="Jsr80Env.JSR80_JDOC_DOCTITLE" value="javax.usb API"/>
 	<property name="Jsr80Env.JSR80_JDOC_BOTTOM" value=""/>
@@ -60,6 +61,7 @@
 	<property name="jsr80.quiet" value="${Jsr80Env.JSR80_QUIET}"/>
 	<property name="jsr80.compress" value="${Jsr80Env.JSR80_COMPRESS}"/>
 	
+	<property name="jsr80.jdoc.overview" value="${Jsr80Env.JSR80_JDOC_OVERVIEW}"/>
 	<property name="jsr80.jdoc.windowtitle" value="${Jsr80Env.JSR80_JDOC_WINDOWTITLE}"/>
 	<property name="jsr80.jdoc.doctitle" value="${Jsr80Env.JSR80_JDOC_DOCTITLE}"/>
 	<property name="jsr80.jdoc.bottom" value="${Jsr80Env.JSR80_JDOC_BOTTOM}"/>
@@ -135,6 +137,7 @@
 			packagenames="javax.usb.*"
 			sourcepath="${jsr80.src.dir}"
 			destdir="${jsr80.jdoc.dir}"
+                        overview="${jsr80.jdoc.overview}"
 			author="${jsr80.jdoc.author}"
 			version="${jsr80.jdoc.version}"
 			verbose="${jsr80.jdoc.verbose}"
