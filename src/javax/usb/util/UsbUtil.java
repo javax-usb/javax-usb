@@ -286,6 +286,12 @@ public class UsbUtil
 		public void abortAllSubmissions() throws NotOpenException
 		{ synchronized (submitLock) { usbPipe.abortAllSubmissions(); } }
 
+		public UsbIrp createUsbIrp()
+		{ return usbPipe.createUsbIrp(); }
+
+		public ControlUsbIrp createControlUsbIrp(byte bmRequestType, byte bRequest, short wValue, short wIndex)
+		{ return usbPipe.createControlUsbIrp(bmRequestType, bRequest, wValue, wIndex); }
+
 		public void addUsbPipeListener( UsbPipeListener listener )
 		{ usbPipe.addUsbPipeListener(listener); }
 
