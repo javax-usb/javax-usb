@@ -48,7 +48,7 @@ public interface UsbInterface
 	 * This will attempt whatever claiming the native implementation provides,
 	 * if any.  If the native claim fails, this will fail.  If the interface
 	 * is already claimed, this may fail depending on the value of the
-	 * {@link javax.usb.UsbInterfacePolicy.forceClaim() UsbInterfacePolicy.forceClaim()}.
+	 * {@link javax.usb.UsbInterfacePolicy#forceClaim(UsbInterface) UsbInterfacePolicy.forceClaim()}.
 	 * <p>
 	 * After a successful claim, the UsbInterfacePolicy is consulted for various
 	 * actions, such as opening a UsbPipe belonging to this UsbInterface,
@@ -64,7 +64,7 @@ public interface UsbInterface
 	/**
 	 * Release this interface.
 	 * <p>
-	 * This is identical to the other {@link release(Object) release},
+	 * This is identical to the other {@link #release(Object) release},
 	 * except a null key is used.
 	 * @exception UsbPolicyDenied If the UsbInterfacePolicy prevented the release.
 	 * @exception UsbClaimException If the interface is not claimed.
