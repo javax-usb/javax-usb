@@ -173,15 +173,17 @@ public interface UsbDevice
 	 * Submit a UsbControlIrp synchronously to the Default Control Pipe.
 	 * @param irp The UsbControlIrp.
 	 * @exception UsbException If an error occurrs.
+	 * @exception IllegalArgumentException If the UsbControlIrp is not valid.
 	 */
-	public void syncSubmit( UsbControlIrp irp ) throws UsbException;
+	public void syncSubmit( UsbControlIrp irp ) throws UsbException,IllegalArgumentException;
 
 	/**
 	 * Submit a UsbControlIrp asynchronously to the Default Control Pipe.
 	 * @param irp The UsbControlIrp.
 	 * @exception UsbException If an error occurrs.
+	 * @exception IllegalArgumentException If the UsbControlIrp is not valid.
 	 */
-	public void asyncSubmit( UsbControlIrp irp ) throws UsbException;
+	public void asyncSubmit( UsbControlIrp irp ) throws UsbException,IllegalArgumentException;
 
 	/**
 	 * Submit a List of UsbControlIrps synchronously to the Default Control Pipe.
@@ -191,8 +193,9 @@ public interface UsbDevice
 	 * is implementation-dependent.
 	 * @param list The List of UsbControlIrps.
 	 * @exception UsbException If an error occurrs.
+	 * @exception IllegalArgumentException If the List contains non-UsbControlIrp objects or those UsbIrp(s) are invalid.
 	 */
-	public void syncSubmit( List list ) throws UsbException;
+	public void syncSubmit( List list ) throws UsbException,IllegalArgumentException;
 
 	/**
 	 * Submit a List of UsbControlIrps asynchronously to the Default Control Pipe.
@@ -202,8 +205,9 @@ public interface UsbDevice
 	 * is implementation-dependent.
 	 * @param list The List of UsbControlIrps.
 	 * @exception UsbException If an error occurrs.
+	 * @exception IllegalArgumentException If the List contains non-UsbControlIrp objects or those UsbIrp(s) are invalid.
 	 */
-	public void asyncSubmit( List list ) throws UsbException;
+	public void asyncSubmit( List list ) throws UsbException,IllegalArgumentException;
 
 	/**
 	 * Create a UsbControlIrp.
