@@ -32,7 +32,7 @@ package javax.usb;
  * {@link #setOffset(int) offset} and {@link #setLength(int) length} with their setters <i>after</i> setting
  * the data.
  * <p>
- * The javax.usb implementation will set the {@link #getActualLength() data length} and, if unsuccessful, the
+ * The javax.usb implementation will set the {@link #getActualLength() data length} or, if unsuccessful, the
  * {@link #getUsbException() UsbException}, after processing.  Finally, it will call {@link #complete() complete}.
  * <p>
  * See the USB 1.1 specification section 5.3.2 for details on USB IRPs.
@@ -75,8 +75,9 @@ public interface UsbIrp
 	/**
 	 * The amount of data that was transferred.
 	 * <p>
-	 * This defaults to 0, and is set by the implementation during/after submission.
-	 * This will never be negative.
+	 * This defaults to 0, and is set by the implementation during/after submission (if successful).
+	 * This will never be negative.  If {@link isUsbException() isUsbException} is true,
+	 * this value is undefined.
 	 * @return The amount of data that was transferred.
 	 */
 	public int getActualLength();
@@ -132,6 +133,8 @@ public interface UsbIrp
 
 	/**
 	 * If a UsbException occured.
+	 * <p>
+	 * If this is true, the {@link getActualLength() actual length} is undefined.
 	 * @return If a UsbException occurred.
 	 */
 	public boolean isUsbException();
