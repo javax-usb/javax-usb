@@ -66,7 +66,7 @@ public interface UsbPipe
 	 * If this pipe is active.
 	 * <p>
 	 * This pipe is active only if it belongs to an
-	 * {@link javax.usb.UsbConfig#isActive() active configuration} and
+	 * {@link javax.usb.UsbConfiguration#isActive() active configuration} and
 	 * {@link javax.usb.UsbInterface#isActive() interface setting}, otherwise it is inactive.
 	 * This UsbPipe cannot be used if inactive.
 	 * @return If this UsbPipe is active.
