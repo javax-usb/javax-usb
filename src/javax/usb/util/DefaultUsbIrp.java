@@ -204,12 +204,10 @@ public class DefaultUsbIrp implements UsbIrp
 	 */
 	public void waitUntilComplete()
 	{
-		if (!isComplete()) {
-			synchronized ( waitLock ) {
-				while (!isComplete()) {
-					try { waitLock.wait(); }
-					catch ( InterruptedException iE ) { }
-				}
+		synchronized ( waitLock ) {
+			while (!isComplete()) {
+				try { waitLock.wait(); }
+				catch ( InterruptedException iE ) { }
 			}
 		}
 	}
@@ -231,12 +229,10 @@ public class DefaultUsbIrp implements UsbIrp
 
 		long startTime = System.currentTimeMillis();
 
-		if (!isComplete()) {
-			synchronized ( waitLock ) {
-				if (!isComplete() && ((System.currentTimeMillis() - startTime) < timeout)) {
-					try { waitLock.wait( timeout ); }
-					catch ( InterruptedException iE ) { }
-				}
+		synchronized ( waitLock ) {
+			if (!isComplete() && ((System.currentTimeMillis() - startTime) < timeout)) {
+				try { waitLock.wait( timeout ); }
+				catch ( InterruptedException iE ) { }
 			}
 		}
 	}
