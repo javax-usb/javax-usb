@@ -1,0 +1,10 @@
+
+This file contains changes in the current (as indicated) version.
+
+Changes in 0.9.0
+================
+
+- Updated Specification file Change summary section
+
+- Changed DescriptorConst.DESCRIPTOR_TYPE_CONFIGURATION to DescriptorConst.DESCRIPTOR_TYPE_CONFIG
+

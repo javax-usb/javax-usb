@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+
+<!-- XML Ant (http://www.apache.org/ant) build file for JSR80 (javax.usb) 	-->
+<!-- @author E. Michael Maximilien                                          -->
+<!-- @author Dan Streetman                                                  -->
+<!-- @version 0.8.0                                                         -->
+
+<!-- All properties are changable via the '.ant-global.properties' file     -->
+<!-- which should (optionally) be located in the user's home directory.     -->
+<!-- The properties and their defaults are shown below.  Note that the      -->
+<!-- default 'root of everything' directory (jsr80.home) defaults to the    -->
+<!-- current directory.                                                     -->
+
+<project name="JSR80" default="help">
+
+	<!-- Global properties for this build -->
+	<property name="ant.prop.file.name" value=".ant-global.properties"/>
+	<property file="${user.home}/${ant.prop.file.name}"/>
+	<property name="jsr80.deprecation" value="on"/>
+	<property name="jsr80.debug" value="off"/>
+	<property name="jsr80.optimize" value="off"/>
+	<property name="jsr80.verbose" value="off"/>
+	<property name="jsr80.quiet" value="on"/>
+
+	<!-- Base root directories -->
+	<property name="jsr80.home" value="."/>                         <!-- Root of all JSR80 files               -->
+	<property name="jsr80.src" value="${jsr80.home}/src"/>          <!-- Location of JSR80 source (java) files -->
+	<property name="jsr80.lib" value="${jsr80.home}/lib"/>          <!-- Location for JAR files                -->
+	<property name="jsr80.jdoc" value="${jsr80.home}/docs/jdoc"/>   <!-- Location for JavaDOC                  -->
+	
+	<!-- JAR files properties -->
+	<property name="jsr80.jar.file" value="javax_usb.jar"/>         <!-- Name of (binary) JAR file -->
+	<property name="jsr80.jar.file.mf" value="javax_usb.mf"/>       <!-- Name of manifest file     -->
+	<property name="jsr80.src.jar.file" value="javax_usb_src.jar"/> <!-- Name of (source) JAR file -->
+	
+	<!-- JavaDOC files properties -->
+	<property name="jsr80.jdoc.windowtitle" value="JavaDOC for JSR80 (javax.usb) API"/>
+	<property name="jsr80.jdoc.doctitle" value="JSR80 (javax.usb) API"/>
+	<property name="jsr80.jdoc.bottom" value="Copyright &#169; 2000-2001 JCP (Java Community Process) All Rights Reserved."/>
+	
+	<!-- Other files properties -->
+	<property name="jsr80.version.class" value="javax.usb.Version"/>
+	
+	<!-- Show help -->
+	<target name="help">
+		<echo message="Buildfile for JSR80 (javax.usb) API"/>
+		<echo message=""/>
+		<echo message="Targets:"/>
+		<echo message=""/>
+		<echo message="  all              do a clean compilation and create JAR files and JavaDOC"/>
+		<echo message="  clean            clean all class files and JAR files"/>
+		<echo message="  clean.jars       clean JAR files"/>
+		<echo message="  compile          compile all source files"/>
+		<echo message="  jars             create class and source JAR files"/>
+		<echo message="  jdoc             create JavaDOC"/>
+		<echo message="  version          print the version number of the API"/>
+		<echo message=""/>
+	</target>
+
+	<!-- Do everything -->
+	<target name="all" depends="init,clean,compile,jars,jdoc"/>
+
+	<!-- Runs the javax.usb.Version class -->
+	<target name="version" depends="compile">
+		<java classname="${jsr80.version.class}" fork="yes">
+			<classpath>
+				<pathelement location="${jsr80.src}"/>
+				<pathelement path="${java.class.path}"/>
+			</classpath>
+		</java>
+	</target>
+	
+	<target name="init">
+		<!-- Creates the time stamp -->
+		<tstamp/>
+	</target>
+  
+	<!-- Compile source files -->
+	<target name="compile" depends="init">
+		<echo message="Compiling JSR80 (javax.usb) API classes"/>
+		<javac deprecation="${jsr80.deprecation}" srcdir="${jsr80.src}" 
+			debug="${jsr80.debug}" optimize="${jsr80.optimize}" verbose="${jsr80.verbose}" 
+			includes="javax/usb/**"/>
+	</target>
+	
+	<!-- Create JAR files -->
+	<target name="jars" depends="compile">
+		<mkdir dir="${jsr80.lib}"/>
+		<jar jarfile="${jsr80.lib}/${jsr80.jar.file}"
+			manifest="${jsr80.home}/${jsr80.jar.file.mf}"
+			basedir="${jsr80.src}"
+			includes="javax/usb/**/*.class,javax/usb/res/jusb.properties"/>
+		
+		<jar jarfile="${jsr80.lib}/${jsr80.src.jar.file}"
+			basedir="${jsr80.src}"
+			includes="javax/usb/**/*.java,javax/usb/res/jusb.properties"/>
+	</target>
+	
+	<!-- Create JavaDOC -->
+	<target name="jdoc" depends="init">
+		<mkdir dir="${jsr80.jdoc}"/>
+		<javadoc packagenames="javax.usb.*"
+			sourcepath="${jsr80.src}"
+			destdir="${jsr80.jdoc}"
+			author="true"
+			version="true"
+			verbose="${jsr80.verbose}"
+			Package="true"
+			use="true"
+			windowtitle="${jsr80.jdoc.windowtitle}"
+			doctitle="${jsr80.jdoc.doctitle}"
+			bottom="${jsr80.jdoc.bottom}"/>
+		<echo message="Java Documentation placed in ${jsr80.jdoc}"/>
+	</target>
+	
+	<!-- Clean jarfiles -->
+	<target name="clean.jars">
+		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}">
+			<fileset dir="${jsr80.lib}" includes="${jsr80.jar.file},${jsr80.src.jar.file}"/>
+		</delete>
+	</target>
+
+	<!-- Clean all classfiles -->
+	<target name="clean" depends="clean.jars">
+		<echo message="Removing all JSR80 (javax.usb) classfiles"/>
+		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}">
+			<fileset dir="${jsr80.src}/javax/usb" includes="**/*.class"/>
+		</delete>
+	</target>
+
+</project>

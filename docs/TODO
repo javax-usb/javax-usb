@@ -1,0 +1,13 @@
+TODO
+=====================================
+
+- Add pipe 'Policy' to UsbPipe.open()
+
+- Add interface claiming 'Policy' to UsbInterface.claim()
+
+- Add irp 'Policy'
+
+- Define more error codes
+
+- Clarify/address Security.
+
