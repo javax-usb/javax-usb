@@ -47,8 +47,13 @@
 	<property name="Jsr80Env.JSR80_SRC_DIR" value="src"/>
 	<property name="Jsr80Env.JSR80_DEST_DIR" value="src"/>
 	<property name="Jsr80Env.JSR80_DOCS_DIR" value="docs"/>
-	<property name="Jsr80Env.JSR80_JDOC_DIR" value="jdoc"/>
+	<property name="Jsr80Env.JSR80_JDOC_DIR" value="${Jsr80Env.JSR80_DOCS_DIR}/jdoc"/>
+	<property name="Jsr80Env.JSR80_TEST_SRC_DIR" value="${Jsr80Env.JSR80_SRC_DIR}/test"/>
+	<property name="Jsr80Env.JSR80_TEST_DEST_DIR" value="${Jsr80Env.JSR80_DEST_DIR}/test"/>
 	
+	<property name="Jsr80Env.JSR80_TEST_CLASSNAME" value="junit.textui.TestRunner"/>	
+	<property name="Jsr80Env.JSR80_TEST_ARG" value="javax.usb.AllTests"/>
+
 	<property name="Jsr80Env.JSR80_JDOC_WINDOWTITLE" value="JavaDOC for JSR80 (javax.usb) API"/>
 	<property name="Jsr80Env.JSR80_JDOC_DOCTITLE" value="JSR80 (javax.usb) API"/>
 	<property name="Jsr80Env.JSR80_JDOC_BOTTOM" value="Copyright &#169; 2000-2001 JCP (Java Community Process) All Rights Reserved."/>
@@ -73,7 +78,7 @@
 	<property name="jsr80.src.dir" value="${Jsr80Env.JSR80_SRC_DIR}"/>
 	<property name="jsr80.dest.dir" value="${Jsr80Env.JSR80_DEST_DIR}"/>
 	<property name="jsr80.docs.dir" value="${Jsr80Env.JSR80_DOCS_DIR}"/>
-	<property name="jsr80.jdoc.dir" value="${jsr80.docs.dir}/${Jsr80Env.JSR80_JDOC_DIR}"/>
+	<property name="jsr80.jdoc.dir" value="${Jsr80Env.JSR80_JDOC_DIR}"/>
 	
 	<property name="jsr80.src.jarfile.dir" value="${Jsr80Env.JSR80_SRC_JARFILE_DIR}"/>
 	<property name="jsr80.src.jarfile" value="${Jsr80Env.JSR80_SRC_JARFILE}"/>
@@ -103,6 +108,13 @@
 	<property name="jsr80.jdoc.package" value="yes"/>
 	<property name="jsr80.jdoc.private" value="no"/>
 	
+	<property name="jsr80.test.classname" value="${Jsr80Env.JSR80_TEST_CLASSNAME}"/>
+
+	<property name="jsr80.test.src.dir" value="${Jsr80Env.JSR80_TEST_SRC_DIR}"/>
+	<property name="jsr80.test.dest.dir" value="${Jsr80Env.JSR80_TEST_DEST_DIR}"/>
+	<property name="jsr80.test.arg" value="${Jsr80Env.JSR80_TEST_ARG}"/>
+	<property name="jsr80.test.fork" value="yes"/>
+
 	<property name="jsr80.version.class" value="javax.usb.Version"/>
 	
 	<!-- Show help (the different options for this build.xml) -->
@@ -120,6 +132,11 @@
 		<echo message="  jdoc             Create JavaDOC"/>
 		<echo message="  mrproper         Clean everything"/>
 		<echo message="  version          Show API version"/>
+		<echo message="  --------- JUnit tests ---------"/>
+		<echo message="  test-all           == test-clean test-compile test-run"/>
+		<echo message="  test-clean         Clean unit tests"/>
+		<echo message="  test-compile       Compile unit tests"/>
+		<echo message="  test-run           Run unit tests"/>
 		<echo message=""/>
 	</target>
 
@@ -165,7 +182,7 @@
 		<jar jarfile="${jsr80.class.jarfile.dir}/${jsr80.class.jarfile}"
 			basedir="${jsr80.dest.dir}"
 			manifest="${jsr80.class.jarfile.dir}/${jsr80.manifest.file}"
-			includes="javax/usb/**/*.class,javax/usb/res/jusb.properties"/>
+			includes="javax/usb/**/*.class"/>
 
 		<delete quiet="true" file="${jsr80.class.jarfile.dir}/${jsr80.manifest.file}"/>
 	</target>
@@ -215,12 +232,12 @@
 
 		<!-- Copying docs files (directories) -->
 		<copy todir="${jsr80.dist.dir}/docs">
-			<fileset dir="${jsr80.docs.dir}" excludes="**/com/**/*"/>
+			<fileset dir="${jsr80.docs.dir}"/>
 		</copy>
 
 		<!-- Copying src files -->
 		<copy todir="${jsr80.dist.dir}/src">
-			<fileset dir="${jsr80.src.dir}" includes="javax/usb/**" excludes="com/ibm/jusb/**,**/*.class"/>
+			<fileset dir="${jsr80.src.dir}" includes="javax/usb/**" excludes="**/*.class"/>
 		</copy>
 
 		<!-- Creating Zip distribution file -->
@@ -256,7 +273,7 @@
 	</target>
 
 	<!-- Clean everything (Mr. Proper) -->
-	<target name="mrproper" depends="init,clean">
+	<target name="mrproper" depends="init,clean,test-clean">
 		<echo message="Cleaning everything in JSR80 API!"/>
 		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false">
 			<fileset dir="${jsr80.src.jarfile.dir}" includes="${jsr80.src.jarfile}"/>
@@ -271,4 +288,63 @@
 			file="${jsr80.dist.tar.file}.gz"/>
 	</target>
 
+	<!-- 
+		The following are unit test tasks.  We have created a series of
+		JUnit XyzTestCase classes to unit test various aspect and portions
+		of the API.  These tasks allows compilation and running of
+		these tests.
+		Find JUnit at: http://www.junit.org
+	-->
+
+	<!--
+		Compiles all JUnit tests
+	-->
+	<target name="test-compile" depends="init,compile">
+		<mkdir dir="${jsr80.test.dest.dir}"/>
+		<javac
+			srcdir="${jsr80.test.src.dir}"
+			destdir="${jsr80.test.dest.dir}"
+			debug="${jsr80.debug}"
+			optimize="${jsr80.optimize}"
+			deprecation="${jsr80.deprecation}"
+			verbose="${jsr80.verbose}"
+			failonerror="yes">
+				<classpath>
+					<pathelement path="${java.class.path}"/>
+					<pathelement location="${jsr80.class.jarfile.dir}/${jsr80.class.jarfile}"/>
+					<pathelement location="${jsr80.src.jarfile.dir}/${jsr80.src.jarfile}"/>
+					<pathelement path="${jsr80.dest.dir}"/>
+					<pathelement path="${jsr80.src.dir}"/>
+				</classpath>
+		</javac>
+	</target>
+
+	<!--
+		Runs the root "AllTests" JUnit TestSuite
+	-->
+	<target name="test-run" depends="init,test-compile">
+		<java classname="${jsr80.test.classname}" fork="${jsr80.test.fork}" failonerror="yes">
+			<arg value="${jsr80.test.arg}"/>
+			<classpath>
+				<pathelement path="${java.class.path}"/>
+				<pathelement path="${jsr80.test.dest.dir}"/>
+				<pathelement location="${jsr80.class.jarfile.dir}/${jsr80.class.jarfile}"/>
+				<pathelement path="${jsr80.dest.dir}"/>
+			</classpath>
+		</java>
+	</target>
+
+	<!--
+		Cleans all the JUnit tests classes
+	-->
+	<target name="test-clean" depends="init">
+		<delete>
+			<fileset dir="${jsr80.test.dest.dir}" includes="javax/usb/**/*.class"/>
+		</delete>
+	</target>
+
+	<!--
+		Does a full blown <clean, compile and run> for the tests classes
+	-->
+	<target name="test-all" depends="init,test-clean,test-compile,test-run"/>
 </project>

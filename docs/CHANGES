@@ -8,6 +8,10 @@ Changes in CVS
 
 - Changed build.xml file to correctly build and create directories, modified dist behavior.
 
+- Moved test cases (from RI package) back into API package.
+
+- Added test-running targets to buildfile.
+
 Changes in 0.9.0
 ================
 
