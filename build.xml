@@ -15,12 +15,8 @@
 
 	<property name="Jsr80Env.JSR80_SRC_DIR" value="src"/>
 	<property name="Jsr80Env.JSR80_DEST_DIR" value="src"/>
-	<property name="Jsr80Env.JSR80_DOCS_DIR" value="docs"/>
 	<property name="Jsr80Env.JSR80_JDOC_DIR" value="docs/jdoc"/>
 	
-	<property name="Jsr80Env.JSR80_DOCS_SRC_DIR" value="docs/src"/>
-	<property name="Jsr80Env.JSR80_DOCS_SPECFILE" value="jsr80.pdf"/>
-
 	<property name="Jsr80Env.JSR80_JARFILE_DIR" value="lib"/>
 	<property name="Jsr80Env.JSR80_JARFILE" value="jsr80.jar"/>
 
@@ -52,11 +48,7 @@
 	<!-- Variable defaults -->
 	<property name="jsr80.src.dir" value="${Jsr80Env.JSR80_SRC_DIR}"/>
 	<property name="jsr80.dest.dir" value="${Jsr80Env.JSR80_DEST_DIR}"/>
-	<property name="jsr80.docs.dir" value="${Jsr80Env.JSR80_DOCS_DIR}"/>
 	<property name="jsr80.jdoc.dir" value="${Jsr80Env.JSR80_JDOC_DIR}"/>
-
-	<property name="jsr80.docs.src.dir" value="${Jsr80Env.JSR80_DOCS_SRC_DIR}"/>
-	<property name="jsr80.docs.specfile" value="${Jsr80Env.JSR80_DOCS_SPECFILE}"/>
 
 	<property name="jsr80.jarfile.dir" value="${Jsr80Env.JSR80_JARFILE_DIR}"/>
 	<property name="jsr80.jarfile" value="${Jsr80Env.JSR80_JARFILE}"/>
@@ -92,19 +84,18 @@
 		<echo message=""/>
 		<echo message="Targets:"/>
 		<echo message=""/>
-		<echo message="  all              == clean compile jars docs jdoc"/>
+		<echo message="  all              == clean compile jars jdoc"/>
 		<echo message="  clean            Clean everything"/>
 		<echo message="  compile          Compile all classes"/>
 		<echo message="  help             Show this help"/>
 		<echo message="  jars             Create JAR files"/>
-		<echo message="  docs             Create Specification"/>
 		<echo message="  jdoc             Create JavaDOC"/>
 		<echo message="  version          Show API version"/>
 		<echo message=""/>
 	</target>
 
 	<!-- Runs the javax.usb.Version class -->
-	<target name="version" depends="init,compile">
+	<target name="version" depends="compile">
 		<java classname="${jsr80.version.class}" fork="yes">
 			<classpath>
 				<pathelement path="${java.class.path}"/>
@@ -114,12 +105,8 @@
 		</java>
 	</target>
 
-	<!-- Initialization -->
-	<target name="init">
-	</target>
-
 	<!-- Compile source files -->
-	<target name="compile" depends="init">
+	<target name="compile">
 		<echo message="Compiling javax.usb API classes"/>
 		<mkdir dir="${jsr80.dest.dir}"/>
 		<javac srcdir="${jsr80.src.dir}"
@@ -132,7 +119,7 @@
 	</target>
 
 	<!-- Create JAR file -->
-	<target name="jars" depends="init,compile">
+	<target name="jars" depends="compile">
 		<mkdir dir="${jsr80.jarfile.dir}"/>
 		
 		<jar jarfile="${jsr80.jarfile.dir}/${jsr80.jarfile}"
@@ -140,17 +127,8 @@
 			includes="javax/usb/**/*.class"/>
 	</target>
 
-	<!-- Create Specification -->
-	<target name="docs" depends="init">
-		<exec executable="make" dir="${jsr80.docs.src.dir}" os="Linux" timeout="5000">
-			<arg line="all"/>
-		</exec>
-
-		<copy verbose="${jsr80.verbose}" file="${jsr80.docs.src.dir}/${jsr80.docs.specfile}" todir="${jsr80.docs.dir}"/>
-	</target>
-
 	<!-- Create JavaDOC -->
-	<target name="jdoc" depends="init">
+	<target name="jdoc">
 		<echo message="Creating javax.usb API JavaDoc"/>
 		<mkdir dir="${jsr80.jdoc.dir}"/>
 		<javadoc
@@ -174,20 +152,16 @@
 	</target>
 
 	<!-- Do everything -->
-	<target name="all" depends="clean,compile,jars,jdoc,docs"/>
+	<target name="all" depends="clean,compile,jars,jdoc"/>
 
 	<!-- Clean all classfiles -->
-	<target name="clean" depends="init">
+	<target name="clean">
 		<echo message="Cleaning everything in javax.usb API."/>
 		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false">
 			<fileset dir="${jsr80.dest.dir}" includes="javax/usb/**/*.class"/>
 			<fileset dir="${jsr80.jarfile.dir}" includes="${jsr80.jarfile}"/>
 			<fileset dir="${jsr80.jdoc.dir}"/>
 		</delete>
-
-		<exec executable="make" dir="${jsr80.docs.src.dir}" os="Linux">
-			<arg line="clean"/>
-		</exec>
 	</target>
 
 </project>
