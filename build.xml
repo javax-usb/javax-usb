@@ -142,7 +142,7 @@
 
 	<!-- Create Specification -->
 	<target name="docs" depends="init">
-		<exec executable="make" dir="${jsr80.docs.src.dir}" os="Linux">
+		<exec executable="make" dir="${jsr80.docs.src.dir}" os="Linux" timeout="5000">
 			<arg line="all"/>
 		</exec>
 
