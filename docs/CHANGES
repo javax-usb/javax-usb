@@ -2,7 +2,16 @@
 This file contains a record of changes in each version.
 
 Changes in CVS
-======================
+==============
+
+- Removed dist target from build.xml
+
+- Removed src jarfile from build.xml
+
+- Cleaned up build.xml
+
+Changes in 0.9.1
+================
 
 - Filled out README file.
 
@@ -11,6 +20,14 @@ Changes in CVS
 - Moved test cases (from RI package) back into API package.
 
 - Added test-running targets to buildfile.
+
+- Added setter methods to UsbIrp and Request.
+
+- Removed UsbCompositeIrp.
+
+- Added (a)syncSubmit(List) to UsbPipe.
+
+- Removed XXXCommands and associated methods from UsbIrp.
 
 Changes in 0.9.0
 ================
