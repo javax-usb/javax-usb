@@ -80,7 +80,10 @@ public class DefaultUsbIrp implements UsbIrp
 	 */
 	public void setData( byte[] d, int o, int l ) throws IllegalArgumentException
 	{
-		setData(d);
+		if (null == d)
+			throw new IllegalArgumentException("Data cannot be null.");
+
+		data = d;
 		setOffset(o);
 		setLength(l);
 	}
@@ -95,7 +98,7 @@ public class DefaultUsbIrp implements UsbIrp
 		if (null == d)
 			throw new IllegalArgumentException("Data cannot be null.");
 
-		data = d;
+		setData(d, 0, d.length);
 	}
 
 	/**
