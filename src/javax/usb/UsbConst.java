@@ -93,6 +93,12 @@ public interface UsbConst
 	public static final byte REQUEST_SYNCH_FRAME             = (byte)0x0c;
 
 	//**************************************************************************
+	// Feature selectors
+
+	public static final byte FEATURE_SELECTOR_DEVICE_REMOTE_WAKEUP = (byte)0x01;
+	public static final byte FEATURE_SELECTOR_ENDPOINT_HALT        = (byte)0x00;
+
+	//**************************************************************************
 	// Descriptor constants
 
 	public static final byte DESCRIPTOR_TYPE_DEVICE              = (byte)0x01;
