@@ -7,10 +7,11 @@
 \usepackage{fancyhdr}
 \usepackage{graphics}
 \usepackage{latexsym}
+\usepackage{times}
 
-\addtolength{\textwidth}{+2in}
-\addtolength{\oddsidemargin}{-1in}
-\addtolength{\evensidemargin}{-1in}
+\addtolength{\textwidth}{+1in}
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
 
 \newcommand{\mytitle}[0]{JSR80 API Specification}
 \newcommand{\myauthor}[0]{Dan Streetman}
@@ -47,8 +48,6 @@
 \\
 \large{ddstreet@ieee.org}
 \\
-\large{ddstreet@us.ibm.com}
-\\
 \large{\mydate}
 \end{flushright}
 
@@ -83,211 +82,543 @@
 \pagenumbering{arabic}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Initialization
+% Introduction
 %
 
-\section{Initialization}
+\section{Introduction}
 
-The entry point for javax.usb is the class \myclass{UsbHostManager} (all classes and interfaces
-are located in the \mypackage{javax.usb} package unless otherwise noted).  This class
-is final and cannot be instantiated; it is a completely static class.  The only
-public method is \mymethod{getUsbServices}, which starts up the javax.usb implementation
-and returns the \myinterface{UsbServices} implementaion.  To find the implementation class,
-the \myclass{UsbHostManager} attempts to load the properties file as defined by the
-field \myclass{UsbHostManager}.\myfield{JAVAX\_USB\_PROPERTIES\_FILE}.  It uses the
-\myclass{ClassLoader}.\mymethod{getSystemResourceAsStream} method to find the properties file;
-this method essentially searches the classpath for the file.  The properties contained
-in this file are loaded into a \myclass{Properties} instance using the method
-\myclass{Properties}.\mymethod{load}, so the file should contain key-value pairs.  The
-only required key-value pair is the key defined by
-\myclass{UsbHostManager}.\myfield{JAVAX\_USB\_USBSERVICES\_PROPERTY}; the value must be the
-name of the class that implements \myinterface{UsbServices}.  The class must be instantiatable
-using \myclass{Class}.\mymethod{newInstance}.
+JSR80 is the Java Specification Request concerned with communication with
+Universal Serial Bus (USB) devices.  This document describes the API associated
+with this JSR.  
 
 \mysectionend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% UsbServices
+% USB Bus Topology
 %
 
-\section{UsbServices}
+\section{USB Bus Topology}
 
-The \myinterface{UsbServices} implementation is the entry point for accessing the
-javax.usb implementation.  It contains informational methods \mymethod{getApiVersion},
-\mymethod{getImpVersion}, and \mymethod{getImpDescription}.  The API version method
-returns the version number (String) of the API that the implementation supports; it
-corresponds to a version (String) returned by the API version class \myclass{Version}.
-The implementation version and description methods return information about the
-implementation itself.
+The structure of the USB bus is topological.  The root
+of the USB physical bus is a physical Host Controller, which is contained
+in a computer system.  Host Controllers are usually on-board or may be
+add-in PCI cards.  They appear logically as hubs, so they are the root hub
+in their own topology tree.  Connected to them are one or more USB devices,
+and since USB hubs are a type of USB device, this topology may continue
+down until there are no more connected devices.  The non-hub devices form
+the leaves of the topology tree, while the hub-type devices form the branches
+of the topology tree.  This forms the physical device topology.
 
-The interface also allows for adding and removing a \myinterface{UsbServicesListener}
-(all listener interfaces and event classes are located in the \mypackage{javax.usb.event} package).
-When added, a listener will receive events when devices are connected or disconnected from the
-topology.
+The javax.usb API closely matches this physical device topology, as shown in
+figure \ref{bus_topology}.  However the root of the topology is slightly different.
+First, the entry point of javax.usb is the \myclass{UsbHostManager} class, shown at the
+top of the tree.  This class instantiates the platform-specific instance of
+the \myinterface{UsbServices} interface.  From the \myinterface{UsbServices} instance, the virtual root
+\myinterface{UsbHub} is available.  This hub is created by the implementation and does
+nothing except manage the actual physical devices.  Each hub connected to
+the virtual root hub represents a physical Host Controller hub that is
+present in the system.  Connected to those hubs are the real externally-connected
+physical devices connected to the system, including external hubs.
 
-The most important method of \myinterface{UsbServices} is \mymethod{getRootUsbHub}.
-This method returns the virtual root \myinterface{UsbHub} of the javax.usb topology.  This gives access
-to all devices connected to the host machine.
+\begin{figure}
+\label{bus_topology}
+\end{figure}
 
 \mysectionend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Topology
-%
+% USB Device Hierarchy
 
-\section{Topology}
+\section{USB Device Hierarchy}
 
-The root \myinterface{UsbHub} is the top level of the USB topology tree.  It is a
-virtual device, meaning that it does not correspond to any physical hardware.
-The javax.usb implementation is responsible for creating and maintaining it.
-The next level in the topology contains \myinterface{UsbHub}s which correspond to the
-physical hardware host controller(s) present in the host system.  The next
-level consists of any devices attached directly to a hardware host controller,
-which may include external USB hubs (which are also devices).  The levels below
-this correspond to devices connected to external hubs.  Note that the USB
-specification imposes a maximum number of chained external devices to 5,
-but the API makes no such restriction; the implementation may or may not
-support more than 5 chained external devices.  The implementation is of course
-required to support up to 5 chained external devices (which means a topology
-7 levels deep including the virtual root hub and a hardware host controller hub,
-plus the 5 external hubs/device).
+The structure of a USB device is hierarchal, instead of topological.  The general
+structure of a device is defined by the USB specification in Chapter 5.
+This structure is made up of different components as defined in the specification,
+and any specific device can organize those components as the device requires,
+within certain limitations which are also defined in the USB specification.
+All devices must have one or more configurations.  As the name suggests,
+each configuration represents a different configuration of the device.
+Only one of the configurations may be active at a time.  Each of those configurations
+must contain one or more interfaces.  An interface represents a certain function
+of the device (or configuration).  Any interface has at least one setting,
+and it may have alternate settings.  Only one setting may be active at a time.
+Each setting may contain zero or more endpoints, and each of those endpoints
+contains a pipe.  The device's pipes, which are used to communicate with the
+device, are the lowest level of the hierarchy.
 
-\mysectionend
+The javax.usb API again closely matches this logical hierarchy.  Figure \ref{device_hierarchy}
+shows the logical arrangement of an example device in javax.usb terms.  A physical
+device is represented by an instance of the \myinterface{UsbDevice} interface.  In this example,
+there are two \myinterface{UsbConfigurations}, which represent the device's configurations,
+inside the \myinterface{UsbDevice}.  Those \myinterface{UsbConfiguration}s
+contain \myinterface{UsbInterface}s; the \myinterface{UsbInterface}s
+contain \myinterface{UsbEndpoint}s; and each \myinterface{UsbEndpoint}
+contains a \myinterface{UsbPipe}.  Each of those represents a logical component
+of the example device, i.e. the device's configurations, interfaces, endpoints,
+and pipes.  To show how alternate settings are handled, inside \myinterface{UsbConfiguration}
+number 2, the \myinterface{UsbInterface} number 1 contains two settings, setting 0 and setting 1.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% UsbHubs
-%
-
-\section{UsbHubs}
-
-\myinterface{UsbHub}s are actually \myinterface{UsbDevice}s with additional capabilites (methods).
-They contain \myinterface{UsbPort}s, which in turn may contain an attached \myinterface{UsbDevice}.
-The ports are numbered (starting with port number 1; there is no port number 0), and
-correspond to the physical ports located on either the hardware host controller or external hub.
-The exception of course is the virtual root hub, which does not correspond to any physical device
-at all, and contains enough ports to accomodate all hardware host controllers.
-
-The topology may then be traversed using each hub's ports, which may contain a device (or not).
-Additionally, all \myinterface{UsbDevce}s connected to a \myinterface{UsbHub} may be accessed using
-the \mymethod{getAttachedUsbDevices} method.
+\begin{figure}
+\label{device_hierarchy}
+\end{figure}
 
 \mysectionend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% UsbDevice Structure
+% UsbDevice
 %
 
-\section{UsbDevice Structure}
+\section{UsbDevice}
 
-\subsection{UsbDevice}
+The \myinterface{UsbDevice} interface is the connection between the USB bus's
+topology and the device's logical hierarchy.  In addition to
+navigational methods, the \myinterface{UsbDevice} interface also has methods
+used for identification and communication.  Figure \ref{UsbDevice}
+shows most of the methods provided by the \myinterface{UsbDevice} interface.
 
-When traversing the topology, it is important to be able to identify what device is
-of interest.  This is possible by using the methods of \myinterface{UsbDevice}.  The most
-common way to examine a device is the fields contained in its \myinterface{DeviceDescriptor}.
-This matches the device descriptor as defined in the USB specification, which contains
-many fields such as \mymethod{idVendor} and \mymethod{idProduct}.  The \myinterface{UsbDevice}
-also contains methods that allow adding and removing an \myinterface{UsbDeviceListener},
-which receives events related to the device.  Each \myinterface{UsbPipe} contains methods
-that allow adding or removing an \myinterface{UsbPipeListener}, which receives events
-related to that pipe.
+\begin{figure}
+\label{UsbDevice}
+\end{figure}
 
-\subsection{UsbConfig, UsbInterface, UsbEndpoint, and UsbPipe}
+The navigational methods connect to the \myinterface{UsbPort} above this
+device in the bus topology, as well as all the \myinterface{UsbConfiguration}s
+below this device in its device hierarchy.  The \myinterface{UsbConfiguration}s
+are available by specific configuration number or in a list of
+all configurations.
 
-The actual structure of a \myinterface{UsbDevice} corresponds to the description from
-the USB specification.  Each device contains one or more \myinterface{UsbConfig}s.
-Only one of the configurations can be active at once, and it is possible that the device
-is in a not configured state, where none of the configurations are active (although this
-is not likely, as most operating system's USB subsystem configures the device automatically).
-Each \myinterface{UsbConfig} contains a \myinterface{ConfigDescriptor}, which matches the
-configuration descriptor as defined in the USB specification.  Each configuration
-also contains one or more \myinterface{UsbInterface}s.  The interfaces may or may not have
-alternate settings, only one of which may be active at once.  Each interface setting
-contains a \myinterface{InterfaceDescriptor} as well as zero or more \myinterface{UsbEndpoint}s.
-Each endpoint contains a \myinterface{EndpointDescriptor} as well as a \myinterface{UsbPipe}.
-The pipe is used for actual communication with the device.
+The identification methods provide the three strings defined in
+the USB specification, the Manufacturer, Product, and Serial Number.
+Also there is a method to get any of the device's string descriptors,
+by number.  Finally there is a method to get the device's descriptor.
+The descriptor, which is represented by an instance of \myinterface{UsbDeviceDescriptor},
+contains methods to get all the values of a device descriptor as
+defined in the USB specification.
 
-\subsection{Default Control Pipe}
+The communication methods provide access to the device's default control
+pipe.  The default control pipe requires \myinterface{UsbControlIrp}s, which contain
+meta-information besides the actual data buffer.  The \myinterface{UsbControlIrp}s
+may be submitted synchronously or asyncronously.  The submission methods
+behave the same, except the synchronous submission method blocks until
+the submission is complete, essentially meaning all data has been transferred.
+The asynchronous submission method does not block, but returns as soon as
+possible, and the submission is completed in a seperate \myclass{Thread}.  There
+are also methods that allow submission of a \myinterface{List} of \myinterface{UsbControlIrp}s.
 
-Communication via the \myinterface{UsbDevice} occurs on the Default Control Pipe (DCP).
-This pipe is a special pipe that must be present on all devices; this
-pipe is always usable, even if the device is in a not configured state.  Other
-communication using the device's pipes, however, is only possible under certain
-conditions; the pipe must be located on a currently active interface setting, and
-that interface must be located on the device's currently active configuration.
-Before using the pipe, the interface it is located on must be \mymethod{claim}ed,
-and the pipe must be \mymethod{open}ed.  Once the interface is claimed and the
-pipe is open, communication may begin on that pipe.
+Finally, there are methods that allow adding and removing a listener for
+\myclass{UsbDeviceEvent}s.  After adding a \myinterface{UsbDeviceListener}, that listener will
+get notified whenever a device event occurs.  Device events will get
+fired whenever and data is transferred, or if any error occurs while
+transferring data, or if the device is physically disconnected.
 
 \mysectionend
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Communication
+% UsbConfiguration
+
+\section{UsbConfiguration}
+
+A \myinterface{UsbConfiguration} is the next interface in the device hierarchy.
+As shown in figure \ref{UsbConfiguration}, the \myinterface{UsbConfiguration}
+is much less complicated than the \myinterface{UsbDevice}.  It provides some
+identification methods and navigational methods, as well as a
+method for checking if this configuration is active or not.
+
+\begin{figure}
+\label{UsbConfiguration}
+\end{figure}
+
+The navigational methods are similar to the \myinterface{UsbDevice}'s navigational
+methods, they allow access to the interfaces above and below in the
+device hierarchy.  There is a method that leads to the \myinterface{UsbDevice}
+instance above this in the device hierarchy.  Also there are methods
+that lead to the \myinterface{UsbInterface}s below this configuration in the device
+hierarchy.  The interfaces are available by number or in a list of all
+available interfaces.  If any interface has more than one alternate
+setting, and the configuration itself is active, then the active
+alternate setting of the interface is provided.  If the configuration
+itself is not active, an implementation-dependent alternate setting
+is provided.
+
+The identification methods include a method to get the string
+descriptor for this configuration, if one exists, and a method to get
+the configuration descriptor associated with this configuration.  The
+\myinterface{UsbConfigurationDescriptor} provides methods corresponding to the fields
+listed in the USB specification.
+
+\mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbInterface
 %
 
-\section{Communication}
+\section{UsbInterface}
 
-\subsection{Submission}
+Next in the device hierarchy is the \myinterface{UsbInterface}.  The \myinterface{UsbInterface} is
+similar to those interfaces above it, as shown in figure \ref{UsbInterface};
+it has identification, navigation, and status methods.  The navigational
+methods are more complicated however, because the interface may have
+alternate settings.  Additionally, the status methods are more complicated.
 
-Communication with a device is accomplished through the submission methods
-located on the \myinterface{UsbDevice} itself and on its \myinterface{UsbPipe}s.
-The methods all accomplish the same goal, transferring data to or from a device.
-They perform this in different ways; the \mymethod{syncSubmit} (synchronous)
-methods block until the communication is done, while the \mymethod{asyncSubmit}
-(asynchronous) methods return immediately, or as fast as the implementation allows;
-in any case before the communication is done.  For the pipe submission methods,
-the parameters vary; either a simple byte[], or a \myinterface{UsbIrp} object,
-or a list of \myinterface{UsbIrp} objects can be used.  The simple byte[]
-is a buffer that contains the data transferred to (or from) the device.
-The irp is a more complicated object, which also contains a byte[], and
-additionally has fields such as offset and length, which can be used
-to specify that only a portion of the byte[] should be used.  It also
-can indicate whether short packets (which are described in the USB specification)
-should be accepted or not.  The list simply aggregates multiple irps and
-allows them all to be submitted at once.  The implementation will ensure
-that no other submissions occur between each irp in the list, and if possible,
-it will optimize their submission.  Particularly in the case of isochronous
-communication, list submission usually is better and/or faster than
-other submission methods.
+\begin{figure}
+\label{UsbInterface}
+\end{figure}
 
-\subsection{Control-type Submission}
+The navigational methods allow access to the \myinterface{UsbConfiguration} above this
+interface in the device hierarchy, as well as accessing all the
+endpoints below this interface in the device hierarchy.  As usual, the
+\myinterface{UsbEndpoint}s are available by number, more specifically endpoint address,
+as well as a list of all available endpoints.  In addition to those
+navigational methods, there are methods that allow access to any alternate
+settings the interface may have.
 
-Communication that occurs on a control-type pipe, which includes the
-DCP, requires additional meta-information about the
-communication itself.  Therefore control pipes can only submit
-\myinterface{ControlUsbIrp}s, which contain additional fields.
-It is not possible to use simple byte[] nor normal \myinterface{UsbIrp}s
-on control-type \myinterface{UsbPipe}s.  Communication through
-the \myinterface{UsbDevice}'s submission methods also requires
-\myinterface{ControlUsbIrp}s, or a list of \myinterface{ControlUsbIrp}s,
-since the DCP is a control-type pipe.
+The identification methods provide the string descriptor for this interface,
+if one exists, as well as the interface descriptor associated with this interface.
+The \myinterface{UsbInterfaceDescriptor} contains methods corresponding to all the fields
+listed in the USB specification.
 
-\subsection{Direction}
+The status methods are slightly more complicated than other status methods.
+There is a method to check if this interface setting is active.  This
+method is only true if the parent \myinterface{UsbConfiguration} is active as well as
+this \myinterface{UsbInterface} setting.  Also, there are methods to allow claiming
+and releasing of the interface, and a method to check if the interface
+has been claimed.  The claiming is used to aquire an exclusive lock
+on the interface and all the endpoints and their pipes under the interface.
+Before sending or receiving data to or from any of the pipes under
+this interface, the interface must be claimed.
+
+\mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbEndpoint
+%
+
+\section{UsbEndpoint}
+
+The \myinterface{UsbEndpoint} is quite simple in comparison to other device hierarchy
+interfaces.  As shown in figure \ref{UsbEndpoint}, the only methods are
+navigational methods to access the \myinterface{UsbInterface} above this, and the
+\myinterface{UsbPipe} below.  Also, there is a method to access the \myinterface{UsbEndpointDescriptor},
+and methods to get the direction and type of endpoint and its associated
+pipe.
+
+\begin{figure}
+\label{UsbEndpoint}
+\end{figure}
+
+\mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbPipe
+%
+
+\section{UsbPipe}
+
+The \myinterface{UsbPipe} is the lowest interface in the device hierarchy.  As shown in
+figure \ref{UsbPipe}, it has navigational and status methods, but most of
+its methods are communication methods.  The navigation method allows
+access to the \myinterface{UsbEndpoint} that this pipe is associated with, and there
+is a method to determine if this pipe is active or not.  A pipe is
+active if its parent interface setting is active.
+
+\begin{figure}
+\label{UsbPipe}
+\end{figure}
+
+In addition to the method to determine if the pipe is active, there
+are methods that allow opening and closing of the pipe, and a method
+to determine if the pipe is open.  The pipe must be opened before
+it can be used for communication.  Also, the parent interface must
+be claimed before the pipe can be opened.
+
+The communication methods are similar to the communication methods
+from the \myinterface{UsbDevice} interface, which allow communication on the default
+control pipe.  However, this pipe is not neccesarily a control-type pipe,
+and so other objects may be used for the communication.  There are
+synchronous and asyncronous methods, which behave the same as the
+methods from the \myinterface{UsbDevice} interface; the synchronous methods block
+until complete, while the asynchronous methods return immediately
+and perform processing in a background thread.  If the pipe is a
+control-type pipe, the object used for communication must be
+a \myinterface{UsbControlIrp}, just as is used with the default control pipe.
+However for non-control-type pipes, a \myinterface{UsbIrp} can be used as
+well as a simple byte[].  The byte[] is the simplest method
+of communication.  It simply transfers all the contained data
+to the device, if the pipe direction is host-to-device, or fills up
+part or all of the buffer with data from the device, if the pipe
+direction is device-to-host.  The \myinterface{UsbIrp} is similar, it contains
+a byte[] data buffer also, but there are other methods to limit
+the amount of transferred data, or start the transfer at a certain offset
+into the buffer, or cause an error if any short packets are detected.
+
+The \myinterface{UsbPipe} also has methods that allow a \myinterface{UsbPipeListener} to be added or removed
+from the pipe.  After a \myinterface{UsbPipeListener} has been added, it will receive a
+\myclass{UsbPipeEvent} when any data is transferred to or from the device on this pipe,
+or when any error occurs while transferring data.  After removing the listener,
+it will not receive any more events.
+
+\mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbControlIrp and UsbIrp
+%
+
+\section{UsbControlIrp and UsbIrp}
+
+The interfaces used to actually communicate with the device are shown in
+figure \ref{UsbIrps}.  The \myinterface{UsbControlIrp} interface is actually an extension
+of the \myinterface{UsbIrp} interface, adding methods that represent fields in the special
+control-type header required for control communication.  Otherwise, the
+\myinterface{UsbControlIrp} is identical to a normal \myinterface{UsbIrp}.  A \myinterface{UsbIrp} has methods that
+can be divided into four different categories; the data buffer, status,
+short packets, and the \myclass{UsbException}.
+
+\begin{figure}
+\label{UsbIrps}
+\end{figure}
+
+First, the data buffer is simply a byte[] but there are additional methods that
+are used to modify the transfer of data.  There are methods to set and get the
+offset, which indicates what offset into the data buffer the imeplementation
+should use when transferring data.  If the offset is zero, data will be transferred
+starting at the beginning of the byte[], if the offset is above zero, data starting
+at the offset into the byte[] will be used when communicating with the device.
+There are also methods to set and get the length of data to transfer with the device.
+Lastly, there is a method to get the actual amount of data transferred with the device.
+For an input-direction pipe, this value may be less than the length of data that was
+requested from the device; for an output-direction pipe, this should be the full
+amount of data to transfer.
+
+The status methods deal with the complete status of the \myinterface{UsbIrp}.  There is a method to
+check if the \myinterface{UsbIrp} is complete or not.  There are also methods to wait until the \myinterface{UsbIrp}
+is complete; these will block until the \myinterface{UsbIrp} changes status to complete.  There
+is a method used to set the \myinterface{UsbIrp} complete or not complete, and finally there is a
+method that is used by the implementation to set the \myinterface{UsbIrp} as complete after finishing
+processing.  This method will also call the method to set the status of the \myinterface{UsbIrp} as
+complete, and cause any \myclass{Thread}s waiting for the \myinterface{UsbIrp} to complete to return from
+the methods they are blocking in.
+
+The methods related to short packets are used to set and get the policy that should be
+used when handling short packets.  The policy can be set to either accept or reject
+short packets.  Short packets will happen if the device transferrs less data than the
+host was expecting.  Normally this will happen only if the pipe direction is
+device-to-host, and the data buffer provided is larger than the amount of data that
+the device has to send to the host during a specific communication.  If short packets
+are accepted, and a short packet occurs, the communication will complete successfully
+and the actual length of transferred data will be less than the size of the provided
+data buffer.  If short packets are not accepted, and a short packet occurs, the
+\myinterface{UsbIrp} will complete with an error.
+
+Finally, there are methods used to manage any UsbException that may occur during
+communication on the pipe.  There is a method to check if an \myclass{UsbException} has
+occurred during communication on the pipe, as well as methods to get and set any
+\myclass{UsbException} that occurs.
 
 It is important to note that submissions are the only way to communicate
 with a device, and although listeners will receive events for all data
-transferred on a pipe (including the DCP), that data must be provided via
-submissions.  Each pipe is unidirectional, and data may flow only one
-direction on it.  If the pipe is an output pipe, the data located in the
-byte[] is sent to the device during submission; however if the pipe
-is an input pipe, the byte[] is filled up with data received from the device.
-Thus, if input is expected on an input pipe, one or more byte[]s (or irps)
+transferred on a pipe, that data must be provided via submissions.
+Each pipe is unidirectional, and data may flow only one direction on it.
+If the pipe is an output pipe, the data located in the byte[] is sent
+to the device during submission; however if the pipe is an input pipe,
+the byte[] is filled up with data received from the device.  Thus,
+if input is expected on an input pipe, one or more data buffers
 must be submitted, and only then will data be received from the pipe.
 Once all submissions for a pipe are done, no more data will be received on
-that pipe until more byte[]s (or irps) are submitted.  If a constant flow
+that pipe until more data buffers are submitted.  If a constant flow
 of data is desired, multiple buffers should be submitted, and as each
 submission finishes, more buffers should be submitted.  Using only
 a single buffer may result in undesirable delays, since the device
 may be able to produce data at a faster rate than each submission takes,
 especially if there are sudden bursts of data.
 
-There is an exception to pipes being unidirectional, and that of course is
-control-type pipes.  They are the exception to almost every rule about pipes.
-Control-type pipes are bidirectional, and the direction is determined on
-a per-submission basis by a bit in the meta-information.  The USB
-specification explains in detail what is included in this meta-information,
-which is called a setup packet.
+\mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% DCP
+%
+
+\section{Default Control Pipe}
+
+The Default Control Pipe is used for much of the communication with a device.
+It is a special pipe that is required to be present on all devices, and it is
+always available for communication.  It is used for all the configuration-type
+communication, as well as communication to get identification information from
+the device.
+
+In figure \ref{DCP}, an example of communication using the Default Control Pipe
+is shown.  First, the user has to obtain an instance of a \myinterface{UsbControlIrp}.  The
+user can use their own implementation of \myinterface{UsbControlIrp}, or they can use the
+implemenation provided by the \myinterface{UsbDevice} implementation, as shown in the figure.
+In the example, the \myinterface{UsbControlIrp} is created by the \myinterface{UsbDevice}, and the extra
+control-type methods are set up during creation.  Next, it should be given
+a data buffer, containing data to transfer to the device or a buffer to
+fill with data from the device, depending on the direction of communication.
+This is the minimum amount of configuration of the \myinterface{UsbControlIrp} required.
+
+To actually perform the communication on the Default Control Pipe, the
+\myinterface{UsbControlIrp} is submitted using, in this example, the \mymethod{syncSubmit}
+method.  The implementation of this method will pass the buffer down to the
+platform's low-level USB subsystem, which will perform the actual transfer of
+data.  After the data transfer is complete, the \myinterface{UsbDevice} implementation will
+set either the actual length of transferred data or the \myclass{UsbException} on the
+\myinterface{UsbControlIrp}, and then \mymethod{complete} the \myinterface{UsbControlIrp}.  This is the
+simplest communication example, which does not show the use of data offset or
+length, and assumes no listeners are being used.
+
+\begin{figure}
+\label{DCP}
+\end{figure}
 
 \mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbPipe submission, synchronous
+%
+
+\section{UsbPipe submission, synchronous}
+
+For most communication on a device, the Default Control Pipe is not used.
+Instead, normal unidirectional pipes are used to transfer data.  Figure
+\ref{UsbPipeSync} shows an example of communication using one of the normal
+\myinterface{UsbPipe}s.  There are more steps to take before actually submitting the \myinterface{UsbIrp}
+than when using the Default Control Pipe.
+
+First, before using any of the \myinterface{UsbPipe}s contained in a \myinterface{UsbInterface} setting,
+the \myinterface{UsbInterface} must be claimed.  Then, the \myinterface{UsbPipe} must be opened.  If either
+of these steps fails, no communication will be possible on that pipe; the
+problem that prevented the claim or the open must be corrected first.  If the
+claim and the open succeed, the pipe is ready for communication.  The interface
+setting may be left claimed and the pipe may be left open as long as the
+interface and its pipes are being used.
+
+To actually communicate on the pipe, data buffers must be provided to the pipe.
+In this example, a \myinterface{UsbIrp} is used.  The \myinterface{UsbIrp} implementation may be provided
+by the caller, but the example shows using the \myinterface{UsbPipe} to create a \myinterface{UsbIrp}
+instance.  After creating the \myinterface{UsbIrp}, at least the data must be set.  Additionally,
+the other fields of the \myinterface{UsbIrp} may be set, including the offset, length, and short
+packet policy of the \myinterface{UsbIrp}.  Those fields are optional, and their defaults should
+be acceptable for the majority of communication.  Once the data buffer and any
+optional fields are set, the \myinterface{UsbIrp} must be provided to the \myinterface{UsbPipe}; in the example,
+the \mymethod{syncSubmit} method is used.  Similar to the Default Control Pipe
+example, the implementation passes the data buffer to the platform USB subsystem,
+which performs the actual communication with the device.  After the communication
+is complete, the implementation either sets the actual length of the data
+transferred, or it sets the appropriate \myclass{UsbException} on the \myinterface{UsbIrp}.  It then
+calls the \myinterface{UsbIrp}'s \mymethod{complete} method to indicate the \myinterface{UsbIrp} is completed.
+While it is not shown in the example, if any \myinterface{UsbPipeListener}s had been added to
+the \myinterface{UsbPipe}, they would receive either a \myclass{UsbPipeDataEvent} or a \myclass{UsbPipeErrorEvent},
+depending on whether the communication succeeded or not.
+
+\begin{figure}
+\label{UsbPipeSync}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbPipe submission, asynchronous
+
+\section{UsbPipe submission, asynchronous}
+
+Asynchronous submission on a pipe is very similar to synchronous submission.
+As shown in figure \ref{UsbPipeAsync}, the initial setup is the same; the
+\myinterface{UsbInterface} setting must be claimed, and the \myinterface{UsbPipe} must be opened.  The
+\myinterface{UsbIrp} should be created in the same way, and the data buffer set as well
+as any of the optional fields such as offset or length.  This example also
+shows how to use a \myinterface{UsbPipeListener}.  Before submitting the \myinterface{UsbIrp}, the
+listener should be added to the \myinterface{UsbPipe}.  The listener only needs to be added
+once to the pipe.  Next, the \myinterface{UsbIrp} is submitted to the pipe using the
+\mymethod{asyncSubmit} method.  The submitting \myclass{Thread} should return
+immediately, while the \myinterface{UsbIrp} is processed in the background by the implementation.
+While the implementation is processing the \myinterface{UsbIrp}, the calling \myclass{Thread} can perform
+other actions.  Eventually, it will want to know if the \myinterface{UsbIrp} is complete.  The
+calling \myclass{Thread} can then call the \mymethod{waitUntilComplete} which will block
+until the \myinterface{UsbIrp} is complete.  
+
+Once the platform USB subsystem has finished transferring the data, it will return
+it to the implementation.  The implementation handles it normally, by setting
+either the actual length of data transferred, or the \myclass{UsbException} that occurred,
+and finally completing the \myinterface{UsbIrp}.  Next the \myinterface{UsbPipeListener} will receive a
+\myclass{UsbPipeDataEvent} or \myclass{UsbPipeErrorEvent}, depending on whether the submission was
+successful or not.
+
+\begin{figure}
+\label{UsbPipeAsync}
+\end{figure}
+
+\mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbPipe submission, byte[]
+%
+
+\section{UsbPipe submission, byte[]}
+
+Submissions using \myinterface{UsbIrp}s are the most flexible type of communication.
+Submissions using byte arrays are much more simple, however.  In
+figure \ref{UsbPipeByteArray}, both synchronous and asynchronous submission
+using a byte[] are shown.  The setup steps, such as claiming the interface
+and opening the pipe, are the same.  After these initial steps, in the
+first example using asynchronous submission, the byte[] is submitted to
+the \myinterface{UsbPipe} using the \mymethod{asyncSubmit} method.  The implementation then
+creates a \myinterface{UsbIrp} to represent the provided data buffer, and this \myinterface{UsbIrp} is
+returned to the caller.  Then processing continues the same as asynchronous
+submission of a \myinterface{UsbIrp}.  In the synchronous example, the data buffer is passed
+to the \myinterface{UsbPipe} using the \mymethod{syncSubmit} method, which blocks while the
+implementation handles transferring the data.  After the data has finished
+transferring, the implementation either returns the actual length of data
+transferred, or it throws a \myclass{UsbException} representing the error that
+occurred during data transfer.  In both cases, after the data transfer is complete
+or an error occurs, any listeners that have been added to the pipe will receive
+a \myclass{UsbPipeDataEvent} or \myclass{UsbPipeErrorEvent}.
+
+\begin{figure}
+\label{UsbPipeByteArray}
+\end{figure}
+
+\mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Hotplugging
+%
+
+\section{Hotplugging}
+
+An important feature of the USB bus is the ability for USB devices to
+be connected and disconnected while the system is running.  This is called
+hotplugging, and system software must be able to handle hotplugging a device.
+Hotplugging is fully supported by the javax.usb subsystem.  Figure
+\ref{Hotplugging} shows how the user can get notified of hotplugging events.
+First, the user can add a \myinterface{UsbServicesListener} to the \myinterface{UsbServices} instance.
+When a physical device is connected to the system, the \myinterface{UsbServicesListener}
+receives a \myclass{UsbServicesEvent} indicating that a device has been connected to the
+system.  If the user is interested in this newly connected device, they can
+add a \myinterface{UsbDeviceListener} to the \myinterface{UsbDevice}.  Then, when the device is
+disconnected, both the \myinterface{UsbServicesListener} and the \myinterface{UsbDeviceListener} will be
+notified with a \myclass{UsbServicesEvent} and a \myclass{UsbDeviceEvent}, respectively.
+
+\begin{figure}
+\label{Hotplugging}
+\end{figure}
+
+\mysectionend
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Exceptions
+%
+
+\section{Exceptions}
+
+The javax.usb subsystem uses many \myclass{Exception}s to represent some of the
+errors that can occur on the USB bus.  Figure \ref{Exceptions} shows the
+\myclass{Exception}s used.  The base \myclass{Exception} is \myclass{UsbException}, which is extended by
+many more specific \myclass{Exception}s such as \myclass{UsbBabbleException}, \myclass{UsbCRCException},
+and others.  Also, there are some \myclass{RuntimeException}s such as \myclass{UsbNotActiveException}
+and \myclass{UsbNotClaimedException}.
+
+\begin{figure}
+\label{Exceptions}
+\end{figure}
+
+\mysectionend
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Security
@@ -308,16 +639,16 @@ Security is not yet fully addressed.
 The API contains several utility classes, all located in the \mypackage{javax.usb.util}
 package, which make the API itself easier to use.
 
-\subsection{DefaultUsbIrp and DefaultControlUsbIrp}
+\subsection{DefaultUsbIrp and DefaultUsbControlIrp}
 
 There is a default implementation of the \myinterface{UsbIrp} interface, as well as a default
-implementation of the \myinterface{ControlUsbIrp} interface.  These may be used to create irps
+implementation of the \myinterface{UsbControlIrp} interface.  These may be used to create irps
 (and control-type irps) to use in submissions.  Additionally, the \myinterface{UsbPipe} itself
-contains a method to create \myinterface{UsbIrp} and \myinterface{ControlUsbIrp} objects which
+contains a method to create \myinterface{UsbIrp} and \myinterface{UsbControlIrp} objects which
 the implementation may prefer, and may require less overhead to process than either the default
 implementations or any other implementation.  The \myinterface{UsbDevice} also allows creation of
-\myinterface{ControlUsbIrp}s.  However, any implementation must be accepted by the implementation;
-it may not restrict the \myinterface{UsbIrp} implementation nor the \myinterface{ControlUsbIrp}
+\myinterface{UsbControlIrp}s.  However, any implementation must be accepted by the implementation;
+it may not restrict the \myinterface{UsbIrp} implementation nor the \myinterface{UsbControlIrp}
 implementation.
 
 \subsection{StandardRequest}
@@ -329,7 +660,7 @@ use only by the low-level USB subsystem driver(s).
 
 \subsection{Version}
 
-In order to determine what version of the API is in use, a \myclass{Version} class is
+To determine what version of the API is in use, a \myclass{Version} class is
 provided in the base \mypackage{javax.usb} package.  It contains methods to determine
 the version of the API itself, as well as the version of the USB specification
 that the API supports.  It also contains a \mymethod{main} method so it can
