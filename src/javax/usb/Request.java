@@ -86,13 +86,13 @@ public interface Request extends Recyclable
 	public void setDataLength(int length);
 
 	/** @return the data byte[] for this request */
-	public byte[] getDataBytes();
+	public byte[] getData();
 
 	/** 
 	 * Sets the Data array for this Request object
 	 * @param data the byte[] data value
 	 */
-	public void setDataBytes( byte[] data );
+	public void setData( byte[] data );
 
 	/**
 	 * Get the UsbException that occurred during this request.
