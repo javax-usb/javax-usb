@@ -19,13 +19,12 @@ import javax.usb.event.*;
  * <p>
  * See the USB 1.1 specification sec 5.3.2 for details on USB pipes.
  * Data flows in the
- * {@link javax.usb.EndpointDescriptor#getDirection() direction}
+ * {@link javax.usb.UsbEndpoint#getDirection() direction}
  * defined by the associated {@link #getUsbEndpoint() endpoint}, except for Control
- * {@link javax.usb.EndpointDescriptor#getType() type} pipes.
+ * {@link javax.usb.UsbEndpoint#getType() type} pipes.
  * <p>
- * The implementation is not required to be Thread-safe; applications should
- * either ensure that the implementation is Thread-safe or use the
- * {@link #synchronizedUsbPipe(UsbPipe) synchronizedUsbPipe} wrapper.
+ * The implementation is not required to be Thread-safe.  Applications should
+ * either ensure that the implementation is Thread-safe or use only one Thread (per UsbPipe).
  * <p>
  * This pipe's configuration and interface setting must be active to use this pipe.
  * Any attempt to use a UsbPipe belonging to an inactive configuration or interface setting
@@ -99,7 +98,7 @@ public interface UsbPipe
 	 * There is no maximum size restriction; the implementation will segment the buffer
 	 * into multiple transactions if required.  There may be a minimum size, but it
 	 * will not be more than the
-	 * {@link javax.usb.EndpointDescriptor#getMaxPacketSize() maximum packet size}.
+	 * {@link javax.usb.EndpointDescriptor#wMaxPacketSize() maximum packet size}.
 	 * <p>
 	 * This will block until either all data is transferred or an error occurrs.
 	 * Short packets indicate either the end of data or an error.
@@ -128,7 +127,7 @@ public interface UsbPipe
 	 * There is no maximum size restriction; the implementation will segment the buffer
 	 * into multiple transactions if required.  There may be a minimum size, but it
 	 * will not be more than the
-	 * {@link javax.usb.EndpointDescriptor#getMaxPacketSize() maximum packet size}.
+	 * {@link javax.usb.EndpointDescriptor#wMaxPacketSize() maximum packet size}.
 	 * <p>
 	 * The implementation should only place this on a queue, or perform whatever
 	 * minimal processing is required, and then return.  This method will not
@@ -154,12 +153,12 @@ public interface UsbPipe
 	 * There is no maximum size restriction; the implementation will segment the buffer
 	 * into multiple transactions if required.  There may be a minimum size, but it
 	 * will not be more than the
-	 * {@link javax.usb.EndpointDescriptor#getMaxPacketSize() maximum packet size}.
+	 * {@link javax.usb.EndpointDescriptor#wMaxPacketSize() maximum packet size}.
 	 * <p>
 	 * This will block until either all data is transferred or an error occurrs.
 	 * Short packets indicate either the end of data or an error.
 	 * <p>
-	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
+	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
 	 * the UsbIrp must be a {@link javax.usb.ControlUsbIrp ControlUsbIrp}.
 	 * @param irp A UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
@@ -176,13 +175,13 @@ public interface UsbPipe
 	 * There is no maximum size restriction; the implementation will segment the buffer
 	 * into multiple transactions if required.  There may be a minimum size, but it
 	 * will not be more than the
-	 * {@link javax.usb.EndpointDescriptor#getMaxPacketSize() maximum packet size}.
+	 * {@link javax.usb.EndpointDescriptor#wMaxPacketSize() maximum packet size}.
 	 * <p>
 	 * The implementation should only place this on a queue, or perform whatever
 	 * minimal processing is required, and then return.  This method will not
 	 * block until the submission is complete.
 	 * <p>
-	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
+	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
 	 * the UsbIrp must be a {@link javax.usb.ControlUsbIrp ControlUsbIrp}.
 	 * @param irp The UsbIrp to use for the submission.
 	 * @exception UsbException If an error occurs.
@@ -202,7 +201,7 @@ public interface UsbPipe
 	 * in the case of Isochronous transfers.</li>
 	 * </ul>
 	 * <p>
-	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
+	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
 	 * the UsbIrps must be {@link javax.usb.ControlUsbIrp ControlUsbIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.
@@ -223,7 +222,7 @@ public interface UsbPipe
 	 * in the case of Isochronous transfers.</li>
 	 * </ul>
 	 * <p>
-	 * If this is a Control {@link javax.usb.EndpointDescriptor#getType() type} pipe,
+	 * If this is a Control {@link javax.usb.UsbEndpoint#getType() type} pipe,
 	 * the UsbIrps must be {@link javax.usb.ControlUsbIrp ControlUsbIrps}.
 	 * @param list The List of UsbIrps.
 	 * @exception UsbException If an error occurs.

@@ -71,9 +71,9 @@ public interface UsbDevice
 	 * <p>
 	 * The speed will be one of:
 	 * <ul>
-	 * <li>{@link javax.usb.UsbConst#SPEED_UNKNOWN UsbConst.SPEED_UNKNOWN}</li>
-	 * <li>{@link javax.usb.UsbConst#SPEED_LOW UsbConst.SPEED_LOW}</li>
-	 * <li>{@link javax.usb.UsbConst#SPEED_FULL UsbConst.SPEED_FULL}</li>
+	 * <li>{@link javax.usb.UsbConst#DEVICE_SPEED_UNKNOWN UsbConst.DEVICE_SPEED_UNKNOWN}</li>
+	 * <li>{@link javax.usb.UsbConst#DEVICE_SPEED_LOW UsbConst.DEVICE_SPEED_LOW}</li>
+	 * <li>{@link javax.usb.UsbConst#DEVICE_SPEED_FULL UsbConst.DEVICE_SPEED_FULL}</li>
 	 * </ul>
 	 * @return The speed of this device.
 	 */

@@ -34,7 +34,7 @@ public interface UsbEndpoint
 	 * <p>
 	 * This is the logical AND of the
 	 * {@link javax.usb.UsbConst#ENDPOINT_DIRECTION_MASK direction mask} and the
-	 * {@link getEndpointDescriptor() endpoint descriptor}'s
+	 * {@link #getEndpointDescriptor() endpoint descriptor}'s
 	 * {@link javax.usb.EndpointDescriptor#bEndpointAddress() address}.
 	 * @return This endpoint's direction.
 	 * @see javax.usb.UsbConst#ENDPOINT_DIRECTION_IN
@@ -47,7 +47,7 @@ public interface UsbEndpoint
 	 * <p>
 	 * This is the logical AND of the
 	 * {@link javax.usb.UsbConst#ENDPOINT_TYPE_MASK type mask} and the
-	 * {@link getEndpointDescriptor() endpoint descriptor}'s
+	 * {@link #getEndpointDescriptor() endpoint descriptor}'s
 	 * {@link javax.usb.EndpointDescriptor#bmAttributes() attributes}.
 	 * @return This endpoint's type.
 	 * @see javax.usb.UsbConst#ENDPOINT_TYPE_CONTROL

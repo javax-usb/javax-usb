@@ -91,7 +91,7 @@ public interface UsbIrp
 	 * <p>
 	 * The implementation will set this to the amount of data
 	 * actually transferred.  The implementation will set this
-	 * before calling {@link complete() complete}, regardless of
+	 * before calling {@link #complete() complete}, regardless of
 	 * whether the submission was successful or not.
 	 * @param length The amount of data that was transferred.
 	 */
