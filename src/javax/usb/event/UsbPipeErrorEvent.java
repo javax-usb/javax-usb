@@ -24,9 +24,6 @@ import javax.usb.*;
  * <li>Any transient bus error which does not place the UsbPipe in an error state.</li>
  * <li>Any persistent bus error which places the UsbPipe in an error state.</li>
  * </ul>
- * Note that an event will <i>not</i> be fired if a
- * {@link javax.usb.UsbIrp UsbIrp}'s
- * {@link javax.usb.UsbIrp.EventCommand EventCommand} indicates not to fire an event.
  * @author E. Michael Maximilien
  * @author Dan Streetman
  * @since 0.8.0

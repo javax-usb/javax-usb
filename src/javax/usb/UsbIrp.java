@@ -48,10 +48,8 @@ public interface UsbIrp
 	 * Get the sequence number assigned to the associated submission.
 	 * <p>
 	 * This is assigned by the UsbPipe every time this UsbIrp is
-	 * submitted.  This is <b>not</b> changed for automatic resubmissions.
-	 * After the UsbPipe assigns the number, it will remain constant
-	 * during submission, even if the UsbIrp resubmits itself,
-	 * until the next time the UsbIrp is submitted by an
+	 * submitted.  After the UsbPipe assigns the number, it will remain constant
+	 * during submission, until the next time the UsbIrp is submitted by an
 	 * application.
 	 * @return the sequence number of this submission.
 	 */
@@ -104,23 +102,13 @@ public interface UsbIrp
 	 * the owner can modify it in any way.  However, when the UsbIrp
 	 * is active (being processed), the UsbIrp should not be modified in any way.
 	 * The result of modifying the UsbIrp while active is undefined.
-	 * <p>
-	 * See
-	 * {@link javax.usb.UsbIrp.ResubmitDataCommand#getResubmitData(UsbIrp) ResubmitDataCommand}
-	 * and
-	 * {@link javax.usb.UsbIrp.ResubmitErrorCommand#continueResubmission(UsbIrp) ResubmitErrorCommand}
-	 * for certain exceptions to this.
-	 * <p>
-	 * This is false when the UsbIrp is initially created, and set to true by the implementation
-	 * when submitted; then set to false again (by the implementation) when the UsbIrp completes.
 	 */
 	public boolean isActive();
 
    /**
 	 * If this submission associated with this irp is completed.
 	 * <p>
-	 * Note that is false until the UsbIrp has completed, including any
-	 * {@link #getResubmit() resubmissions}.  This is set by the implementation.
+	 * This is false until the UsbIrp has completed.
 	 * @return if this submit is done.
 	 */
 	public boolean isCompleted();
@@ -142,13 +130,6 @@ public interface UsbIrp
 	 * this method returns.
 	 * <p>
 	 * The implementation may or may not use synchronization on the UsbIrp.
-	 * <p>
-	 * <strong>WARNING</strong> : If automatic resubmission is being used, this will
-	 * not return between resubmissions; i.e. it will only return when
-	 * the UsbIrp is completed <strong>without</strong> being resubmitted,
-	 * such as when it is aborted or a UsbException occurs, or after
-	 * resubmit is manually turned off.
-	 * @see #setResubmit( boolean resubmit )
 	 */
 	public void waitUntilCompleted();
 
@@ -168,17 +149,7 @@ public interface UsbIrp
 	 * has passed.
 	 * <p>
 	 * The implementation may or may not use synchronization on the UsbIrp.
-	 * <p>
-	 * <strong>WARNING</strong> : If automatic resubmission is being used, this will
-	 * not return between resubmissions; i.e. it will only return when
-	 * the UsbIrp is completed <strong>without</strong> being resubmitted,
-	 * such as when it is aborted or a UsbException occurs, or after
-	 * resubmit is manually turned off.  Also, the timeout value
-	 * applies collectively to all (re)submissions; i.e. the timeout
-	 * applies to the total time taken by the submission and subsequent
-	 * resubmissions, not just to the time taken by each individual submission.
 	 * @param timeout number of milliseconds to wait before giving up
-	 * @see #setResubmit( boolean resubmit )
 	 */
 	public void waitUntilCompleted( long timeout );
 

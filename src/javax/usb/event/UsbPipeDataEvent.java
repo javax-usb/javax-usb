@@ -18,10 +18,8 @@ import javax.usb.UsbPipe;
  * <ul>
  * <li>{@link javax.usb.UsbPipe#syncSubmit( byte[] data ) synchronous byte[] submission}.</li>
  * <li>{@link javax.usb.UsbPipe#asyncSubmit( byte[] data ) asynchronous byte[] submission}.</li>
- * <li>{@link javax.usb.UsbPipe#syncSubmit( UsbIrp irp ) synchronous UsbIrp (and UsbCompositeIrp) submission}
- * if the {@link javax.usb.UsbIrp.EventCommand EventCommand} chooses to.</li>
- * <li>{@link javax.usb.UsbPipe#asyncSubmit( UsbIrp irp ) asynchronous UsbIrp (and UsbCompositeIrp) submission}
- * if the {@link javax.usb.UsbIrp.EventCommand EventCommand} chooses to.</li>
+ * <li>{@link javax.usb.UsbPipe#syncSubmit( UsbIrp irp ) synchronous UsbIrp (and UsbCompositeIrp) submission}.</li>
+ * <li>{@link javax.usb.UsbPipe#asyncSubmit( UsbIrp irp ) asynchronous UsbIrp (and UsbCompositeIrp) submission}.</li>
  * </ul>
  * @author E. Michael Maximilien
  * @author Dan Streetman
