@@ -39,8 +39,9 @@ public interface UsbInterface
 	 * @exception UsbException If the interface could not be claimed.
 	 * @exception UsbNotActiveException If this interface setting is not
 	 * {@link #isActive() active}.
+	 * @exception UsbDisconnectedException If this interface (device) has been disconnected.
 	 */
-	public void claim() throws UsbClaimException,UsbException,UsbNotActiveException;
+	public void claim() throws UsbClaimException,UsbException,UsbNotActiveException,UsbDisconnectedException;
 
 	/**
 	 * Claim this interface using a UsbInterfacePolicy.
@@ -54,8 +55,9 @@ public interface UsbInterface
 	 * @exception UsbException If the interface could not be claimed.
 	 * @exception UsbNotActiveException If this interface setting is not
 	 * {@link #isActive() active}.
+	 * @exception UsbDisconnectedException If this interface (device) has been disconnected.
 	 */
-	public void claim(UsbInterfacePolicy policy) throws UsbClaimException,UsbException,UsbNotActiveException;
+	public void claim(UsbInterfacePolicy policy) throws UsbClaimException,UsbException,UsbNotActiveException,UsbDisconnectedException;
 
 	/**
 	 * Release this interface.
@@ -70,8 +72,9 @@ public interface UsbInterface
 	 * @exception UsbException If the interface could not be released.
 	 * @exception UsbNotActiveException If this interface setting is not
 	 * {@link #isActive() active}.
+	 * @exception UsbDisconnectedException If this interface (device) has been disconnected.
 	 */
-	public void release() throws UsbClaimException,UsbException,UsbNotActiveException;
+	public void release() throws UsbClaimException,UsbException,UsbNotActiveException,UsbDisconnectedException;
 
 	/**
 	 * If this interface is claimed.
@@ -188,6 +191,7 @@ public interface UsbInterface
 	 * @return The interface String, or null.
 	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
+	 * @exception UsbDisconnectedException If this interface (device) has been disconnected.
 	 */
-	public String getInterfaceString() throws UsbException,UnsupportedEncodingException;
+	public String getInterfaceString() throws UsbException,UnsupportedEncodingException,UsbDisconnectedException;
 }

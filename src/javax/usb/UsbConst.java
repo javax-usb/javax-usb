@@ -23,8 +23,11 @@ public interface UsbConst
 	//**************************************************************************
 	// Device constants
 
+	/** Unknown device speed.  Either the speed could not be detected or the speed was invalid (not USB 1.1 speed). */
 	public static final Object DEVICE_SPEED_UNKNOWN = new Object();
+	/** Low speed device. */
 	public static final Object DEVICE_SPEED_LOW     = new Object();
+	/** Full speed device. */
 	public static final Object DEVICE_SPEED_FULL    = new Object();
 
 	//**************************************************************************

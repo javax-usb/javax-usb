@@ -46,8 +46,9 @@ public interface UsbPipe
 	 * @exception UsbException If the UsbPipe could not be opened.
 	 * @exception UsbNotActiveException If the config or interface setting is not active.
 	 * @exception UsbNotClaimedException If the interface is not claimed.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public void open() throws UsbException,UsbNotActiveException,UsbNotClaimedException;
+	public void open() throws UsbException,UsbNotActiveException,UsbNotClaimedException,UsbDisconnectedException;
 
 	/**
 	 * Close this UsbPipe.
@@ -59,8 +60,9 @@ public interface UsbPipe
 	 * @exception UsbException If the UsbPipe could not be closed.
 	 * @exception UsbNotActiveException If the UsbPipe is not active.
 	 * @exception UsbNotOpenException If the UsbPipe is not open.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public void close() throws UsbException,UsbNotActiveException,UsbNotOpenException;
+	public void close() throws UsbException,UsbNotActiveException,UsbNotOpenException,UsbDisconnectedException;
 
 	/**
 	 * If this pipe is active.
@@ -118,8 +120,9 @@ public interface UsbPipe
 	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the data is null.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public int syncSubmit( byte[] data ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
+	public int syncSubmit( byte[] data ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Asynchonously submit a byte[] to the UsbPipe.
@@ -146,8 +149,9 @@ public interface UsbPipe
 	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the data is null.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public UsbIrp asyncSubmit( byte[] data ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
+	public UsbIrp asyncSubmit( byte[] data ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Synchonously submit a UsbIrp to the UsbPipe.
@@ -170,8 +174,9 @@ public interface UsbPipe
 	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the UsbIrp is not valid.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public void syncSubmit( UsbIrp irp ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
+	public void syncSubmit( UsbIrp irp ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Asynchonously submit a UsbIrp to the UsbPipe.
@@ -195,8 +200,9 @@ public interface UsbPipe
 	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the UsbIrp is not valid.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public void asyncSubmit( UsbIrp irp ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
+	public void asyncSubmit( UsbIrp irp ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Synchonously submit a List of UsbIrps to the UsbPipe.
@@ -220,8 +226,9 @@ public interface UsbPipe
 	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the list is empty or contains any non-UsbIrp objects, or those UsbIrp(s) are invalid.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public void syncSubmit( List list ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
+	public void syncSubmit( List list ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Asynchonously submit a List of UsbIrps to the UsbPipe.
@@ -245,8 +252,9 @@ public interface UsbPipe
 	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
 	 * @exception IllegalArgumentException If the list is empty or contains any non-UsbIrp objects, or those UsbIrp(s) are invalid.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public void asyncSubmit( List list ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException;
+	public void asyncSubmit( List list ) throws UsbException,UsbNotActiveException,UsbNotOpenException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Stop all submissions in progress.
@@ -256,8 +264,9 @@ public interface UsbPipe
 	 * There will be no submissions pending after this returns.
 	 * @exception UsbNotActiveException If the pipe is not {@link #isActive() active}.
 	 * @exception UsbNotOpenException If the pipe is not {@link #isOpen() open}.
+	 * @exception UsbDisconnectedException If this pipe (device) has been disconnected.
 	 */
-	public void abortAllSubmissions() throws UsbNotActiveException,UsbNotOpenException;
+	public void abortAllSubmissions() throws UsbNotActiveException,UsbNotOpenException,UsbDisconnectedException;
 
 	/**
 	 * Create a UsbIrp.

@@ -30,8 +30,9 @@ public interface UsbDevice
 	/**
 	 * Get the UsbPort on the parent UsbHub that this device is connected to.
 	 * @return The port on the parent UsbHub that this is attached to.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-	public UsbPort getParentUsbPort();
+	public UsbPort getParentUsbPort() throws UsbDisconnectedException;
 
     /**
 	 * If this is a UsbHub.
@@ -47,8 +48,9 @@ public interface UsbDevice
 	 * @return The manufacturer String, or null.
 	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-    public String getManufacturerString() throws UsbException,UnsupportedEncodingException;
+    public String getManufacturerString() throws UsbException,UnsupportedEncodingException,UsbDisconnectedException;
 
     /**
 	 * Get the serial number String.
@@ -58,8 +60,9 @@ public interface UsbDevice
 	 * @return The serial number String, or null.
 	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-    public String getSerialNumberString() throws UsbException,UnsupportedEncodingException;
+    public String getSerialNumberString() throws UsbException,UnsupportedEncodingException,UsbDisconnectedException;
 
     /**
 	 * Get the product String.
@@ -69,8 +72,9 @@ public interface UsbDevice
 	 * @return The product String, or null.
 	 * @exception UsbException If there was an error getting the UsbStringDescriptor.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-    public String getProductString() throws UsbException,UnsupportedEncodingException;
+    public String getProductString() throws UsbException,UnsupportedEncodingException,UsbDisconnectedException;
 
     /**
 	 * Get the speed of the device.
@@ -153,8 +157,9 @@ public interface UsbDevice
 	 * @param index The index of the string descriptor to get.
 	 * @return The specified string descriptor.
 	 * @exception UsbException If an error occurred while getting the string descriptor.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-	public UsbStringDescriptor getUsbStringDescriptor( byte index ) throws UsbException;
+	public UsbStringDescriptor getUsbStringDescriptor( byte index ) throws UsbException,UsbDisconnectedException;
 
 	/**
 	 * Get the String from the specified string descriptor.
@@ -166,24 +171,27 @@ public interface UsbDevice
 	 * @return The specified String.
 	 * @exception UsbException If an error occurred while getting the String.
 	 * @exception UnsupportedEncodingException If the string encoding is not supported.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-	public String getString( byte index ) throws UsbException,UnsupportedEncodingException;
+	public String getString( byte index ) throws UsbException,UnsupportedEncodingException,UsbDisconnectedException;
 
 	/**
 	 * Submit a UsbControlIrp synchronously to the Default Control Pipe.
 	 * @param irp The UsbControlIrp.
 	 * @exception UsbException If an error occurrs.
 	 * @exception IllegalArgumentException If the UsbControlIrp is not valid.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-	public void syncSubmit( UsbControlIrp irp ) throws UsbException,IllegalArgumentException;
+	public void syncSubmit( UsbControlIrp irp ) throws UsbException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Submit a UsbControlIrp asynchronously to the Default Control Pipe.
 	 * @param irp The UsbControlIrp.
 	 * @exception UsbException If an error occurrs.
 	 * @exception IllegalArgumentException If the UsbControlIrp is not valid.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-	public void asyncSubmit( UsbControlIrp irp ) throws UsbException,IllegalArgumentException;
+	public void asyncSubmit( UsbControlIrp irp ) throws UsbException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Submit a List of UsbControlIrps synchronously to the Default Control Pipe.
@@ -194,8 +202,9 @@ public interface UsbDevice
 	 * @param list The List of UsbControlIrps.
 	 * @exception UsbException If an error occurrs.
 	 * @exception IllegalArgumentException If the List contains non-UsbControlIrp objects or those UsbIrp(s) are invalid.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-	public void syncSubmit( List list ) throws UsbException,IllegalArgumentException;
+	public void syncSubmit( List list ) throws UsbException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Submit a List of UsbControlIrps asynchronously to the Default Control Pipe.
@@ -206,8 +215,9 @@ public interface UsbDevice
 	 * @param list The List of UsbControlIrps.
 	 * @exception UsbException If an error occurrs.
 	 * @exception IllegalArgumentException If the List contains non-UsbControlIrp objects or those UsbIrp(s) are invalid.
+	 * @exception UsbDisconnectedException If this device has been disconnected.
 	 */
-	public void asyncSubmit( List list ) throws UsbException,IllegalArgumentException;
+	public void asyncSubmit( List list ) throws UsbException,IllegalArgumentException,UsbDisconnectedException;
 
 	/**
 	 * Create a UsbControlIrp.
