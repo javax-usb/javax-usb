@@ -66,7 +66,7 @@ public interface UsbIrp
 	 * <p>
 	 * This indicates the amount of data to transfer.
 	 * <p>
-	 * This defaults to 0, and this is set to data.length by {@link #setData(byte[]} the 1-parameter setData}.
+	 * This defaults to 0, and this is set to data.length by {@link #setData(byte[]) the 1-parameter setData}.
 	 * This will never be negative.
 	 * @return The amount of data to transfer.
 	 */

@@ -250,7 +250,7 @@ public class StandardRequest
 	 * the device is only required to support those Descriptors defined
 	 * in the USB 1.1 specification table 9.5, which includes
 	 * {@link javax.usb.UsbConst#DESCRIPTOR_TYPE_DEVICE device},
-	 * {@link javax.usb.UsbConst#DESCRIPTOR_TYPE_CONFIG config}, and
+	 * {@link javax.usb.UsbConst#DESCRIPTOR_TYPE_CONFIGURATION configuration}, and
 	 * {@link javax.usb.UsbConst#DESCRIPTOR_TYPE_STRING string} descriptor types.
 	 * Note that devices normally do not support requests for interface or endpoint
 	 * descriptors; the configuration descriptor contains all its interface and endpoint
@@ -392,7 +392,7 @@ public class StandardRequest
 	 * the device is only required to support those Descriptors defined
 	 * in the USB 1.1 specification table 9.5, which includes
 	 * {@link javax.usb.UsbConst#DESCRIPTOR_TYPE_DEVICE device},
-	 * {@link javax.usb.UsbConst#DESCRIPTOR_TYPE_CONFIG config}, and
+	 * {@link javax.usb.UsbConst#DESCRIPTOR_TYPE_CONFIGURATION configuration}, and
 	 * {@link javax.usb.UsbConst#DESCRIPTOR_TYPE_STRING string} descriptor types.
 	 * Note that devices normally do not support requests for interface or endpoint
 	 * descriptors; the configuration descriptor contains all its interface and endpoint
