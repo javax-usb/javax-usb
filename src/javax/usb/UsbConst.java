@@ -40,9 +40,9 @@ public interface UsbConst
 
     public static final byte ENDPOINT_TYPE_MASK                         = (byte)0x03;
     public static final byte ENDPOINT_TYPE_CONTROL                      = (byte)0x00;
-    public static final byte ENDPOINT_TYPE_ISOC                         = (byte)0x01;
+    public static final byte ENDPOINT_TYPE_ISOCHRONOUS                  = (byte)0x01;
     public static final byte ENDPOINT_TYPE_BULK                         = (byte)0x02;
-    public static final byte ENDPOINT_TYPE_INT                          = (byte)0x03;
+    public static final byte ENDPOINT_TYPE_INTERRUPT                    = (byte)0x03;
 
 	public static final byte ENDPOINT_SYNCHRONIZATION_TYPE_MASK		    = (byte)0x0c;
 	public static final byte ENDPOINT_SYNCHRONIZATION_TYPE_NONE		    = (byte)0x00;
