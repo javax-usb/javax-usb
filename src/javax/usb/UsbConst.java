@@ -30,24 +30,24 @@ public interface UsbConst
 	//**************************************************************************
 	// Configuration constants
 
-    public static final byte CONFIGURATION_POWERED_MASK  = (byte)0x60;
-    public static final byte CONFIGURATION_SELF_POWERED  = (byte)0x40;
-    public static final byte CONFIGURATION_REMOTE_WAKEUP = (byte)0x20;
+	public static final byte CONFIGURATION_POWERED_MASK  = (byte)0x60;
+	public static final byte CONFIGURATION_SELF_POWERED  = (byte)0x40;
+	public static final byte CONFIGURATION_REMOTE_WAKEUP = (byte)0x20;
 
 	//**************************************************************************
 	// Endpoint constants
 
-    public static final byte ENDPOINT_NUMBER_MASK                       = (byte)0x0f;
+	public static final byte ENDPOINT_NUMBER_MASK                       = (byte)0x0f;
 
-    public static final byte ENDPOINT_DIRECTION_MASK                    = (byte)0x80;
-    public static final byte ENDPOINT_DIRECTION_OUT                     = (byte)0x00;
-    public static final byte ENDPOINT_DIRECTION_IN                      = (byte)0x80;
+	public static final byte ENDPOINT_DIRECTION_MASK                    = (byte)0x80;
+	public static final byte ENDPOINT_DIRECTION_OUT                     = (byte)0x00;
+	public static final byte ENDPOINT_DIRECTION_IN                      = (byte)0x80;
 
-    public static final byte ENDPOINT_TYPE_MASK                         = (byte)0x03;
-    public static final byte ENDPOINT_TYPE_CONTROL                      = (byte)0x00;
-    public static final byte ENDPOINT_TYPE_ISOCHRONOUS                  = (byte)0x01;
-    public static final byte ENDPOINT_TYPE_BULK                         = (byte)0x02;
-    public static final byte ENDPOINT_TYPE_INTERRUPT                    = (byte)0x03;
+	public static final byte ENDPOINT_TYPE_MASK                         = (byte)0x03;
+	public static final byte ENDPOINT_TYPE_CONTROL                      = (byte)0x00;
+	public static final byte ENDPOINT_TYPE_ISOCHRONOUS                  = (byte)0x01;
+	public static final byte ENDPOINT_TYPE_BULK                         = (byte)0x02;
+	public static final byte ENDPOINT_TYPE_INTERRUPT                    = (byte)0x03;
 
 	public static final byte ENDPOINT_SYNCHRONIZATION_TYPE_MASK         = (byte)0x0c;
 	public static final byte ENDPOINT_SYNCHRONIZATION_TYPE_NONE         = (byte)0x00;
