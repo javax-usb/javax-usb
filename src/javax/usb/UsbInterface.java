@@ -61,14 +61,15 @@ public interface UsbInterface extends UsbInfo
 	public void release() throws UsbException;
 
 	/**
-	 * If this interface is claimed (in Java).
+	 * If this interface is claimed.
 	 * <p>
-	 * This returns true only if this interface is claimed (in Java).
-	 * This will not return true if the interface is claimed natively,
-	 * but not in Java (but the claim call will fail).
+	 * This will return true if claimed in Java.
+	 * This may, depending on implementation, return true if
+	 * claimed natively (outside of Java)
+	 * <p>
+	 * If this UsbInterface is not {@link #isActive() active}, this will
+	 * return false.
 	 * @return if this interface is claimed (in Java).
-	 * @throws javax.usb.NotActiveException if this interface setting is not
-	 * {@link #isActive() active}.
 	 */
 	public boolean isClaimed();
 
