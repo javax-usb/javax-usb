@@ -1,0 +1,139 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Start of Document
+%
+
+\documentclass{article}
+\usepackage{fancyhdr}
+\usepackage{graphics}
+\usepackage{latexsym}
+
+\addtolength{\textwidth}{+2in}
+\addtolength{\oddsidemargin}{-1in}
+\addtolength{\evensidemargin}{-1in}
+
+\begin{document}
+\pagestyle{empty}
+
+\newcommand{\mytitle}[0]{JSR80 API Specification}
+\newcommand{\myauthor}[0]{Dan Streetman}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titlepage
+%
+
+\begin{titlepage}
+
+\begin{center}
+\Huge{\textbf{\mytitle}}
+\end{center}
+
+\vfill
+\vfill
+
+\begin{flushright}
+\large{\myauthor}
+\\
+\large{ddstreet@us.ibm.com}
+\\
+\large{\today}
+\end{flushright}
+
+\vfill
+
+\end{titlepage}
+
+\newpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Page setup
+%
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\sectionmark}[1]{\markright{\emph{\mytitle}}}
+\renewcommand{\subsectionmark}[1]{\markright{\emph{\mytitle}}}
+\renewcommand{\subsubsectionmark}[1]{\markright{\emph{\mytitle}}}
+\fancyhead[LE,RO]{\bfseries\thepage}
+\fancyhead[LO]{\rightmark}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Table of Contents
+%
+
+\tableofcontents
+
+\listoftables
+
+\listoffigures
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Entry Point
+%
+
+\section{Entry Point}
+
+The entry point for javax.usb is the \emph{UsbHostManager} class.  This class instantiates
+and provides access to the implementation's main access class, which is an implementation of
+\emph{UsbServices}.  This implementation class must provide a no-parameter constructor
+and it must be listed in the (required) properties file, \emph{javax/usb/res/jusb.properties},
+as the value for the key \emph{javax.usb.os.UsbServices}.
+
+The \emph{UsbServices} provides add and remove methods for \emph{UsbServicesListener}s, which
+monitors when devices are connected or added to the system.  Also the class provides access
+to the root \emph{UsbHub}.  This hub is the root of the entire USB topology tree.  It does
+not correspond to a physical hub, but instead is a virtual hub to which all physical Host Controller
+hubs are connected.  Each of the physical Host Controller hubs contains the devices actually
+connected to the system.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Topology Tree
+%
+
+\section{Topology Tree}
+
+The USB topology tree is a representation of the physical device connection layout.  It
+consists of a tree-based structure of \emph{UsbDevice}s, some of which are \emph{UsbHub}s.
+It starts at the virtual root \emph{UsbHub}, to which devices (which are actually
+Host Controller hubs) are connected.  Each of these hubs may have devices connected on one or
+more of its \emph{UsbPort}s.  These connected devices may actually be a hub, in which case they
+may have more devices connected to their port(s).  This is the way that USB devices are connected
+to a system, with the exception of course of the virtual root hub.  That is created and managed
+by the JSR80 implementation.  See the section on \emph{UsbHubs and UsbDevices} for details on
+the virtual root hub.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbHubs and UsbDevices
+%
+
+\section{UsbHubs and UsbDevices}
+
+A \emph{UsbHub} is an extended \emph{UsbDevice}.  It has methods specific to a hub.  Those
+methods allow the user to access the hub's \emph{UsbPort}s and attached devices.  
+
+A \emph{UsbDevice} represents a physical USB device.  It provides methods for accessing the
+parent port that the device is connected to, accessing the device's descriptor, accessing
+the device's configurations and strings, and adding or removing a \emph{UsbDeviceListener}
+which monitors when the device is disconnected as well as when communication occurs on the
+Default Control Pipe.  It also provides methods to communicate via the Default Control Pipe.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% UsbDevice Components
+%
+
+\section{UsbDevice Components}
+
+Each \emph{UsbDevice} is made up of several parts.  These parts start with the device's
+configuration(s).  A USB device is required to contain at least one configuration, and
+only one configuration may be active at once, meaning the device must be configured
+in one and only one certain way, that it defines.  A device may also be in an unconfigured
+state, but normally the operating system software initializes the device to its default
+configuration, which is configuration number 1 (0 is reserved for the unconfigured state).
+Each configuration is represented by a \emph{UsbConfig}.  The device maintains which
+of its configs is active, if any.
+
+\end{document}
