@@ -23,8 +23,8 @@ import javax.usb.event.*;
  * defined by the associated {@link #getUsbEndpoint() endpoint}, except for Control
  * {@link javax.usb.UsbEndpoint#getType() type} pipes.
  * <p>
- * The implementation is not required to be Thread-safe.  Applications should
- * either ensure that the implementation is Thread-safe or use only one Thread (per UsbPipe).
+ * The implementation is not required to be Thread-safe.  If a Thread-safe UsbPipe is
+ * required, use a {@link javax.usb.util.UsbUtil#synchronizedUsbPipe(UsbPipe) synchronizedUsbPipe}.
  * <p>
  * This pipe's configuration and interface setting must be active to use this pipe.
  * Any attempt to use a UsbPipe belonging to an inactive configuration or interface setting

@@ -9,6 +9,12 @@ package javax.usb.util;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
+import java.io.*;
+import java.util.*;
+
+import javax.usb.*;
+import javax.usb.event.*;
+
 /**
  * General utility methods.
  * @author Dan Streetman
@@ -188,6 +194,73 @@ public class UsbUtil
 			sb.insert(0, c);
 
 		return sb.substring(0, min);
+	}
+
+	/**
+	 * Create a synchronized UsbPipe.
+	 * @param usbPipe The unsynchronized UsbPipe.
+	 * @return A synchronized UsbPipe.
+	 */
+	public static UsbPipe synchronizedUsbPipe(UsbPipe usbPipe) { return new UsbUtil.SynchronizedUsbPipe(usbPipe); }
+
+	/**
+	 * A synchronized UsbPipe wrapper implementation.
+	 * <p>
+	 * Not all methods are synchronized; the open/close methods are
+	 * synchronized to each other, and the submission and abort methods
+	 * are synchronized to each other.
+	 */
+	public static class SynchronizedUsbPipe implements UsbPipe
+	{
+		/**
+		 * Constructor.
+		 * @param usbPipe The UsbPipe to wrap.
+		 */
+		public SynchronizedUsbPipe(UsbPipe usbPipe) { this.usbPipe = usbPipe; }
+
+		public void open() throws UsbException,NotActiveException
+		{ synchronized (openLock) { usbPipe.open(); } }
+
+		public void close() throws UsbException,NotActiveException
+		{ synchronized (openLock) { usbPipe.close(); } }
+
+		public boolean isActive() { return usbPipe.isActive(); }
+
+		public boolean isOpen() { return usbPipe.isOpen(); }
+
+		public UsbEndpoint getUsbEndpoint() { return usbPipe.getUsbEndpoint(); }
+
+		public int syncSubmit( byte[] data ) throws UsbException,NotOpenException
+		{ synchronized (submitLock) { return usbPipe.syncSubmit(data); } }
+
+		public UsbIrp asyncSubmit( byte[] data ) throws UsbException,NotOpenException
+		{ synchronized (submitLock) { return usbPipe.asyncSubmit(data); } }
+
+		public void syncSubmit( UsbIrp irp ) throws UsbException,NotOpenException
+		{ synchronized (submitLock) { usbPipe.syncSubmit(irp); } }
+
+		public void asyncSubmit( UsbIrp irp ) throws UsbException,NotOpenException
+		{ synchronized (submitLock) { usbPipe.asyncSubmit(irp); } }
+
+		public void syncSubmit( List list ) throws UsbException,NotOpenException
+		{ synchronized (submitLock) { usbPipe.syncSubmit(list); } }
+
+		public void asyncSubmit( List list ) throws UsbException,NotOpenException
+		{ synchronized (submitLock) { usbPipe.asyncSubmit(list); } }
+
+		public void abortAllSubmissions() throws NotOpenException
+		{ synchronized (submitLock) { usbPipe.abortAllSubmissions(); } }
+
+		public void addUsbPipeListener( UsbPipeListener listener )
+		{ usbPipe.addUsbPipeListener(listener); }
+
+		public void removeUsbPipeListener( UsbPipeListener listener )
+		{ usbPipe.removeUsbPipeListener(listener); }
+
+		protected Object openLock = new Object();
+		protected Object submitLock = new Object();
+
+		public UsbPipe usbPipe = null;
 	}
 
 }
