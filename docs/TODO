@@ -1,13 +1,9 @@
 TODO
 =====================================
 
-- Add pipe 'Policy' to UsbPipe.open()
+- Add UsbInterface.claim(<key>) and UsbPipe.open(<key>) et. al. - or similar
 
-- Add interface claiming 'Policy' to UsbInterface.claim()
+- Define more Exceptions (as needed)
 
-- Add irp 'Policy'
-
-- Define more error codes
-
-- Clarify/address Security.
+- Form security policy, implement
 
