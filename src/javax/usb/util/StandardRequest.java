@@ -149,7 +149,7 @@ public class StandardRequest
 	 * specified in the constructor.
 	 * @param recipient The recipient.
 	 * @param featureSelector The Feature Selector.
-	 * @param target The target interface number or endpoint address, or Test Selector.
+	 * @param target The target interface number or endpoint address.
 	 * @exception UsbException If unsuccessful.
 	 * @exception IllegalArgumentException If the recipient or target is invalid.
 	 */
@@ -456,7 +456,7 @@ public class StandardRequest
 	 * @param usbDevice The UsbDevice.
 	 * @param recipient The recipient.
 	 * @param featureSelector The Feature Selector.
-	 * @param target The target interface number or endpoint address, or Test Selector.
+	 * @param target The target interface number or endpoint address.
 	 * @exception UsbException If unsuccessful.
 	 * @exception IllegalArgumentException If the recipient or target is invalid.
 	 */
