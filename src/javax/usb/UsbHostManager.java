@@ -122,7 +122,7 @@ public final class UsbHostManager
 	private static final String USBSERVICES_PROPERTY_NOT_DEFINED()
 	{ return "The property " + JAVAX_USB_USBSERVICES_PROPERTY + " is not defined as the implementation class of UsbServices"; }
 	private static final String USBSERVICES_CLASSNOTFOUNDEXCEPTION(String c)
-	{ return "The UsbServices implementation class "+c+" was found found"; }
+	{ return "The UsbServices implementation class "+c+" was not found"; }
 	private static final String USBSERVICES_EXCEPTIONININITIALIZERERROR(String c)
 	{ return "an Exception occurred during initialization of the UsbServices Class "+c; }
 	private static final String USBSERVICES_INSTANTIATIONEXCEPTION(String c)
