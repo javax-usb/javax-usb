@@ -9,6 +9,7 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
+import java.io.NotActiveException;
 import java.util.List;
 
 import javax.usb.event.*;

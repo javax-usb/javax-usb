@@ -9,6 +9,7 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -99,6 +100,7 @@ public interface UsbConfig
 	 * config string, this returns null.
 	 * @return The config String, or null.
 	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
-	public String getConfigString() throws UsbException;
+	public String getConfigString() throws UsbException,UnsupportedEncodingException;
 }

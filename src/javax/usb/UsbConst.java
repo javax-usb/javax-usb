@@ -16,11 +16,16 @@ package javax.usb;
 public interface UsbConst
 {
 	//**************************************************************************
+	// Hub constants
+
+	public static final byte HUB_CLASSCODE = (byte)0x09;
+
+	//**************************************************************************
 	// Device constants
 
-	public static final Object DEVICE_SPEED_UNKNOWN = new Object();
-	public static final Object DEVICE_SPEED_LOW     = new Object();
-	public static final Object DEVICE_SPEED_FULL    = new Object();
+	public static final Object DEVICE_SPEED_UNKNOWN = new Object() { public String toString() { return "Unknown Speed"; } };
+	public static final Object DEVICE_SPEED_LOW     = new Object() { public String toString() { return "Low Speed"; } };
+	public static final Object DEVICE_SPEED_FULL    = new Object() { public String toString() { return "Full Speed"; } };
 
 	//**************************************************************************
 	// Config constants

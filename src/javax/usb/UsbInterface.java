@@ -9,6 +9,7 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -21,10 +22,8 @@ import java.util.*;
  * the active interface setting should be used for claiming and releasing ownership of
  * the interface; also no action may be taken on any parts of this interface
  * setting, if the setting is not active.  Any attempt to perform action on objects
- * belonging to an inactive interface setting will throw a
- * {@link javax.usb.NotActiveException NotActiveException}.
+ * belonging to an inactive interface setting will throw a NotActiveException.
  * @author Dan Streetman
- * @author E. Michael Maximilien
  */
 public interface UsbInterface
 {
@@ -60,7 +59,7 @@ public interface UsbInterface
 	 * @exception NotActiveException If this interface setting is not
 	 * {@link #isActive() active}.
 	 */
-	public void release() throws UsbException;
+	public void release() throws UsbException,NotActiveException;
 
 	/**
 	 * If this interface is claimed.
@@ -90,13 +89,7 @@ public interface UsbInterface
 	 * Get the number of alternate settings for this interface.
 	 * @return the number of alternate settings for this interface.
 	 */
-	public byte getNumSettings();
-
-    /**
-	 * Get the number of this alternate setting.
-	 * @return this interface's alternate setting
-	 */
-    public byte getSettingNumber();
+	public int getNumSettings();
 
 	/**
 	 * Get the number of the active alternate setting.
@@ -104,7 +97,7 @@ public interface UsbInterface
 	 * @exception NotActiveException If the interface (and parent config) is not
 	 * {@link #isActive() active}.
 	 */
-	public byte getActiveSettingNumber();
+	public byte getActiveSettingNumber() throws NotActiveException;
 
 	/**
 	 * Get the active alternate setting.
@@ -113,7 +106,7 @@ public interface UsbInterface
 	 * @exception NotActiveException If this interface (and parent config) is not
 	 * {@link #isActive() active}.
 	 */
-	public UsbInterface getActiveSetting();
+	public UsbInterface getActiveSetting() throws NotActiveException;
 
 	/**
 	 * Get the specified alternate setting.
@@ -182,6 +175,7 @@ public interface UsbInterface
 	 * interface string, this returns null.
 	 * @return The interface String, or null.
 	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
-	public String getInterfaceString() throws UsbException;
+	public String getInterfaceString() throws UsbException,UnsupportedEncodingException;
 }

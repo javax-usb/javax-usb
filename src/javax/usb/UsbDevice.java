@@ -9,6 +9,7 @@ package javax.usb;
  * http://oss.software.ibm.com/developerworks/opensource/license-cpl.html
  */
 
+import java.io.*;
 import java.util.*;
 
 import javax.usb.event.*;
@@ -39,8 +40,9 @@ public interface UsbDevice
 	 * {@link #getString(byte) getString}.
 	 * @return The manufacturer String, or null.
 	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
-    public String getManufacturerString() throws UsbException;
+    public String getManufacturerString() throws UsbException,UnsupportedEncodingException;
 
     /**
 	 * Get the serial number String.
@@ -49,8 +51,9 @@ public interface UsbDevice
 	 * {@link #getString(byte) getString}.
 	 * @return The serial number String, or null.
 	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
-    public String getSerialNumberString() throws UsbException;
+    public String getSerialNumberString() throws UsbException,UnsupportedEncodingException;
 
     /**
 	 * Get the product String.
@@ -59,8 +62,9 @@ public interface UsbDevice
 	 * {@link #getString(byte) getString}.
 	 * @return The product String, or null.
 	 * @exception UsbException If there was an error getting the StringDescriptor.
+	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
-    public String getProductString() throws UsbException;
+    public String getProductString() throws UsbException,UnsupportedEncodingException;
 
     /**
 	 * Get the speed of the device.
@@ -155,8 +159,9 @@ public interface UsbDevice
 	 * @param index The index of the string to get.
 	 * @return The specified String.
 	 * @exception UsbException If an error occurred while getting the String.
+	 * @exception UnsupportedEncodingException If the string encoding is not supported.
 	 */
-	public String getString( byte index ) throws UsbException;
+	public String getString( byte index ) throws UsbException,UnsupportedEncodingException;
 
 	/**
 	 * Submit a ControlUsbIrp synchronously to the Default Control Pipe.
