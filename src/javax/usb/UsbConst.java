@@ -23,9 +23,9 @@ public interface UsbConst
 	//**************************************************************************
 	// Device constants
 
-	public static final Object DEVICE_SPEED_UNKNOWN = new Object() { public String toString() { return "Unknown Speed"; } };
-	public static final Object DEVICE_SPEED_LOW     = new Object() { public String toString() { return "Low Speed"; } };
-	public static final Object DEVICE_SPEED_FULL    = new Object() { public String toString() { return "Full Speed"; } };
+	public static final Object DEVICE_SPEED_UNKNOWN = new Object();
+	public static final Object DEVICE_SPEED_LOW     = new Object();
+	public static final Object DEVICE_SPEED_FULL    = new Object();
 
 	//**************************************************************************
 	// Config constants
