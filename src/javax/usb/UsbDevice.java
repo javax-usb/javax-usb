@@ -21,10 +21,10 @@ import javax.usb.event.*;
 public interface UsbDevice
 {
 	/**
-	 * Get the UsbPort on the 'parent' UsbHub that this device is connected to.
-	 * @return the port on the parent UsbHub that this is attached to.
+	 * Get the UsbPort on the parent UsbHub that this device is connected to.
+	 * @return The port on the parent UsbHub that this is attached to.
 	 */
-	public UsbPort getUsbPort();
+	public UsbPort getParentUsbPort();
 
     /**
 	 * If this is a UsbHub.
