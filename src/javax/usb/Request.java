@@ -86,13 +86,13 @@ public interface Request extends Recyclable
 	public void setDataLength(int length);
 
 	/** @return the data byte[] for this request */
-	public byte[] getData();
+	public byte[] getDataBytes();
 
 	/** 
 	 * Sets the Data array for this Request object
 	 * @param data the byte[] data value
 	 */
-	public void setData( byte[] data );
+	public void setDataBytes( byte[] data );
 
 	/**
 	 * Get the UsbException that occurred during this request.
@@ -129,12 +129,6 @@ public interface Request extends Recyclable
 	 * @param completed If this is completed.
 	 */
 	public void setCompleted( boolean completed );
-
-	/**
-	 * @return a formated byte[] representing this Request object
-	 * @exception javax.usb.RequestException if this Request object is invalid
-	 */
-	public byte[] toBytes() throws RequestException;
 
 	/**
 	 * Explicitly tell this Request object that it can be recycled.  
