@@ -8,6 +8,5 @@ Group: System Environment/Libraries
 Java API to USB devices.
 %files
 %defattr(-, root, root)
-/opt/javax-usb/lib/jsr80.jar
-/etc/profile.d/javax-usb.sh
-/etc/profile.d/javax-usb.csh
+/opt/javax-usb/lib/jsr80*.jar
+/etc/profile.d/javax-usb.*
