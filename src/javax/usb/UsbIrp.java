@@ -17,14 +17,17 @@ package javax.usb;
  * actual data buffer, as well as other metadata that gives the user more
  * control and knowledge over how the data is handled.
  * <p>
- * Before submitting this, several steps must be taken:
+ * Before submitting this, at least some of these (depending on UsbIrp implementation) must be performed:
  * <ul>
  * <li>The {@link #getData() data} must be {@link #setData(byte[]) set}.</li>
+ * <li>The {@link #getOffset() data offset}, must be {@link #setOffset(int) set}.</li>
  * <li>The {@link #getLength() data length} must be {@link #setLength(int) set}.</li>
- * <li>The {@link #getOffset() data offset}, if non-zero, must be {@link #setOffset(int) set}.</li>
- * <li>The {@link #isComplete() complete state} must be false; how this is set (or reset) is implementation-dependent.</li>
+ * <li>The {@link #getAcceptShortPacket() Short Packet policy} must be {@link #setAcceptShortPacket(boolean) set}.</li>
+ * <li>The {@link #getUsbException() UsbException} must be null (and {@link #isUsbException() isUsbException} must be false).</li>
+ * <li>The {@link #isComplete() complete state} must be false.</li>
  * </ul>
- * The implementation will set the {@link #getActualLength() data length}.
+ * The implementation will set the {@link #getActualLength() data length} and, if unsuccessful, the
+ * {@link #getUsbException() UsbException}, after processing.  Finally, it will call {@link #complete() complete}.
  * <p>
  * See the USB 1.1 specification section 5.3.2 for details on USB IRPs.
  * The IRP defined in this API has more than is mentioned in the USB 1.1 specification;
@@ -87,32 +90,12 @@ public interface UsbIrp
 	 * Set the amount of data that was transferred.
 	 * <p>
 	 * The implementation will set this to the amount of data
-	 * actually transferred.  The implementation <b>must</b> set this
+	 * actually transferred.  The implementation will set this
 	 * before calling {@link complete() complete}, regardless of
 	 * whether the submission was successful or not.
 	 * @param length The amount of data that was transferred.
 	 */
 	public void setActualLength(int length);
-
-	/**
-	 * If this has completed.
-	 * <p>
-	 * This must be false before use.
-	 * @return If the has completed.
-	 */
-	public boolean isComplete();
-
-	/**
-	 * Set this as complete.
-	 * <p>
-	 * This is the last method the implementation calls; it indicates the UsbIrp has completed.  
-	 * The implementation <b>must</b> {@link #setLength(int) set the length},
-	 * even if the submission was unsuccessful, before calling this.
-	 * The implementation will {@link #setUsbException(UsbException) set the UsbException},
-	 * if appropriate, before calling this.
-	 * After calling this {@link #isComplete() isComplete} will return true.
-	 */
-	public void complete();
 
 	/**
 	 * If a UsbException occured.
@@ -154,4 +137,23 @@ public interface UsbIrp
 	 */
 	public void setAcceptShortPacket( boolean accept );
 
+	/**
+	 * If this has completed.
+	 * <p>
+	 * This must be false before use.
+	 * @return If the has completed.
+	 */
+	public boolean isComplete();
+
+	/**
+	 * Set this as complete.
+	 * <p>
+	 * This is the last method the implementation calls; it indicates the UsbIrp has completed.  
+	 * The implementation will set the {@link #setActualLength(int) actual length},
+	 * even if the submission was unsuccessful, before calling this.
+	 * The implementation will {@link #setUsbException(UsbException) set the UsbException},
+	 * if appropriate, before calling this.
+	 * After calling this {@link #isComplete() isComplete} will return true.
+	 */
+	public void complete();
 }
