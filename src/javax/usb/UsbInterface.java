@@ -49,10 +49,6 @@ public interface UsbInterface
 	 * if any.  If the native claim fails, this will fail.  If the interface
 	 * is already claimed, this may fail depending on the value of the
 	 * {@link javax.usb.UsbInterfacePolicy#forceClaim(UsbInterface) UsbInterfacePolicy.forceClaim()}.
-	 * <p>
-	 * After a successful claim, the UsbInterfacePolicy is consulted for various
-	 * actions, such as opening a UsbPipe belonging to this UsbInterface,
-	 * or releasing this UsbInterface.
 	 * @param policy The UsbInterfacePolicy to use.
 	 * @exception UsbClaimException If the interface is already claimed.
 	 * @exception UsbException If the interface could not be claimed.
@@ -64,35 +60,18 @@ public interface UsbInterface
 	/**
 	 * Release this interface.
 	 * <p>
-	 * This is identical to the other {@link #release(Object) release},
-	 * except a null key is used.
-	 * @exception UsbPolicyDenied If the UsbInterfacePolicy prevented the release.
-	 * @exception UsbClaimException If the interface is not claimed.
-	 * @exception UsbException If the interface could not be released.
-	 * @exception UsbNotActiveException If this interface setting is not
-	 * {@link #isActive() active}.
-	 */
-	public void release() throws UsbPolicyDenied,UsbClaimException,UsbException,UsbNotActiveException;
-
-	/**
-	 * Release this interface using a key.
-	 * <p>
 	 * This will only succeed if the interface has been properly claimed.
 	 * If the native release fails, this will fail.
 	 * <p>
 	 * This should be done after the interface is no longer being used.
 	 * All pipes must be closed before this can be released.
 	 * <p>
-	 * The provided key will be passed to the UsbInterfacePolicy.
-	 * If this UsbInterface was claimed using a UsbInterfacePolicy,
-	 * this will only succeed if the policy allows it.
-	 * @exception UsbPolicyDenied If the UsbInterfacePolicy prevented the release.
 	 * @exception UsbClaimException If the interface is not claimed.
 	 * @exception UsbException If the interface could not be released.
 	 * @exception UsbNotActiveException If this interface setting is not
 	 * {@link #isActive() active}.
 	 */
-	public void release(Object key) throws UsbPolicyDenied,UsbClaimException,UsbException,UsbNotActiveException;
+	public void release() throws UsbClaimException,UsbException,UsbNotActiveException;
 
 	/**
 	 * If this interface is claimed.

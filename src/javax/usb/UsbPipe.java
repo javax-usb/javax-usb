@@ -36,35 +36,18 @@ public interface UsbPipe
 	/**
 	 * Open this UsbPipe.
 	 * <p>
-	 * This is identical to the other {@link #open(Object) open}, but uses
-	 * a null key.
-	 * @exception UsbPolicyDenied If the UsbInterfacePolicy prevented the open.
-	 * @exception UsbException If the UsbPipe could not be opened.
-	 * @exception UsbNotActiveException If the config or interface setting is not active.
-	 * @exception UsbNotClaimedException If the interface is not claimed.
-	 */
-	public void open() throws UsbPolicyDenied,UsbException,UsbNotActiveException,UsbNotClaimedException;
-
-	/**
-	 * Open this UsbPipe using a key.
-	 * <p>
 	 * The pipe cannot be used for communication until it is open.
 	 * <p>
 	 * The implementation should, to whatever extent the platform allows,
 	 * try to ensure the pipe is usable (not in error) before returning
 	 * successfully.
 	 * <p>
-	 * The key will be passed to the UsbInterfacePolicy which may prevent
-	 * the open.
-	 * <p>
 	 * If the pipe has already been opened, this will not succeed.
-	 * @param key The key to pass to the UsbInterfacePolicy.
-	 * @exception UsbPolicyDenied If the UsbInterfacePolicy prevented the open.
 	 * @exception UsbException If the UsbPipe could not be opened.
 	 * @exception UsbNotActiveException If the config or interface setting is not active.
 	 * @exception UsbNotClaimedException If the interface is not claimed.
 	 */
-	public void open(Object key) throws UsbPolicyDenied,UsbException,UsbNotActiveException,UsbNotClaimedException;
+	public void open() throws UsbException,UsbNotActiveException,UsbNotClaimedException;
 
 	/**
 	 * Close this UsbPipe.
