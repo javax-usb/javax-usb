@@ -16,8 +16,6 @@ package javax.usb;
  * and the supported USB specification version number.
  * @author E. Michael Maximilien
  * @author Dan Streetman
- * @since 0.8.0
- * @version 0.9.0 (USB specification version 1.1)
  */
 public final class Version extends Object
 {
@@ -65,5 +63,5 @@ public final class Version extends Object
 	//
 
 	private static final String VERSION_USB_SPECIFICATION = "1.1";
-	private static final String VERSION_JAVAX_USB = "1.0.0-beta2";
+	private static final String VERSION_JAVAX_USB = "0.9.1";
 }
