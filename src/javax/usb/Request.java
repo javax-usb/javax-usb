@@ -19,6 +19,7 @@ import javax.usb.util.Recyclable;
  * different standard requests.  See chapter 9.
  * </i>
  * @author E. Michael Maximilien
+ * @author Dan Streetman  - getDataLength() added 12/18/01
  * @since 0.8.0
  * @version 1.0.0
  * @see javax.usb.UsbHostManager#getUsbServices
@@ -66,6 +67,17 @@ public interface Request extends Recyclable
 	 * (i.e. this is not the total request length)</i>
 	 */
 	public short getLength();
+
+	/**
+	 * Get the length of valid data for this request.
+	 * <p>
+	 * NOTE: this length is the length of data actually sent/received to/from
+	 * the device, which is always less than or equal to the length of
+	 * the byte[] buffer.  Only this number of bytes in the buffer are
+	 * valid (and only after the request is complete).
+	 * @return the length of vaid data for this request.
+	 */
+	public int getDataLength();
 
 	/** @return the data byte[] for this request */
 	public byte[] getData();
