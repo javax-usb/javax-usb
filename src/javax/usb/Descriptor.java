@@ -25,7 +25,7 @@ public interface Descriptor
     /**
 	 * Get the type of this descriptor.
 	 * @return The type of this descriptor.
-	 * 
+	 */
     public byte getType();
 
 }
