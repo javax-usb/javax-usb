@@ -31,14 +31,14 @@ public interface UsbHub extends UsbDevice
 	 * by the hub itself.  See the USB 1.1 specification sec 11.4
 	 * for details on the internal port, sec 11.5 for details on the
 	 * downstream ports, and sec 11.6 for details on the upstream port.
-	 * @return the number of (downstream) ports for this hub
+	 * @return The number of (downstream) ports for this hub.
 	 */
 	public byte getNumberOfPorts();
 
 	/**
 	 * Get all the ports this hub has.
 	 * <p>
-	 * See getUsbPort() for important details on port numbering.
+	 * The port numbering is 1-based.
 	 * <p>
 	 * The List will be unmodifiable.
 	 * @return All ports this hub has.

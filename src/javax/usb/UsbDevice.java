@@ -35,35 +35,32 @@ public interface UsbDevice
     /**
 	 * Get the manufacturer String.
 	 * <p>
-	 * This is a convienence method.  The String may be cached.
-	 * If the device does not support strings or does not define the
-	 * manufacturer string, this returns null.
+	 * This is a convienence method, which uses
+	 * {@link #getString(byte) getString}.
 	 * @return The manufacturer String, or null.
 	 * @exception UsbException If there was an error getting the StringDescriptor.
 	 */
-    public String getManufacturer() throws UsbException;
+    public String getManufacturerString() throws UsbException;
 
     /**
 	 * Get the serial number String.
 	 * <p>
-	 * This is a convienence method.  The String may be cached.
-	 * If the device does not support strings or does not define the
-	 * serial number string, this returns null.
+	 * This is a convienence method, which uses
+	 * {@link #getString(byte) getString}.
 	 * @return The serial number String, or null.
 	 * @exception UsbException If there was an error getting the StringDescriptor.
 	 */
-    public String getSerialNumber();
+    public String getSerialNumberString() throws UsbException;
 
     /**
 	 * Get the product String.
 	 * <p>
-	 * This is a convienence method.  The String may be cached.
-	 * If the device does not support strings or does not define the
-	 * product string, this returns null.
+	 * This is a convienence method, which uses
+	 * {@link #getString(byte) getString}.
 	 * @return The product String, or null.
 	 * @exception UsbException If there was an error getting the StringDescriptor.
 	 */
-    public String getProductString();
+    public String getProductString() throws UsbException;
 
     /**
 	 * Get the speed of the device.
@@ -99,8 +96,7 @@ public interface UsbDevice
 	/**
 	 * If this UsbDevice contains the specified UsbConfig.
 	 * <p>
-	 * Note that this will return false for the number zero, which indicates
-	 * the device is in a Not Configured state.
+	 * This will return false for zero (the Not Configured state).
 	 * @return If the specified UsbConfig is contained in this UsbDevice.
 	 */
 	public boolean containsUsbConfig( byte number );
@@ -115,9 +111,9 @@ public interface UsbDevice
 
     /**
 	 * Get the active UsbConfig.
-	 * @return the active UsbConfig.
-//FIXME - create NotConfiguredException?
-	 * @throws RuntimeException if the device is in a Not Configured state.
+	 * <p>
+	 * If this device is Not Configured, this returns null.
+	 * @return The active UsbConfig, or null.
 	 */
     public UsbConfig getActiveUsbConfig();
 
@@ -153,9 +149,9 @@ public interface UsbDevice
 	/**
 	 * Get the String from the specified string descriptor.
 	 * <p>
-	 * This is a convienence method.  The String may be cached.
-	 * If the device does not support strings or does not define the
-	 * specified string, this returns null.
+	 * This is a convienence method, which uses
+	 * {@link #getStringDescriptor(byte) getStringDescriptor()}.
+	 * {@link javax.usb.StringDescriptor#getString() getString()}.
 	 * @param index The index of the string to get.
 	 * @return The specified String.
 	 * @exception UsbException If an error occurred while getting the String.
