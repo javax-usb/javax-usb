@@ -160,7 +160,7 @@
 	<!-- Clean all classfiles -->
 	<target name="clean">
 		<echo message="Cleaning everything in javax.usb API."/>
-		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" failonerror="false">
+		<delete verbose="${jsr80.verbose}" quiet="${jsr80.quiet}" includeEmptyDirs="true" failonerror="false">
 			<fileset dir="${jsr80.dest.dir}" includes="javax/usb/**/*.class"/>
 			<fileset dir="${jsr80.jarfile.dir}" includes="${jsr80.jarfile}"/>
 			<fileset dir="${jsr80.jdoc.dir}"/>
