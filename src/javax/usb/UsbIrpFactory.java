@@ -22,9 +22,4 @@ public interface UsbIrpFactory
 	 */
 	public UsbIrp createUsbIrp();
 
-	/**
-	 * Create a UsbCompositeIrp
-	 * @return a UsbCompositeIrp
-	 */
-	public UsbCompositeIrp createUsbCompositeIrp();
 }

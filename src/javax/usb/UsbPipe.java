@@ -292,12 +292,6 @@ public interface UsbPipe
 	 * This will block until the operation is completed,
 	 * either sucessfully or with an error.
 	 * <p>
-	 * <strong>WARNING</strong> : If automatic resubmission is being used, this will
-	 * not return between resubmissions; i.e. it will only return when
-	 * the UsbIrp is completed <strong>without</strong> being resubmitted,
-	 * such as when it is aborted or a UsbException occurs, or after
-	 * resubmit is manually turned off.
-	 * <p>
 	 * See javax.usb.UsbIrp for details on using UsbIrps for submissions.
 	 * <p>
 <!-- This will not be true after implementing UsbPipe Policies -->
@@ -341,6 +335,36 @@ public interface UsbPipe
 	 * @throws javax.usb.NotActiveException if the config or interface setting is not active.
 	 */
 	public void asyncSubmit( UsbIrp irp ) throws UsbException;
+
+	/**
+	 * Synchonously submit a List of UsbIrps to the UsbPipe.
+	 * <p>
+	 * This is exactly the same as calling
+	 * {@link #syncSubmit(UsbIrp) syncSubmit} multiple times, except
+	 * (1) The UsbIrps are guaranteed to be sent to the hardware synchronously
+	 * and (2) The implementation may optimaize submission of the UsbIrps, especially
+	 * in the case of Isochronous transfers.
+	 * @param list The List of UsbIrps for this submission
+	 * @throws javax.usb.UsbException if there was an error during the submission
+	 * @throws javax.usb.NotActiveException if the config or interface setting is not active.
+	 * @throws IllegalArgumentException If the list is empty or contains any non-UsbIrp object(s).
+	 */
+	public void syncSubmit( List list ) throws UsbException;
+
+	/**
+	 * Asynchonously submit a List of UsbIrps to the UsbPipe.
+	 * <p>
+	 * This is exactly the same as calling
+	 * {@link #asyncSubmit(UsbIrp) asyncSubmit} multiple times, except
+	 * (1) The UsbIrps are guaranteed to be sent to the hardware synchronously
+	 * and (2) The implementation may optimaize submission of the UsbIrps, especially
+	 * in the case of Isochronous transfers.
+	 * @param list The List of UsbIrps for this submission
+	 * @throws javax.usb.UsbException if there was an error during the submission
+	 * @throws javax.usb.NotActiveException if the config or interface setting is not active.
+	 * @throws IllegalArgumentException If the list is empty or contains any non-UsbIrp object(s).
+	 */
+	public void asyncSubmit( List list ) throws UsbException;
 
 	/**
 	 * Stop all submissions in progress
