@@ -24,9 +24,9 @@ public final class UsbHostManager
 
 	/** 
 	 * Get the UsbServices implementation.
-	 * @return the UsbServices for this USB host 
+	 * @return The UsbServices implementation instance.
 	 * @exception UsbException If the is an error creating the UsbSerivces implementation.
-	 * @exception SecurityException If the caller does not have permission to access javax.usb.
+	 * @exception SecurityException If the caller does not have security access.
 	 */
 	public static synchronized UsbServices getUsbServices() throws UsbException,SecurityException
 	{
@@ -36,11 +36,34 @@ public final class UsbHostManager
 		return usbServices;
 	}
 
+	/**
+	 * Get the Properties loaded from the properties file.
+	 * <p>
+	 * If the properties have not yet been loaded, this loads them.
+	 * @return An copy of the Properties.
+	 * @exception UsbException If an error occurrs while loading the properties.
+	 * @exception SecurityException If the caller does not have security access.
+	 */
+	public static synchronized Properties getProperties() throws UsbException,SecurityException
+	{
+		if (!propertiesLoaded)
+			setupProperties();
+
+		return (Properties)properties.clone();
+	}
+
+	/**
+	 * Create the UsbServices implementation instance.
+	 * <p>
+	 * This creates the UsbServices implementation instance based on the
+	 * class named in the properties file.
+	 * @return The UsbServices implementation instance.
+	 * @exception UsbException If the UsbServices class could not be instantiated.
+	 * @exception SecurityException If the caller does not have security access.
+	 */
 	private static UsbServices createUsbServices() throws UsbException,SecurityException
 	{
-		setupProperties();
-
-		String className = System.getProperty(JAVAX_USB_USBSERVICES_PROPERTY);
+		String className = getProperties().getProperty(JAVAX_USB_USBSERVICES_PROPERTY);
 
 		if (null == className)
 			throw new UsbException(USBSERVICES_PROPERTY_NOT_DEFINED());
@@ -60,37 +83,41 @@ public final class UsbHostManager
 		}
 	}
 
+	/**
+	 * Set up the Properties using the properties file.
+	 * <p>
+	 * This populates the Properties using the key-values listed in the properties file.
+	 * @exception UsbException If an error occurs.
+	 * @exception SecurityException If the caller does not have security access.
+	 */
 	private static void setupProperties() throws UsbException,SecurityException
 	{
-		Properties p = new Properties();
-		Properties sysP = System.getProperties();
 		InputStream i = ClassLoader.getSystemResourceAsStream(JAVAX_USB_PROPERTIES_FILE);
 		if (null == i)
-			throw new UsbException("Properties file " + JAVAX_USB_PROPERTIES_FILE + " not found");
+			throw new UsbException(PROPERTIES_FILE_NOT_FOUND);
+
 		try {
-			p.load(i);
+			properties.load(i);
 		} catch ( IOException ioE ) {
-			throw new UsbException("IOException while reading properties file " + JAVAX_USB_PROPERTIES_FILE + " : " + ioE.getMessage());
+			throw new UsbException(PROPERTIES_FILE_IOEXCEPTION_READING + " : " + ioE.getMessage());
 		}
-		try { i.close(); }
-		catch ( IOException ioE ) { /* FIXME - log inability to close */ }
 
-		Enumeration e = p.propertyNames();
-		while (e.hasMoreElements()) {
-			String key = (String)e.nextElement();
-			if (!sysP.containsKey(key))
-				sysP.setProperty(key, p.getProperty(key));
+		propertiesLoaded = true;
+
+		try {
+			i.close();
+		} catch ( IOException ioE ) {
+//FIXME - handle this better than System.err
+			System.err.println(PROPERTIES_FILE_IOEXCEPTION_CLOSING + " : " + ioE.getMessage());
 		}
 	}
 
-	/**
-	 * @throws java.lang.SecurityException if the "getUsbServices" javax.usb security
-	 * permission is not granted to the calling code base
-	 */
-	private void checkPermission() throws SecurityException
-	{
-		AccessController.checkPermission( JavaxUsbPermission.GETUSBSERVICES_JAVAX_USB_PERMISSION );
-	}
+	public static final String JAVAX_USB_PROPERTIES_FILE = "javax.usb.properties";
+	public static final String JAVAX_USB_USBSERVICES_PROPERTY = "javax.usb.services";
+
+	private static final String PROPERTIES_FILE_NOT_FOUND = "Properties file " + JAVAX_USB_PROPERTIES_FILE + " not found.";
+	private static final String PROPERTIES_FILE_IOEXCEPTION_READING = "IOException while reading properties file " + JAVAX_USB_PROPERTIES_FILE;
+	private static final String PROPERTIES_FILE_IOEXCEPTION_CLOSING = "IOException while closing properties file " + JAVAX_USB_PROPERTIES_FILE;
 
 	private static final String USBSERVICES_PROPERTY_NOT_DEFINED()
 	{ return "The property " + JAVAX_USB_USBSERVICES_PROPERTY + " is not defined as the implementation class of UsbServices"; }
@@ -105,8 +132,8 @@ public final class UsbHostManager
 	private static final String USBSERVICES_CLASSCASTEXCEPTION(String c)
 	{ return "The class "+c+" does not implement UsbServices"; }
 
-	public static final String JAVAX_USB_PROPERTIES_FILE = "javax.usb.properties";
-	public static final String JAVAX_USB_USBSERVICES_PROPERTY = "javax.usb.services";
+	private static boolean propertiesLoaded = false;
+	private static Properties properties = new Properties();
 
 	private static UsbServices usbServices = null;
 }
