@@ -20,10 +20,14 @@ package javax.usb;
  * <i>See section 9.6.2 of USB 1.1 specification for details</i>
  * </p>
  * @author E. Michael Maximilien
+ * @author Dan Streetman
  * @since 0.8.0
  */
 public interface ConfigDescriptor extends Descriptor
 {
+	/** @return The total length of this Descriptor. */
+	public short getTotalLength();
+
     /** @return the number of interfaces supported by this configuration */
     public byte getNumInterfaces();
 
