@@ -125,6 +125,93 @@ public class UsbUtil
 	public static long unsignedLong( int i ) { return 0x00000000ffffffff & i; }
 
 	/**
+	 * Convert 2 bytes into a short.
+	 * <p>
+	 * This converts the 2 bytes into a short.
+	 * The msb will be the high byte (8 bits) of the short,
+	 * and the lsb will be the low byte (8 bits) of the short.
+	 * @param msb The Most Significant Byte.
+	 * @param lsb The Least Significant Byte.
+	 * @return A short representing the bytes.
+	 */
+	public static short toShort(byte msb, byte lsb) { return (short)((0xff00 & (short)(msb << 8)) | (0x00ff & (short)lsb)); }
+
+	/**
+	 * Convert 4 bytes into an int.
+	 * <p>
+	 * This converts the 4 bytes into an int.
+	 * @param byte3 The byte to be left-shifted 24 bits.
+	 * @param byte2 The byte to be left-shifted 16 bits.
+	 * @param byte1 The byte to be left-shifted 8 bits.
+	 * @param byte0 The byte that will not be left-shifted.
+	 * @return An int representing the bytes.
+	 */
+	public static int toInt(byte byte3, byte byte2, byte byte1, byte byte0)
+	{
+		return toInt(toShort(byte3, byte2), toShort(byte1, byte0));
+	}
+
+	/**
+	 * Convert 8 bytes into a long.
+	 * <p>
+	 * This converts the 8 bytes into a long.
+	 * @param byte7 The byte to be left-shifted 56 bits.
+	 * @param byte6 The byte to be left-shifted 48 bits.
+	 * @param byte5 The byte to be left-shifted 40 bits.
+	 * @param byte4 The byte to be left-shifted 32 bits.
+	 * @param byte3 The byte to be left-shifted 24 bits.
+	 * @param byte2 The byte to be left-shifted 16 bits.
+	 * @param byte1 The byte to be left-shifted 8 bits.
+	 * @param byte0 The byte that will not be left-shifted.
+	 * @return A long representing the bytes.
+	 */
+	public static long toLong(byte byte7, byte byte6, byte byte5, byte byte4, byte byte3, byte byte2, byte byte1, byte byte0)
+	{
+		return toLong(toInt(byte7, byte6, byte5, byte4), toInt(byte3, byte2, byte1, byte0));
+	}
+
+	/**
+	 * Convert 2 shorts into an int.
+	 * <p>
+	 * This converts the 2 shorts into an int.
+	 * @param mss The Most Significant Short.
+	 * @param lss The Least Significant Short.
+	 * @return An int representing the shorts.
+	 */
+	public static int toInt(short mss, short lss) { return ((0xffff0000 & (int)(mss << 16)) | (0x0000ffff & (int)lss)); }
+
+	/**
+	 * Convert 4 shorts into a long.
+	 * <p>
+	 * This converts the 4 shorts into a long.
+	 * @param short3 The short to be left-shifted 48 bits.
+	 * @param short2 The short to be left-shifted 32 bits.
+	 * @param short1 The short to be left-shifted 16 bits.
+	 * @param short0 The short that will not be left-shifted.
+	 * @return A long representing the shorts.
+	 */
+	public static long toLong(short short3, short short2, short short1, short short0)
+	{
+		return toLong(toInt(short3, short2),toInt(short1, short0));
+	}
+
+	/**
+	 * Convert 2 ints into a long.
+	 * <p>
+	 * This converts the 2 ints into a long.
+	 * @param msi The Most Significant Int.
+	 * @param lsi The Least Significant Int.
+	 * @return A long representing the ints.
+	 */
+	public static long toLong(int msi, int lsi)
+	{
+		/* We can't represent a mask for the MSI, but that's ok, we don't really need one;
+		 * left-shifting sets the low bits to 0.
+		 */
+		return (long)((long)((long)msi << 32) | (long)((long)0x00000000ffffffff & (long)lsi));
+	}
+
+	/**
 	 * Format a byte into a proper length hex String.
 	 * <p>
 	 * This is identical to Long.toHexString()
@@ -157,7 +244,7 @@ public class UsbUtil
 	 */
 	public static String toHexString( int i )
 	{
-			return toHexString( unsignedLong( i ), '0', 8, 8 );
+		return toHexString( unsignedLong( i ), '0', 8, 8 );
 	}
 
 	/**
@@ -169,7 +256,7 @@ public class UsbUtil
 	 */
 	public static String toHexString( long l )
 	{
-			return toHexString( l, '0', 16, 16 );
+		return toHexString( l, '0', 16, 16 );
 	}
 
 	/**
@@ -195,6 +282,174 @@ public class UsbUtil
 
 		return sb.substring(0, min);
 	}
+
+	/**
+	 * Format a byte[] into a hex String.
+	 * <p>
+	 * This creates a String by concatenating the result of
+	 * <code>delimiter + {@link #toHexString(byte) toHexString(byte)}</code>
+	 * for each byte in the array.  If the specified length is greater
+	 * than the actual array length, the array length is used.
+	 * If the specified length (or array length) is 0 or less,
+	 * the resulting String will be an empty String.
+	 * @param delimiter The delimiter to prefix every byte with.
+	 * @param array The byte[] to convert.
+	 * @param length The number of bytes to use.
+	 * @return A String representing the byte[].
+	 * @exception NullPointerException If the byte[] is null.
+	 */
+	public static String toHexString(String delimiter, byte[] array, int length)
+	{
+		StringBuffer sB = new StringBuffer();
+
+		if (length > array.length)
+			length = array.length;
+
+		if (length < 0)
+			length = 0;
+
+		for (int i=0; i<length; i++)
+			sB.append(delimiter + toHexString(array[i]));
+
+		return sB.toString();
+	}
+
+	/**
+	 * Format a short[] into a hex String.
+	 * <p>
+	 * This creates a String by concatenating the result of
+	 * <code>delimiter + {@link #toHexString(short) toHexString(short)}</code>
+	 * for each short in the array.  If the specified length is greater
+	 * than the actual array length, the array length is used.
+	 * If the specified length (or array length) is 0 or less,
+	 * the resulting String will be an empty String.
+	 * @param delimiter The delimiter to prefix every short with.
+	 * @param array The short[] to convert.
+	 * @param length The number of shorts to use.
+	 * @return A String representing the short[].
+	 * @exception NullPointerException If the short[] is null.
+	 */
+	public static String toHexString(String delimiter, short[] array, int length)
+	{
+		StringBuffer sB = new StringBuffer();
+
+		if (length > array.length)
+			length = array.length;
+
+		if (length < 0)
+			length = 0;
+
+		for (int i=0; i<length; i++)
+			sB.append(delimiter + toHexString(array[i]));
+
+		return sB.toString();
+	}
+
+	/**
+	 * Format a int[] into a hex String.
+	 * <p>
+	 * This creates a String by concatenating the result of
+	 * <code>delimiter + {@link #toHexString(int) toHexString(int)}</code>
+	 * for each int in the array.  If the specified length is greater
+	 * than the actual array length, the array length is used.
+	 * If the specified length (or array length) is 0 or less,
+	 * the resulting String will be an empty String.
+	 * @param delimiter The delimiter to prefix every int with.
+	 * @param array The int[] to convert.
+	 * @param length The number of ints to use.
+	 * @return A String representing the int[].
+	 * @exception NullPointerException If the int[] is null.
+	 */
+	public static String toHexString(String delimiter, int[] array, int length)
+	{
+		StringBuffer sB = new StringBuffer();
+
+		if (length > array.length)
+			length = array.length;
+
+		if (length < 0)
+			length = 0;
+
+		for (int i=0; i<length; i++)
+			sB.append(delimiter + toHexString(array[i]));
+
+		return sB.toString();
+	}
+
+	/**
+	 * Format a long[] into a hex String.
+	 * <p>
+	 * This creates a String by concatenating the result of
+	 * <code>delimiter + {@link #toHexString(long) toHexString(long)}</code>
+	 * for each long in the array.  If the specified length is greater
+	 * than the actual array length, the array length is used.
+	 * If the specified length (or array length) is 0 or less,
+	 * the resulting String will be an empty String.
+	 * @param delimiter The delimiter to prefix every long with.
+	 * @param array The long[] to convert.
+	 * @param length The number of longs to use.
+	 * @return A String representing the long[].
+	 * @exception NullPointerException If the long[] is null.
+	 */
+	public static String toHexString(String delimiter, long[] array, int length)
+	{
+		StringBuffer sB = new StringBuffer();
+
+		if (length > array.length)
+			length = array.length;
+
+		if (length < 0)
+			length = 0;
+
+		for (int i=0; i<length; i++)
+			sB.append(delimiter + toHexString(array[i]));
+
+		return sB.toString();
+	}
+
+	/**
+	 * Format a byte[] into a hex String.
+	 * <p>
+	 * This calls {@link #toHexString(String,byte[],int) toHexString(delimiter, array, array.length)}.
+	 * @param delimiter The delimiter to prefix every byte with.
+	 * @param array The byte[] to convert.
+	 * @return A String representing the byte[].
+	 * @exception NullPointerException If the byte[] is null.
+	 */
+	public static String toHexString(String delimiter, byte[] array) { return toHexString(delimiter, array, array.length); }
+
+	/**
+	 * Format a short[] into a hex String.
+	 * <p>
+	 * This calls {@link #toHexString(String,short[],int) toHexString(delimiter, array, array.length)}.
+	 * @param delimiter The delimiter to prefix every short with.
+	 * @param array The short[] to convert.
+	 * @return A String representing the short[].
+	 * @exception NullPointerException If the short[] is null.
+	 */
+	public static String toHexString(String delimiter, short[] array) { return toHexString(delimiter, array, array.length); }
+
+	/**
+	 * Format a int[] into a hex String.
+	 * <p>
+	 * This calls {@link #toHexString(String,int[],int) toHexString(delimiter, array, array.length)}.
+	 * @param delimiter The delimiter to prefix every int with.
+	 * @param array The int[] to convert.
+	 * @return A String representing the int[].
+	 * @exception NullPointerException If the int[] is null.
+	 */
+	public static String toHexString(String delimiter, int[] array) { return toHexString(delimiter, array, array.length); }
+
+	/**
+	 * Format a long[] into a hex String.
+	 * <p>
+	 * This calls {@link #toHexString(String,long[],int) toHexString(delimiter, array, array.length)}.
+	 * @param delimiter The delimiter to prefix every long with.
+	 * @param array The long[] to convert.
+	 * @return A String representing the long[].
+	 * @exception NullPointerException If the long[] is null.
+	 */
+	public static String toHexString(String delimiter, long[] array) { return toHexString(delimiter, array, array.length); }
 
 	/**
 	 * Get a String description of the specified device-speed Object.
