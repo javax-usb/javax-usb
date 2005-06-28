@@ -280,7 +280,7 @@ public class UsbUtil
 		while (sb.length() < max)
 			sb.insert(0, c);
 
-		return sb.substring(0, min);
+		return sb.substring(sb.length() - min);
 	}
 
 	/**
