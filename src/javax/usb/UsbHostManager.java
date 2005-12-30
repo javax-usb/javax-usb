@@ -25,7 +25,7 @@ public final class UsbHostManager
 	/** 
 	 * Get the UsbServices implementation.
 	 * @return The UsbServices implementation instance.
-	 * @exception UsbException If the is an error creating the UsbSerivces implementation.
+	 * @exception UsbException If there is an error creating the UsbSerivces implementation.
 	 * @exception SecurityException If the caller does not have security access.
 	 */
 	public static UsbServices getUsbServices() throws UsbException,SecurityException
@@ -43,7 +43,7 @@ public final class UsbHostManager
 	 * <p>
 	 * If the properties have not yet been loaded, this loads them.
 	 * @return An copy of the Properties.
-	 * @exception UsbException If an error occurrs while loading the properties.
+	 * @exception UsbException If an error occurs while loading the properties.
 	 * @exception SecurityException If the caller does not have security access.
 	 */
 	public static Properties getProperties() throws UsbException,SecurityException
