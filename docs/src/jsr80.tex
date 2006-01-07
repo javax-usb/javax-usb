@@ -380,7 +380,7 @@ short packets, and the \myclass{UsbException}.
 
 First, the data buffer is simply a byte[] but there are additional methods that
 are used to modify the transfer of data.  There are methods to set and get the
-offset, which indicates what offset into the data buffer the imeplementation
+offset, which indicates what offset into the data buffer the implementation
 should use when transferring data.  If the offset is zero, data will be transferred
 starting at the beginning of the byte[], if the offset is above zero, data starting
 at the offset into the byte[] will be used when communicating with the device.
@@ -401,7 +401,7 @@ the methods they are blocking in.
 
 The methods related to short packets are used to set and get the policy that should be
 used when handling short packets.  The policy can be set to either accept or reject
-short packets.  Short packets will happen if the device transferrs less data than the
+short packets.  Short packets will happen if the device transfers less data than the
 host was expecting.  Normally this will happen only if the pipe direction is
 device-to-host, and the data buffer provided is larger than the amount of data that
 the device has to send to the host during a specific communication.  If short packets
