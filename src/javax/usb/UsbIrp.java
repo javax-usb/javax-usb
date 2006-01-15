@@ -177,7 +177,7 @@ public interface UsbIrp
 	 * If this has completed.
 	 * <p>
 	 * This must be false before use.
-	 * @return If the has completed.
+	 * @return If this UsbIrp has completed.
 	 */
 	public boolean isComplete();
 
