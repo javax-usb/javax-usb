@@ -195,7 +195,7 @@ defined in the USB specification.
 The communication methods provide access to the device's default control
 pipe.  The default control pipe requires \myinterface{UsbControlIrp}s, which contain
 meta-information besides the actual data buffer.  The \myinterface{UsbControlIrp}s
-may be submitted synchronously or asyncronously.  The submission methods
+may be submitted synchronously or asynchronously.  The submission methods
 behave the same, except the synchronous submission method blocks until
 the submission is complete, essentially meaning all data has been transferred.
 The asynchronous submission method does not block, but returns as soon as
@@ -322,7 +322,7 @@ The communication methods are similar to the communication methods
 from the \myinterface{UsbDevice} interface, which allow communication on the default
 control pipe.  However, this pipe is not neccesarily a control-type pipe,
 and so other objects may be used for the communication.  There are
-synchronous and asyncronous methods, which behave the same as the
+synchronous and asynchronous methods, which behave the same as the
 methods from the \myinterface{UsbDevice} interface; the synchronous methods block
 until complete, while the asynchronous methods return immediately
 and perform processing in a background thread.  If the pipe is a
