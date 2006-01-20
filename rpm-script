@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo -n "Please enter the version number: "
+read VERSION
+
+cp -vf lib/jsr80.jar rpm-files/opt/javax-usb/lib/jsr80-$VERSION.jar
+ln -s jsr80-$VERSION.jar rpm-files/opt/javax-usb/lib/jsr80.jar
+
+rpmbuild -bb javax-usb.spec \
+	--buildroot="`pwd`/rpm-files" \
+	--target i386 \
+	--define "_rpmdir `pwd`" \
+	--define "_rpmfilename %{name}-%{version}-%{release}.%{arch}.rpm"
+
+rm -vf rpm-files/opt/javax-usb/lib/jsr80-$VERSION.jar
+rm -vf rpm-files/opt/javax-usb/lib/jsr80.jar
