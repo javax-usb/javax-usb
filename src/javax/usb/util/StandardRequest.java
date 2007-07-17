@@ -280,7 +280,7 @@ public class StandardRequest
 	{
 		byte bmRequestType = REQUESTTYPE_GET_DESCRIPTOR;
 		byte bRequest = UsbConst.REQUEST_GET_DESCRIPTOR;
-		short wValue = (short)((type << 8) | index);
+		short wValue = (short)((type << 8) | ((int)index)&0xff);
 		short wIndex = langid;
 
 		UsbControlIrp usbControlIrp = usbDevice.createUsbControlIrp(bmRequestType, bRequest, wValue, wIndex);
