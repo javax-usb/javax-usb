@@ -96,7 +96,21 @@ public final class UsbHostManager
 	 */
 	private static void setupProperties() throws UsbException,SecurityException
 	{
-		InputStream i = ClassLoader.getSystemResourceAsStream(JAVAX_USB_PROPERTIES_FILE);
+		InputStream i = null;
+
+		// First look in 'java.home'/lib
+		String h = System.getProperty("java.home");
+		String s = System.getProperty("file.separator");
+		if (null != h && null != s)
+		{
+			try { i = new FileInputStream(h + s + "lib" + s + JAVAX_USB_PROPERTIES_FILE); }
+			catch ( FileNotFoundException fnfE ) { /* no 'java.home'/lib properties file, ok */ }
+		}
+
+		// Now check the normal CLASSPATH
+		if (null == i)
+			i = UsbHostManager.class.getClassLoader().getResourceAsStream(JAVAX_USB_PROPERTIES_FILE);
+
 		if (null == i)
 			throw new UsbException(PROPERTIES_FILE_NOT_FOUND);
 
