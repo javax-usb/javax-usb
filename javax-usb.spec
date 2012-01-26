@@ -1,8 +1,8 @@
 Summary: javax.usb API
 Name: javax-usb
-Version: 1.0.1
+Version: 1.0.2
 Release: 1
-Copyright: (c)Copyright International Business Machines Corporation 2001. All rights reserved.
+license: (c)Copyright International Business Machines Corporation 2001,2008. All rights reserved.
 Group: System Environment/Libraries
 %description
 Java API to USB devices.
